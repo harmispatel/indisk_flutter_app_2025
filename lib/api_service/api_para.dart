@@ -1,0 +1,32 @@
+class ApiParams {
+  static const String phoneNumber = "phoneNumber";
+  static const String username = "username";
+  static const String password = "password";
+  static const String name = "name";
+  static const String phone = "phone";
+  static const String email = "email";
+  static const String is_blocked = "is_blocked";
+  static const String created_by = "created_by";
+  static const String restaurant_id = "restaurant_id";
+  static const String role = "role";
+  static const String id = "id";
+  static const String is_active = "is_active";
+  static const String description = "description";
+  static const String food_category = "food_category";
+  static const String unit = "unit";
+  static const String available_qty = "available_qty";
+  static const String content_per_single_item = "content_per_single_item";
+  static const String cooking_time = "cooking_time";
+  static const String preparations = "preparations";
+  static const String min_stock_required = "min_stock_required";
+  static const String time_unit = "time_unit";
+  static const String priority = "priority";
+  static const String preparations_time = "preparations_time";
+  static const String shifting_constant = "shifting_constant";
+  static const String base_price = "base_price";
+  static const String discount_price = "discount_price";
+  static const String prices_by_quantity = "prices_by_quantity";
+  static const String image_url = "image_url";
+  static const String foodData = "foodData";
+  static const String user_id = "user_id";
+}

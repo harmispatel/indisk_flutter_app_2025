@@ -1,0 +1,18 @@
+String BASE_URL = "https://indisk.harmistechnology.com/api/";
+
+class ApiUrl {
+  static String LOGIN = "${BASE_URL}login";
+  static String CREATE_MANAGER = "${BASE_URL}staff/staff-create";
+  static String UPDATE_MANAGER = "${BASE_URL}staff/staff-update";
+  static String DELETE_STAFF = "${BASE_URL}staff/staff-delete";
+  static String GET_STAFF_LIST = "${BASE_URL}staff/staff-list";
+  static String CREATE_FOOD_CATEGORY = "${BASE_URL}create-food-category";
+  static String UPDATE_FOOD_CATEGORY = "${BASE_URL}update-food-category";
+  static String DELETE_FOOD_CATEGORY = "${BASE_URL}delete-food-category";
+  static String GET_FOOD_CATEGORY_LIST = "${BASE_URL}food-category-list";
+
+  static String CREATE_FOOD = "${BASE_URL}create-food";
+  static String UPDATE_FOOD = "${BASE_URL}update-food";
+  static String DELETE_FOOD = "${BASE_URL}delete-food";
+  static String GET_FOOD = "${BASE_URL}get-food-list";
+}

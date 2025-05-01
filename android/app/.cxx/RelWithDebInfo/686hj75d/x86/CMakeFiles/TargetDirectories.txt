@@ -1,0 +1,2 @@
+/Users/harmistechnology/Flutter Project 2024/Flutter_Project_2025/appyclone-indisk_app-flutter-2025-e93d7d4955b1/android/app/.cxx/RelWithDebInfo/686hj75d/x86/CMakeFiles/edit_cache.dir
+/Users/harmistechnology/Flutter Project 2024/Flutter_Project_2025/appyclone-indisk_app-flutter-2025-e93d7d4955b1/android/app/.cxx/RelWithDebInfo/686hj75d/x86/CMakeFiles/rebuild_cache.dir
