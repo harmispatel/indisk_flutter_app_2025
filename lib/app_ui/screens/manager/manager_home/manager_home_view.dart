@@ -6,6 +6,8 @@ import 'package:indisk_app/utils/common_styles.dart';
 import 'package:indisk_app/utils/common_utills.dart';
 import 'package:indisk_app/utils/local_images.dart';
 
+import '../manager_order_list/manager_order_list_view.dart';
+
 class ManagerHomeView extends StatefulWidget {
   const ManagerHomeView({super.key});
 
@@ -69,6 +71,8 @@ class DashboardCard extends StatelessWidget {
           pushToScreen(FoodListView());
         } else if (index == 2) {
           pushToScreen(FoodCategoryListView());
+        } else if (index == 0) {
+          pushToScreen(ManagerOrderListView());
         }
       },
       child: Card(

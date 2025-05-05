@@ -38,6 +38,7 @@ class FoodListData {
   int? minStockRequired;
   int? priority;
   String? preparationsTime;
+  String? description;
   List<String>? imageUrl;
   double? shiftingConstant;
   FoodCategory? foodCategory;
@@ -60,6 +61,7 @@ class FoodListData {
       this.minStockRequired,
       this.priority,
       this.preparationsTime,
+      this.description,
       this.imageUrl,
       this.shiftingConstant,
       this.foodCategory,
@@ -82,6 +84,7 @@ class FoodListData {
     minStockRequired = json['min_stock_required'];
     priority = json['priority'];
     preparationsTime = json['preparations_time'];
+    description = json['description'];
     imageUrl = json['image_url'].cast<String>();
     shiftingConstant = json['shifting_constant'];
     foodCategory = json['food_category'] != null
@@ -117,6 +120,7 @@ class FoodListData {
     data['min_stock_required'] = this.minStockRequired;
     data['priority'] = this.priority;
     data['preparations_time'] = this.preparationsTime;
+    data['description'] = this.description;
     data['image_url'] = this.imageUrl;
     data['shifting_constant'] = this.shiftingConstant;
     if (this.foodCategory != null) {
@@ -203,18 +207,18 @@ class PricesByQuantity {
   PricesByQuantity({this.quantity, this.price, this.discountPrice, this.sId});
 
   PricesByQuantity.fromJson(Map<String, dynamic> json) {
-    quantity = json['quantity'];
-    price = json['price'];
-    discountPrice = json['discount_price'];
+    quantity = json['quantity'].toString(); // Ensure string conversion
+    price = json['price'].toString();
+    discountPrice = json['discount_price'].toString();
     sId = json['_id'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['quantity'] = this.quantity;
-    data['price'] = this.price;
-    data['discount_price'] = this.discountPrice;
-    data['_id'] = this.sId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['quantity'] = quantity;
+    data['price'] = price;
+    data['discount_price'] = discountPrice;
+    data['_id'] = sId;
     return data;
   }
 }

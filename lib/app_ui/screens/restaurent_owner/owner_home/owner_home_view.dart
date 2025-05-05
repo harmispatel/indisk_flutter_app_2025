@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 import 'package:indisk_app/utils/app_dimens.dart';
 import 'package:indisk_app/utils/common_colors.dart';
 import 'package:indisk_app/utils/common_styles.dart';
@@ -32,9 +32,6 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-
-
-
   Widget _buildPieChartCard() {
     return Card(
       elevation: 2,
@@ -48,111 +45,117 @@ class DashboardPage extends StatelessWidget {
               Container(
                 height: 240.0,
                 width: kDeviceWidth,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Order Type Share",
-                            style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                        SizedBox(height: 16),
-                        SizedBox(
-                          width: 200,
-                          height: 200,
-                          child: PieChart(
-                            PieChartData(
-                              sections: [
-                                PieChartSectionData(
-                                    value: 40,
-                                    title: 'Dine-in',
-                                    color: Colors.blue,
-                                    radius: 50),
-                                PieChartSectionData(
-                                    value: 35,
-                                    title: 'Delivery',
-                                    color: Colors.green,
-                                    radius: 50),
-                                PieChartSectionData(
-                                    value: 25,
-                                    title: 'Take-away',
-                                    color: Colors.orange,
-                                    radius: 50),
-                              ],
-                              sectionsSpace: 2,
-                              centerSpaceRadius: 30,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Order Type Share",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600)),
+                          SizedBox(height: 16),
+                          SizedBox(
+                            width: 200,
+                            height: 200,
+                            child: PieChart(
+                              PieChartData(
+                                sections: [
+                                  PieChartSectionData(
+                                      value: 40,
+                                      title: 'Dine-in',
+                                      color: Colors.blue,
+                                      radius: 50),
+                                  PieChartSectionData(
+                                      value: 35,
+                                      title: 'Delivery',
+                                      color: Colors.green,
+                                      radius: 50),
+                                  PieChartSectionData(
+                                      value: 25,
+                                      title: 'Take-away',
+                                      color: Colors.orange,
+                                      radius: 50),
+                                ],
+                                sectionsSpace: 2,
+                                centerSpaceRadius: 30,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    kSizedBoxH20,
-                    kSizedBoxH20,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        getChartBlock(
-                            blockColor: CommonColors.green, text: "Delivery"),
-                        kSizedBoxV20,
-                        getChartBlock(
-                            blockColor: CommonColors.orange, text: "Take Away"),
-                        kSizedBoxV20,
-                        getChartBlock(
-                            blockColor: CommonColors.blue , text: "Drive In")
-                      ],
-                    ),
-                    Spacer(),
-                    Card(
-                      child: Container(
-                        padding: EdgeInsetsDirectional.symmetric(horizontal: 30.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 100.0,
-                              width: 135.0,
-                              child: Column(
-                                children: [
-                                  Text("Total Orders",
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                                  SizedBox(height: 8),
-                                  Text("250",
-                                      style: getBoldTextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontColor: CommonColors.green,
-                                        fontSize: 30.0
-                                      )),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              height: 100.0,
-                              width: 135.0,
-                              child: Column(
-                                children: [
-                                  Text("Total Revenue",
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                                  SizedBox(height: 8),
-                                  Text("\$2500",
-                                      style: getBoldTextStyle(
-                                          fontWeight: FontWeight.w900,
-                                          fontColor: CommonColors.green,
-                                          fontSize: 30.0
-                                      )),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                        ],
                       ),
-                    )
-                  ],
+                      kSizedBoxH20,
+                      kSizedBoxH20,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          getChartBlock(
+                              blockColor: CommonColors.green, text: "Delivery"),
+                          kSizedBoxV20,
+                          getChartBlock(
+                              blockColor: CommonColors.orange,
+                              text: "Take Away"),
+                          kSizedBoxV20,
+                          getChartBlock(
+                              blockColor: CommonColors.blue, text: "Drive In")
+                        ],
+                      ),
+                      kSizedBoxH20,
+                      Card(
+                        child: Container(
+                          padding:
+                              EdgeInsetsDirectional.symmetric(horizontal: 30.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 100.0,
+                                width: 135.0,
+                                child: Column(
+                                  children: [
+                                    Text("Total Orders",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500)),
+                                    SizedBox(height: 8),
+                                    Text("250",
+                                        style: getBoldTextStyle(
+                                            fontWeight: FontWeight.w900,
+                                            fontColor: CommonColors.green,
+                                            fontSize: 30.0)),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 100.0,
+                                width: 135.0,
+                                child: Column(
+                                  children: [
+                                    Text("Total Revenue",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500)),
+                                    SizedBox(height: 8),
+                                    Text("2500 Kr",
+                                        style: getBoldTextStyle(
+                                            fontWeight: FontWeight.w900,
+                                            fontColor: CommonColors.green,
+                                            fontSize: 30.0)),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               kSizedBoxV20,
-
             ],
           ),
         ),
@@ -196,8 +199,6 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-
-
   getChartBlock({required Color blockColor, required String text}) {
     return Container(
       child: Row(
@@ -218,8 +219,6 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-
-
 class BeautifulOrderSummaryTable extends StatelessWidget {
   final Map<String, Map<String, dynamic>> data = {
     "Dine-in": {"orders": 124, "revenue": 10500},
@@ -229,16 +228,10 @@ class BeautifulOrderSummaryTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle? headerStyle = getBoldTextStyle(
-      fontSize: 16.0,
-      fontColor: CommonColors.black
-    );
-    TextStyle? rowLabelStyle = getSemiBoldTextStyle(
-      fontSize: 15.0
-    );
-    TextStyle? valueStyle = getNormalTextStyle(
-      fontSize: 15.0
-    );
+    TextStyle? headerStyle =
+        getBoldTextStyle(fontSize: 16.0, fontColor: CommonColors.black);
+    TextStyle? rowLabelStyle = getSemiBoldTextStyle(fontSize: 15.0);
+    TextStyle? valueStyle = getNormalTextStyle(fontSize: 15.0);
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -277,9 +270,15 @@ class BeautifulOrderSummaryTable extends StatelessWidget {
                       padding: const EdgeInsets.all(12),
                       child: Text("Orders", style: rowLabelStyle),
                     ),
-                    Center(child: Text("${data["Dine-in"]!["orders"]}", style: valueStyle)),
-                    Center(child: Text("${data["Delivery"]!["orders"]}", style: valueStyle)),
-                    Center(child: Text("${data["Take-away"]!["orders"]}", style: valueStyle)),
+                    Center(
+                        child: Text("${data["Dine-in"]!["orders"]}",
+                            style: valueStyle)),
+                    Center(
+                        child: Text("${data["Delivery"]!["orders"]}",
+                            style: valueStyle)),
+                    Center(
+                        child: Text("${data["Take-away"]!["orders"]}",
+                            style: valueStyle)),
                   ],
                 ),
                 TableRow(
@@ -288,9 +287,15 @@ class BeautifulOrderSummaryTable extends StatelessWidget {
                       padding: const EdgeInsets.all(12),
                       child: Text("Revenue", style: rowLabelStyle),
                     ),
-                    Center(child: Text("₹${data["Dine-in"]!["revenue"]}", style: valueStyle)),
-                    Center(child: Text("₹${data["Delivery"]!["revenue"]}", style: valueStyle)),
-                    Center(child: Text("₹${data["Take-away"]!["revenue"]}", style: valueStyle)),
+                    Center(
+                        child: Text("₹${data["Dine-in"]!["revenue"]}",
+                            style: valueStyle)),
+                    Center(
+                        child: Text("₹${data["Delivery"]!["revenue"]}",
+                            style: valueStyle)),
+                    Center(
+                        child: Text("₹${data["Take-away"]!["revenue"]}",
+                            style: valueStyle)),
                   ],
                 ),
               ],
@@ -301,7 +306,6 @@ class BeautifulOrderSummaryTable extends StatelessWidget {
     );
   }
 }
-
 
 class TimeSlotGrid extends StatelessWidget {
   final List<Map<String, dynamic>> timeSlots = [
@@ -322,7 +326,7 @@ class TimeSlotGrid extends StatelessWidget {
       crossAxisCount: 4,
       crossAxisSpacing: 12,
       mainAxisSpacing: 12,
-      childAspectRatio: 1,
+      childAspectRatio: 0.8,
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       children: timeSlots.map((slot) {
@@ -343,30 +347,36 @@ class TimeSlotGrid extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Time: ${slot['time']}", style: getBoldTextStyle(
-                fontSize: 16.0
-              )),
+              Text("Time: ${slot['time']}",
+                  style: getBoldTextStyle(fontSize: 16.0)),
               kSizedBoxV10,
-              Divider(color: CommonColors.grey100,height: 1.0,),
+              Divider(
+                color: CommonColors.grey100,
+                height: 1.0,
+              ),
               const SizedBox(height: 4),
-              Text("Orders",style: getBoldTextStyle(
-                fontSize: 15.0,
-                fontColor: CommonColors.black
-              ),),
+              Text(
+                "Orders",
+                style: getBoldTextStyle(
+                    fontSize: 15.0, fontColor: CommonColors.black),
+              ),
               kSizedBoxV5,
-              Text("${slot['orders']}",style: getSemiBoldTextStyle(
-                  fontSize: 18.0,
-                  fontColor: CommonColors.blue
-              ),),
-              Text("Revenue",style: getBoldTextStyle(
-                fontSize: 15.0,
-                fontColor: CommonColors.black
-              ),),
+              Text(
+                "${slot['orders']}",
+                style: getSemiBoldTextStyle(
+                    fontSize: 18.0, fontColor: CommonColors.blue),
+              ),
+              Text(
+                "Revenue",
+                style: getBoldTextStyle(
+                    fontSize: 15.0, fontColor: CommonColors.black),
+              ),
               kSizedBoxV5,
-              Text("\$${slot['revenue']}",style: getSemiBoldTextStyle(
-                  fontSize: 18.0,
-                  fontColor: CommonColors.green
-              ),),
+              Text(
+                "${slot['revenue']} Kr",
+                style: getSemiBoldTextStyle(
+                    fontSize: 18.0, fontColor: CommonColors.green),
+              ),
             ],
           ),
         );
@@ -374,6 +384,3 @@ class TimeSlotGrid extends StatelessWidget {
     );
   }
 }
-
-
-

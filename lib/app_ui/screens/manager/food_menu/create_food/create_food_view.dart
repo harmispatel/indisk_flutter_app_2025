@@ -1,9 +1,7 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:indisk_app/app_ui/common_widget/common_appbar.dart';
-import 'package:indisk_app/app_ui/common_widget/common_image.dart';
-import 'package:indisk_app/app_ui/common_widget/common_textfield.dart';
 import 'package:indisk_app/app_ui/common_widget/form_field_label.dart';
 import 'package:indisk_app/app_ui/common_widget/label_textfield.dart';
 import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
@@ -14,7 +12,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../../api_service/models/food_category_master.dart';
 import '../../../../../utils/common_styles.dart';
-import '../../food_category/create_food_category/create_food_category_view_model.dart';
 import 'create_food_view_model.dart';
 
 class CreateFoodView extends StatefulWidget {
@@ -29,7 +26,6 @@ class _CreateFoodViewState extends State<CreateFoodView> {
   final _nameController = TextEditingController();
   final _descController = TextEditingController();
   final _basePriceController = TextEditingController();
-  final _discountPriceController = TextEditingController();
   final _foodUnitController = TextEditingController();
   final _availableQtyController = TextEditingController();
   final _preparationController = TextEditingController();
@@ -56,7 +52,10 @@ class _CreateFoodViewState extends State<CreateFoodView> {
     return Scaffold(
       appBar: CommonAppbar(title: "Create Food"),
       bottomNavigationBar: Container(
-        padding: EdgeInsetsDirectional.only(bottom: MediaQuery.of(context).viewPadding.bottom,start: 20.0,end: 20.0),
+        padding: EdgeInsetsDirectional.only(
+            bottom: MediaQuery.of(context).viewPadding.bottom,
+            start: 20.0,
+            end: 20.0),
         child: PrimaryButton(
             text: "Save",
             onPressed: () {
@@ -69,7 +68,6 @@ class _CreateFoodViewState extends State<CreateFoodView> {
                     preparation: _preparationController.text.trim(),
                     minStock: _minimumStockController.text.trim(),
                     basePrice: _basePriceController.text.trim(),
-                    discountPrice: _discountPriceController.text.trim(),
                     foodUnit: _foodUnitController.text.trim(),
                     qtyAvailable: _availableQtyController.text.trim(),
                     contentPerSingleItem:
@@ -180,14 +178,6 @@ class _CreateFoodViewState extends State<CreateFoodView> {
                   mViewModel.quantities[0].quantity = 1;
                   setState(() {});
                 }),
-            getColumnTextField(
-                controller: _discountPriceController,
-                lable: "Discount Price",
-                onTextChange: (String value) {
-                  mViewModel.quantities[0].discountPrice = value;
-                  mViewModel.quantities[0].quantity = 1;
-                  setState(() {});
-                }),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -223,7 +213,7 @@ class _CreateFoodViewState extends State<CreateFoodView> {
                                   int.parse(value);
                             }
                           },
-                         // enabled: index != 0,
+                          // enabled: index != 0,
                           keyboardType: TextInputType.number,
                         ),
                       ),
@@ -243,7 +233,7 @@ class _CreateFoodViewState extends State<CreateFoodView> {
                               mViewModel.quantities[index].price = value;
                             }
                           },
-                        //  enabled: index != 0,
+                          //  enabled: index != 0,
                           keyboardType: TextInputType.number,
                         ),
                       ),
@@ -264,7 +254,7 @@ class _CreateFoodViewState extends State<CreateFoodView> {
                                   value;
                             }
                           },
-                        //  enabled: index != 0,
+                          //  enabled: index != 0,
                           keyboardType: TextInputType.number,
                         ),
                       ),
@@ -371,9 +361,6 @@ class _CreateFoodViewState extends State<CreateFoodView> {
       return false;
     } else if (_basePriceController.text.isEmpty) {
       showRedToastMessage("Please enter food base price");
-      return false;
-    } else if (_discountPriceController.text.isEmpty) {
-      showRedToastMessage("Please enter food discount price");
       return false;
     } else if (!isValidQuantityPrice!) {
       showRedToastMessage("Please check your price with qauntity");

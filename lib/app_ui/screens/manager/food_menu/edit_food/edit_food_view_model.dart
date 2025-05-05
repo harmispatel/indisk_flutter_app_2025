@@ -2,20 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:indisk_app/api_service/api_para.dart';
-import 'package:indisk_app/api_service/index.dart';
-import 'package:indisk_app/api_service/models/common_master.dart';
-import 'package:indisk_app/api_service/models/file_model.dart';
-import 'package:indisk_app/app_ui/screens/app/app_view.dart';
-import 'package:indisk_app/utils/common_utills.dart';
-import 'package:indisk_app/utils/global_variables.dart';
-import 'package:provider/provider.dart';
 
+import '../../../../../api_service/api_para.dart';
+import '../../../../../api_service/index.dart';
+import '../../../../../api_service/models/common_master.dart';
+import '../../../../../api_service/models/file_model.dart';
 import '../../../../../api_service/models/food_category_master.dart';
-import '../food_list/food_list_view_model.dart';
-import 'create_food_view.dart';
+import '../../../../../utils/common_utills.dart';
+import '../../../../../utils/global_variables.dart';
+import '../../../app/app_view.dart';
+import '../create_food/create_food_view.dart';
 
-class CreateFoodViewModel extends ChangeNotifier {
+class EditFoodViewModel with ChangeNotifier {
   Services services = Services();
 
   List<XFile> images = [];
@@ -31,7 +29,33 @@ class CreateFoodViewModel extends ChangeNotifier {
 
   bool? isApiLoading = false;
 
-  Future<void> createFoodCategory({
+  List<String> existingImageUrls = [];
+
+  void setExistingImageUrls(List<String> urls) {
+    existingImageUrls = urls;
+    notifyListeners();
+  }
+
+  List<dynamic> get allImages {
+    return [...existingImageUrls, ...images];
+  }
+
+  void setSelectedCategoryFromId(String? categoryId) {
+    if (categoryId != null) {
+      selectedFoodCategory = foodCategoryList.firstWhere(
+        (category) => category.sId == categoryId,
+      );
+    }
+    notifyListeners();
+  }
+
+  void resetAll() {
+    foodCategoryList.clear();
+    quantities.clear();
+    selectedFoodCategory = null;
+  }
+
+  Future<void> updateFood({
     required name,
     required description,
     required cookingTime,
@@ -42,9 +66,10 @@ class CreateFoodViewModel extends ChangeNotifier {
     required foodUnit,
     required qtyAvailable,
     required contentPerSingleItem,
+    required id,
   }) async {
     showProgressDialog();
-    CommonMaster? commonMaster = await services.api!.createFood(
+    CommonMaster? commonMaster = await services.api!.updateFood(
         params: {
           ApiParams.name: name,
           ApiParams.description: description,
@@ -62,39 +87,13 @@ class CreateFoodViewModel extends ChangeNotifier {
           ApiParams.content_per_single_item: contentPerSingleItem,
           ApiParams.priority: "1",
           ApiParams.shifting_constant: "1.5",
+          ApiParams.id: id,
         },
         files: fileList,
         onProgress: (bytes, totalBytes) {
           print("Progress == ${bytes / totalBytes}");
         });
-    hideProgressDialog();
 
-    if (commonMaster != null) {
-      if (commonMaster.success != null && commonMaster.success!) {
-        showGreenToastMessage("${commonMaster.message}");
-        Navigator.pop(mainNavKey.currentContext!, true);
-        Provider.of<FoodListViewModel>(mainNavKey.currentContext!,
-                listen: false)
-            .getFoodList();
-      } else {
-        showRedToastMessage("${commonMaster.message}");
-      }
-    } else {
-      oopsMSG();
-    }
-  }
-
-  Future<void> updateFoodCategory(
-      {id, name, decsription, String? isActive}) async {
-    showProgressDialog();
-    CommonMaster? commonMaster =
-        await services.api!.updateFoodCategory(params: {
-      ApiParams.name: name,
-      ApiParams.description: decsription,
-      ApiParams.is_active: isActive!,
-      ApiParams.restaurant_id: gRestaurentDetails!.sId!,
-      ApiParams.id: id,
-    }, files: fileList, onProgress: (bytes, totalBytes) {});
     hideProgressDialog();
 
     if (commonMaster != null) {
@@ -107,12 +106,6 @@ class CreateFoodViewModel extends ChangeNotifier {
     } else {
       oopsMSG();
     }
-  }
-
-  void resetAll() {
-    foodCategoryList.clear();
-    quantities.clear();
-    selectedFoodCategory = null;
   }
 
   Future<void> pickImages() async {

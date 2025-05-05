@@ -6,6 +6,8 @@ import '../../../../database/app_preferences.dart';
 import '../../../common_widget/common_appbar.dart';
 import '../order_list_page/order_list_page.dart';
 import '../owner_home/owner_home_view.dart';
+import '../restaurant/restaurant_list_view.dart';
+import '../sale/sale_list_view.dart';
 import '../staff_list/staff_list_view.dart';
 
 class OwnerDashoboard extends StatefulWidget {
@@ -61,6 +63,10 @@ class _OwnerDashoboardState extends State<OwnerDashoboard> {
             icon: Icon(Icons.bar_chart),
             label: 'Sale',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.restaurant),
+            label: 'Restaurant',
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -79,7 +85,8 @@ class _OwnerDashoboardState extends State<OwnerDashoboard> {
           DashboardPage(),
           BeautifulFoodOrderList(),
           StaffListView(),
-          Container()
+          SaleListView(),
+          RestaurantListView(),
         ],
       ),
     );

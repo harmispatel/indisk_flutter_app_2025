@@ -266,8 +266,22 @@ class ApiServices extends BaseServices {
   Future<CommonMaster?> updateFood(
       {required Map<String, String> params,
       required List<FileModel> files,
-      required Function(int p1, int p2)? onProgress}) {
-    // TODO: implement updateFood
-    throw UnimplementedError();
+      required Function(int p1, int p2)? onProgress}) async {
+    dynamic response = await appBaseClient.formDataApi(
+        url: ApiUrl.UPDATE_FOOD,
+        postParams: params,
+        files: files,
+        onProgress: onProgress,
+        requestMethod: "PUT");
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 }

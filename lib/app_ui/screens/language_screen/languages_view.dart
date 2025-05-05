@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
-import 'package:indisk_app/app_ui/screens/login/login_view.dart';
 import 'package:indisk_app/main.dart';
 import 'package:indisk_app/utils/common_colors.dart';
 import 'package:indisk_app/utils/common_styles.dart';
-import 'package:indisk_app/utils/common_utills.dart';
 
 import '../../../database/app_preferences.dart';
 import '../../../utils/app_dimens.dart';
+import '../../../utils/common_utills.dart';
+import '../login/login_view.dart';
 
 class LanguagesView extends StatefulWidget {
   const LanguagesView({super.key});
@@ -49,9 +48,13 @@ class _LanguagesViewState extends State<LanguagesView> {
                   final language = _languageCodes.keys.elementAt(index);
                   return Center(
                     child: InkWell(
-                      onTap: () {
+                      onTap: () async {
                         _selectedLanguage =
                             _languageCodes.values.elementAt(index);
+                        if (_selectedLanguage.isNotEmpty) {
+                          await SP.instance.setLanguageCode(_selectedLanguage);
+                          pushAndRemoveUntil(LoginView());
+                        }
                         setState(() {});
                       },
                       child: Stack(
@@ -100,14 +103,14 @@ class _LanguagesViewState extends State<LanguagesView> {
             ),
           ),
           Spacer(),
-          PrimaryButton(
-              text: "${language.confirm}",
-              onPressed: () async {
-                if (_selectedLanguage.isNotEmpty) {
-                  await SP.instance.setLanguageCode(_selectedLanguage);
-                  pushAndRemoveUntil(LoginView());
-                }
-              }),
+          // PrimaryButton(
+          //     text: "${language.confirm}",
+          //     onPressed: () async {
+          //       if (_selectedLanguage.isNotEmpty) {
+          //         await SP.instance.setLanguageCode(_selectedLanguage);
+          //         pushAndRemoveUntil(LoginView());
+          //       }
+          //     }),
           kBottomPadding,
         ],
       ),

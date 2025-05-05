@@ -5,7 +5,6 @@ import 'package:indisk_app/app_ui/screens/restaurent_owner/add_manager/add_manag
 import 'package:indisk_app/utils/common_colors.dart';
 import 'package:indisk_app/utils/common_styles.dart';
 import 'package:indisk_app/utils/common_utills.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../utils/app_dimens.dart';
@@ -19,7 +18,7 @@ class StaffListView extends StatefulWidget {
 class _StaffListViewState extends State<StaffListView> {
   late StaffListViewModel mViewModel;
 
-  void _addStaff({StaffListDetails? staffListDetails}) async{
+  void _addStaff({StaffListDetails? staffListDetails}) async {
     await pushToScreen(AddManagerView(
       staffListDetails: staffListDetails,
     ));
@@ -63,12 +62,12 @@ class _StaffListViewState extends State<StaffListView> {
                   width: 100.0,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: CommonColors.blie,
-                    borderRadius: BorderRadius.circular(5.0)
+                      color: CommonColors.blie,
+                      borderRadius: BorderRadius.circular(5.0)),
+                  child: Text(
+                    staff.role == 2 ? "Waiter" : "Manager",
+                    style: getBoldTextStyle(fontColor: CommonColors.white),
                   ),
-                  child: Text(staff.role == 2 ?  "Waiter" : "Manager" ,style: getBoldTextStyle(
-                    fontColor: CommonColors.white
-                  ),),
                 )
               ],
             ),
@@ -96,9 +95,9 @@ class _StaffListViewState extends State<StaffListView> {
                 kSizedBoxV20,
                 InkWell(
                   onTap: () {
-                   showDeleteStaffDialog(context, staff.name!, (){
-                     mViewModel.deleteStaff(staffId: staff.sId);
-                   });
+                    showDeleteStaffDialog(context, staff.name!, () {
+                      mViewModel.deleteStaff(staffId: staff.sId);
+                    });
                   },
                   child: Container(
                       padding: EdgeInsetsDirectional.all(5.0),
@@ -166,14 +165,17 @@ class _StaffListViewState extends State<StaffListView> {
     );
   }
 
-  void showDeleteStaffDialog(BuildContext context, String staffName, VoidCallback onConfirm) {
+  void showDeleteStaffDialog(
+      BuildContext context, String staffName, VoidCallback onConfirm) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
           title: Text("Delete Staff"),
-          content: Text("Are you sure you want to delete $staffName? This action cannot be undone."),
+          content: Text(
+              "Are you sure you want to delete $staffName? This action cannot be undone."),
           actions: [
             TextButton(
               child: Text("Cancel"),
@@ -194,5 +196,4 @@ class _StaffListViewState extends State<StaffListView> {
       },
     );
   }
-
 }

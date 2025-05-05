@@ -13,6 +13,7 @@ import '../../../utils/common_colors.dart';
 import '../../../utils/global_variables.dart';
 import '../manager/food_category/create_food_category/create_food_category_view_model.dart';
 import '../manager/food_category/food_category_list/food_category_list_view_model.dart';
+import '../manager/food_menu/edit_food/edit_food_view_model.dart';
 import '../manager/food_menu/food_list/food_list_view_model.dart';
 import '../restaurent_owner/add_manager/add_manager_view_model.dart';
 import '../restaurent_owner/staff_list/staff_list_view_model.dart';
@@ -134,6 +135,8 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => CreateFoodViewModel()),
         ChangeNotifierProvider<FoodListViewModel>(
             create: (_) => FoodListViewModel()),
+        ChangeNotifierProvider<EditFoodViewModel>(
+            create: (_) => EditFoodViewModel()),
       ],
       child: Consumer<AppModel>(
         builder: (context, appModel, child) => MaterialApp(

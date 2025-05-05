@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../api_service/models/food_list_master.dart';
 import '../../../../../utils/common_utills.dart';
+import '../edit_food/edit_food_view.dart';
 import 'food_list_view_model.dart';
 
 class FoodListView extends StatefulWidget {
@@ -22,10 +23,6 @@ class _FoodListViewState extends State<FoodListView> {
     Future.delayed(Duration.zero, () {
       mViewModel.getFoodList();
     });
-  }
-
-  void _editItem(int index) {
-    // print("Edit ${foodItems[index].name}");
   }
 
   @override
@@ -114,7 +111,7 @@ class _FoodListViewState extends State<FoodListView> {
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   SizedBox(height: 6),
-                  Text("Price: \$${item.basePrice?.toStringAsFixed(2)}",
+                  Text("Price: ${item.basePrice?.toStringAsFixed(2)} Kr",
                       style: TextStyle(fontSize: 16)),
                   Text("Quantity: ${item.availableQty}",
                       style: TextStyle(fontSize: 16)),
@@ -126,7 +123,17 @@ class _FoodListViewState extends State<FoodListView> {
             children: [
               IconButton(
                 icon: Icon(Icons.edit, color: Colors.blue),
-                onPressed: () => _editItem(index),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EditFoodView(foodItem: mViewModel.foodList[index]),
+                    ),
+                  ).then((_) {
+                    mViewModel.getFoodList();
+                  });
+                },
               ),
               IconButton(
                 icon: Icon(Icons.delete, color: Colors.red),
