@@ -3,8 +3,10 @@ class ApiParams {
   static const String username = "username";
   static const String password = "password";
   static const String name = "name";
+  static const String restaurant_name = "restaurant_name";
   static const String phone = "phone";
   static const String email = "email";
+  static const String contact = "contact";
   static const String is_blocked = "is_blocked";
   static const String created_by = "created_by";
   static const String restaurant_id = "restaurant_id";
@@ -12,6 +14,9 @@ class ApiParams {
   static const String id = "id";
   static const String is_active = "is_active";
   static const String description = "description";
+  static const String tagLine = "tagLine";
+  static const String isActive = "isActive";
+  static const String websiteLink = "websiteLink";
   static const String food_category = "food_category";
   static const String unit = "unit";
   static const String available_qty = "available_qty";

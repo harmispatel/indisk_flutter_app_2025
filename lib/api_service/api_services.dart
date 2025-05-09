@@ -10,6 +10,7 @@ import 'base_client.dart';
 import 'base_services.dart';
 import 'models/common_master.dart';
 import 'models/food_list_master.dart';
+import 'models/restaurant_master.dart';
 
 class ApiServices extends BaseServices {
   AppBaseClient appBaseClient = AppBaseClient();
@@ -273,6 +274,69 @@ class ApiServices extends BaseServices {
         files: files,
         onProgress: onProgress,
         requestMethod: "PUT");
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> createRestaurant(
+      {required Map<String, String> params,
+      required List<FileModel> files,
+      required Function(int p1, int p2)? onProgress}) async {
+    // TODO: implement createFood
+    dynamic response = await appBaseClient.formDataApi(
+        url: ApiUrl.RESTAURANT_CREATE,
+        postParams: params,
+        files: files,
+        onProgress: onProgress);
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<RestaurantMaster?> getRestaurantList(
+      {required Map<String, dynamic> params}) async {
+    // TODO: implement getFoodCategoryList
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.RESTAURANT_LIST,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return RestaurantMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> deleteRestaurant(
+      {required Map<String, dynamic> params}) async {
+    // TODO: implement deleteStaff
+    dynamic response = await appBaseClient.deleteApiCall(
+      url: ApiUrl.DELETE_RESTAURANT,
+      postParams: params,
+    );
     if (response != null) {
       try {
         return CommonMaster.fromJson(response);

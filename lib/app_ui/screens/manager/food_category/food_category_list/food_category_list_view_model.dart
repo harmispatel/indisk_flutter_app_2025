@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:indisk_app/api_service/api_para.dart';
 import 'package:indisk_app/api_service/index.dart';
@@ -19,14 +18,15 @@ class FoodCategoryListViewModel extends ChangeNotifier {
     notifyListeners();
     foodCategoryList.clear();
     FoodCategoryMaster? staffListMaster = await services.api!
-        .getFoodCategoryList(queryParams: {ApiParams.restaurant_id : gRestaurentDetails!.sId});
+        .getFoodCategoryList(
+            queryParams: {ApiParams.restaurant_id: gRestaurentDetails?.sId});
     isApiLoading = false;
     notifyListeners();
 
     if (staffListMaster != null) {
       if (staffListMaster.success != null && staffListMaster.success!) {
         foodCategoryList.addAll(staffListMaster.data!);
-      }else{
+      } else {
         showRedToastMessage(staffListMaster.message!);
       }
     } else {
@@ -37,16 +37,15 @@ class FoodCategoryListViewModel extends ChangeNotifier {
 
   Future<void> deleteFoodCategory({String? staffId}) async {
     showProgressDialog();
-    CommonMaster? staffListMaster = await services.api!
-        .deleteFoodCategory(params: {
-      ApiParams.id : staffId
-    });
+    CommonMaster? staffListMaster =
+        await services.api!.deleteFoodCategory(params: {ApiParams.id: staffId});
     hideProgressDialog();
 
     if (staffListMaster != null) {
       if (staffListMaster.success != null && staffListMaster.success!) {
-        foodCategoryList.removeWhere((staffDetails) =>  staffDetails.sId == staffId);
-      }else{
+        foodCategoryList
+            .removeWhere((staffDetails) => staffDetails.sId == staffId);
+      } else {
         showRedToastMessage(staffListMaster.message!);
       }
     } else {

@@ -7,6 +7,7 @@ import 'package:indisk_app/utils/common_utills.dart';
 import 'package:indisk_app/utils/local_images.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../utils/global_variables.dart';
 import '../create_food_category/create_food_category_view.dart';
 
 class FoodCategoryListView extends StatefulWidget {
@@ -22,6 +23,7 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
     // TODO: implement initState
     super.initState();
     Future.delayed(Duration.zero, () {
+      print("Restaurant Id is :: ${gRestaurentDetails?.sId}");
       mViewModel.getFoodCategoryList();
     });
   }
@@ -64,7 +66,8 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
                       return FoodCard(
                         category: category,
                         onDelete: () {
-                          mViewModel.deleteFoodCategory();
+                          mViewModel.deleteFoodCategory(
+                              staffId: mViewModel.foodCategoryList[index].sId);
                         },
                       );
                     },

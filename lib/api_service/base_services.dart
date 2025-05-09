@@ -4,6 +4,7 @@ import 'package:indisk_app/api_service/models/login_master.dart';
 
 import 'models/common_master.dart';
 import 'models/food_list_master.dart';
+import 'models/restaurant_master.dart';
 import 'models/staff_list_master.dart';
 
 abstract class BaseServices {
@@ -58,4 +59,15 @@ abstract class BaseServices {
   Future<FoodListMaster?> getFoodList({required Map<String, dynamic> params});
 
   Future<CommonMaster?> deleteFood({required Map<String, dynamic> params});
+
+  Future<CommonMaster?> createRestaurant(
+      {required Map<String, String> params,
+      required List<FileModel> files,
+      required Function(int p1, int p2)? onProgress});
+
+  Future<RestaurantMaster?> getRestaurantList(
+      {required Map<String, dynamic> params});
+
+  Future<CommonMaster?> deleteRestaurant(
+      {required Map<String, dynamic> params});
 }

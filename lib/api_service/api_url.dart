@@ -15,4 +15,7 @@ class ApiUrl {
   static String UPDATE_FOOD = "${BASE_URL}update-food";
   static String DELETE_FOOD = "${BASE_URL}delete-food";
   static String GET_FOOD = "${BASE_URL}get-food-list";
+  static String RESTAURANT_CREATE = "${BASE_URL}restaurant-create";
+  static String RESTAURANT_LIST = "${BASE_URL}restaurant-list";
+  static String DELETE_RESTAURANT = "${BASE_URL}restaurant-delete";
 }

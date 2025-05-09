@@ -16,6 +16,8 @@ import '../manager/food_category/food_category_list/food_category_list_view_mode
 import '../manager/food_menu/edit_food/edit_food_view_model.dart';
 import '../manager/food_menu/food_list/food_list_view_model.dart';
 import '../restaurent_owner/add_manager/add_manager_view_model.dart';
+import '../restaurent_owner/restaurant/add_restaurant/add_restaurant_view_model.dart';
+import '../restaurent_owner/restaurant/restaurant_list_view_model.dart';
 import '../restaurent_owner/staff_list/staff_list_view_model.dart';
 import '../splash/splash_view.dart';
 import '../splash/splash_view_model.dart';
@@ -137,6 +139,10 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => FoodListViewModel()),
         ChangeNotifierProvider<EditFoodViewModel>(
             create: (_) => EditFoodViewModel()),
+        ChangeNotifierProvider<RestaurantViewModel>(
+            create: (_) => RestaurantViewModel()),
+        ChangeNotifierProvider<RestaurantListViewModel>(
+            create: (_) => RestaurantListViewModel()),
       ],
       child: Consumer<AppModel>(
         builder: (context, appModel, child) => MaterialApp(

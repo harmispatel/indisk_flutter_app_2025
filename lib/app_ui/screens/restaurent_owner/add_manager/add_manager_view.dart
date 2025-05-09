@@ -5,7 +5,6 @@ import 'package:indisk_app/app_ui/common_widget/common_textfield.dart';
 import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
 import 'package:indisk_app/main.dart';
 import 'package:indisk_app/utils/app_constants.dart';
-import 'package:indisk_app/utils/app_dimens.dart';
 import 'package:indisk_app/utils/common_utills.dart';
 import 'package:indisk_app/utils/global_variables.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +13,9 @@ import '../../../../utils/common_colors.dart';
 import 'add_manager_view_model.dart';
 
 class AddManagerView extends StatefulWidget {
-
   final StaffListDetails? staffListDetails;
 
-  const AddManagerView({super.key,this.staffListDetails});
+  const AddManagerView({super.key, this.staffListDetails});
 
   @override
   _AddManagerViewState createState() => _AddManagerViewState();
@@ -37,16 +35,20 @@ class _AddManagerViewState extends State<AddManagerView> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      if(widget.staffListDetails != null){
+      if (widget.staffListDetails != null) {
         mViewModel.updateManager(
-          id: widget.staffListDetails!.sId,
+            id: widget.staffListDetails!.sId,
             phone: _phoneController.text.trim(),
             name: _nameController.text,
             email: _emailController.text.trim(),
             password: _passwordController.text,
             username: _usernameController.text.trim(),
-            role: gLoginDetails!.role !=  AppConstants.ROLE_OWNER ? 2 : selectedRole == "Manager" ? 1 : 2);
-      }else{
+            role: gLoginDetails!.role != AppConstants.ROLE_OWNER
+                ? 2
+                : selectedRole == "Manager"
+                    ? 1
+                    : 2);
+      } else {
         if (mViewModel.profileImage != null) {
           mViewModel.createManager(
               phone: _phoneController.text.trim(),
@@ -54,12 +56,15 @@ class _AddManagerViewState extends State<AddManagerView> {
               email: _emailController.text.trim(),
               password: _passwordController.text,
               username: _usernameController.text.trim(),
-              role: gLoginDetails!.role !=  AppConstants.ROLE_OWNER ? 2 : selectedRole == "Manager" ? 1 : 2);
+              role: gLoginDetails!.role != AppConstants.ROLE_OWNER
+                  ? 2
+                  : selectedRole == "Manager"
+                      ? 1
+                      : 2);
         } else {
           showRedToastMessage("Please select profile photo");
         }
       }
-
     }
   }
 
@@ -67,24 +72,21 @@ class _AddManagerViewState extends State<AddManagerView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration.zero,(){
-      if(widget.staffListDetails != null){
+    Future.delayed(Duration.zero, () {
+      if (widget.staffListDetails != null) {
         _nameController.text = widget.staffListDetails!.name!;
         _usernameController.text = widget.staffListDetails!.username!;
         _phoneController.text = widget.staffListDetails!.phone!;
         _emailController.text = widget.staffListDetails!.email!;
         _passwordController.text = widget.staffListDetails!.password!;
-        if(widget.staffListDetails!.role == 1){
+        if (widget.staffListDetails!.role == 1) {
           selectedRole = "Manager";
-        }else if(widget.staffListDetails!.role == 2){
+        } else if (widget.staffListDetails!.role == 2) {
           selectedRole = "Waiter";
         }
-
       }
       mViewModel.resetAll();
-      setState(() {
-
-      });
+      setState(() {});
     });
   }
 
@@ -96,10 +98,17 @@ class _AddManagerViewState extends State<AddManagerView> {
         title: "Add Staff",
         isBackButtonVisible: true,
       ),
-      bottomSheet: Container(
+      bottomNavigationBar: Container(
         padding: EdgeInsetsDirectional.only(
             bottom: MediaQuery.of(context).viewPadding.bottom),
-        child: PrimaryButton(text: widget.staffListDetails != null ? "Update Employee":"Save Employee", onPressed: _submit),
+        child: Padding(
+          padding: const EdgeInsets.only(right: 15, left: 15),
+          child: PrimaryButton(
+              text: widget.staffListDetails != null
+                  ? "Update Employee"
+                  : "Save Employee",
+              onPressed: _submit),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -118,21 +127,26 @@ class _AddManagerViewState extends State<AddManagerView> {
                         radius: 100,
                         backgroundImage: mViewModel.profileImage != null
                             ? FileImage(mViewModel.profileImage!)
-                            : (widget.staffListDetails != null && widget.staffListDetails!.image != null) ? NetworkImage(widget.staffListDetails!.image!) : null,
+                            : (widget.staffListDetails != null &&
+                                    widget.staffListDetails!.image != null)
+                                ? NetworkImage(widget.staffListDetails!.image!)
+                                : null,
                         child: mViewModel.profileImage == null
-                            ? (widget.staffListDetails != null && widget.staffListDetails!.image != null) ? null :Icon(Icons.camera_alt, size: 40)
+                            ? (widget.staffListDetails != null &&
+                                    widget.staffListDetails!.image != null)
+                                ? null
+                                : Icon(Icons.camera_alt, size: 40)
                             : null,
                       ),
                       Align(
                         alignment: AlignmentDirectional.bottomEnd,
                         child: Container(
-                          height: 50.0,
-                          width: 50.0,
-                          padding: EdgeInsetsDirectional.all(5.0),
+                            height: 50.0,
+                            width: 50.0,
+                            padding: EdgeInsetsDirectional.all(5.0),
                             decoration: BoxDecoration(
-                              color: CommonColors.primaryColor,
-                              shape: BoxShape.circle
-                            ),
+                                color: CommonColors.primaryColor,
+                                shape: BoxShape.circle),
                             child: Center(child: Icon(Icons.edit))),
                       )
                     ],
@@ -152,32 +166,33 @@ class _AddManagerViewState extends State<AddManagerView> {
                   keyboardType: TextInputType.emailAddress),
               _buildTextField(_passwordController, "${language.password}",
                   Icons.lock, true),
-             if(gLoginDetails!.role ==  AppConstants.ROLE_OWNER) Container(
-                margin: EdgeInsetsDirectional.symmetric(vertical: 10.0),
-                padding: EdgeInsetsDirectional.symmetric(
-                    horizontal: 10.0, vertical: 5.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(color: CommonColors.grey, width: 1.0)),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: selectedRole,
-                    hint: Text("Select Role"),
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    items: <String>['Manager', 'Waiter'].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (_) {
-                      selectedRole = _;
-                      setState(() {});
-                    },
+              if (gLoginDetails!.role == AppConstants.ROLE_OWNER)
+                Container(
+                  margin: EdgeInsetsDirectional.symmetric(vertical: 10.0),
+                  padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: 10.0, vertical: 5.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: CommonColors.grey, width: 1.0)),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: selectedRole,
+                      hint: Text("Select Role"),
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      items: <String>['Manager', 'Waiter'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (_) {
+                        selectedRole = _;
+                        setState(() {});
+                      },
+                    ),
                   ),
-                ),
-              )
+                )
             ],
           ),
         ),
@@ -189,10 +204,9 @@ class _AddManagerViewState extends State<AddManagerView> {
     TextEditingController controller,
     String label,
     IconData icon,
-
     bool isObscure, {
     TextInputType keyboardType = TextInputType.text,
-        bool isEnable = true,
+    bool isEnable = true,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
