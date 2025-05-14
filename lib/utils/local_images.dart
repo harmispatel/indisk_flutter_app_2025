@@ -1,6 +1,4 @@
-
- class LocalImages{
-
+class LocalImages {
   static final String appLogo = "assets/icons/app_logo.png";
   static final String img_food_category = "assets/images/img_food_category.png";
   static final String img_food = "assets/images/img_food.png";
@@ -8,6 +6,6 @@
   static final String img_orders = "assets/images/img_orders.png";
   static final String img_staff = "assets/images/img_staff.png";
   static final String img_training = "assets/images/img_training.png";
-
-
- }
+  static final String img_best_seller = "assets/images/img_best_seller.png";
+  static final String img_best_seller_2 = "assets/images/img_best_seller_2.png";
+}

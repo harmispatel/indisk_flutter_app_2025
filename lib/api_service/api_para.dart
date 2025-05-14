@@ -16,6 +16,7 @@ class ApiParams {
   static const String description = "description";
   static const String tagLine = "tagLine";
   static const String isActive = "isActive";
+  static const String status = "status";
   static const String websiteLink = "websiteLink";
   static const String food_category = "food_category";
   static const String unit = "unit";
@@ -34,4 +35,8 @@ class ApiParams {
   static const String image_url = "image_url";
   static const String foodData = "foodData";
   static const String user_id = "user_id";
+  static const String owner_id = "owner_id";
+  static const String address = "address";
+  static const String location = "location";
+  static const String cuisine_type = "cuisine_type";
 }

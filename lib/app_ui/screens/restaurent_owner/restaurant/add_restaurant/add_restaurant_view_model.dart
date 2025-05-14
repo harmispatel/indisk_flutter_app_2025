@@ -59,29 +59,33 @@ class RestaurantViewModel with ChangeNotifier {
   }
 
   Future<void> createRestaurant({
-    required userId,
-    required name,
+    required ownerId,
     required email,
-    required contact,
-    required description,
-    required tagLine,
-    required websiteLink,
+    required password,
+    required phone,
+    required name,
+    required address,
     required status,
+    required description,
+    required location,
+    required cuisineType,
   }) async {
     showProgressDialog();
     CommonMaster? commonMaster = await services.api!.createRestaurant(
         params: {
-          ApiParams.restaurant_name: name,
+          ApiParams.owner_id: ownerId,
           ApiParams.email: email,
-          ApiParams.contact: contact,
+          ApiParams.password: password,
+          ApiParams.phone: phone,
+          ApiParams.name: name,
+          ApiParams.address: address,
+          ApiParams.status: status,
           ApiParams.description: description,
-          ApiParams.tagLine: tagLine,
-          ApiParams.isActive: status,
-          ApiParams.websiteLink: websiteLink,
-          ApiParams.user_id: userId,
+          ApiParams.location: location,
+          ApiParams.cuisine_type: cuisineType,
         },
         files: [
-          FileModel(profileImage!.path, "logo")
+          FileModel(profileImage!.path, "image")
         ],
         onProgress: (bytes, totalBytes) {
           print("Progress == ${bytes / totalBytes}");

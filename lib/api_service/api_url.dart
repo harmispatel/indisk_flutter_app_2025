@@ -18,4 +18,5 @@ class ApiUrl {
   static String RESTAURANT_CREATE = "${BASE_URL}restaurant-create";
   static String RESTAURANT_LIST = "${BASE_URL}restaurant-list";
   static String DELETE_RESTAURANT = "${BASE_URL}restaurant-delete";
+  static String GET_OWNER_HOME = "${BASE_URL}get-owner-home";
 }

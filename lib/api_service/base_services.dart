@@ -4,6 +4,7 @@ import 'package:indisk_app/api_service/models/login_master.dart';
 
 import 'models/common_master.dart';
 import 'models/food_list_master.dart';
+import 'models/owner_home_master.dart';
 import 'models/restaurant_master.dart';
 import 'models/staff_list_master.dart';
 
@@ -70,4 +71,6 @@ abstract class BaseServices {
 
   Future<CommonMaster?> deleteRestaurant(
       {required Map<String, dynamic> params});
+
+  Future<OwnerHomeMaster?> getOwnerHome({required Map<String, dynamic> params});
 }

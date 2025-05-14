@@ -21,10 +21,12 @@ class _AddRestaurantViewState extends State<AddRestaurantView> {
   String _status = 'active';
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _passController = TextEditingController();
+  final _contactController = TextEditingController();
+  final _addressController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _tagLineController = TextEditingController();
-  final _websiteLinkController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _cuisineController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +47,17 @@ class _AddRestaurantViewState extends State<AddRestaurantView> {
             onPressed: () {
               if (isValid()) {
                 mViewModel.createRestaurant(
-                    name: _nameController.text.trim(),
-                    email: _emailController.text.trim(),
-                    contact: _phoneController.text.trim(),
-                    description: _descriptionController.text.trim(),
-                    tagLine: _tagLineController.text.trim(),
-                    websiteLink: _websiteLinkController.text.trim(),
-                    status: _status,
-                    userId: gLoginDetails!.sId!);
+                  name: _nameController.text.trim(),
+                  email: _emailController.text.trim(),
+                  phone: _contactController.text.trim(),
+                  description: _descriptionController.text.trim(),
+                  status: _status,
+                  ownerId: gLoginDetails!.sId!,
+                  password: _passController.text.trim(),
+                  address: _addressController.text.trim(),
+                  location: _locationController.text.trim(),
+                  cuisineType: _cuisineController.text.trim(),
+                );
               }
             },
           ),
@@ -103,16 +108,19 @@ class _AddRestaurantViewState extends State<AddRestaurantView> {
             SizedBox(height: 20),
             _buildTextField(_nameController, "Name", Icons.restaurant, false),
             _buildTextField(
-                _emailController, "email", Icons.email_rounded, false),
-            _buildTextField(_phoneController, "Contact", Icons.phone, false,
+                _emailController, "Email", Icons.email_rounded, false,
+                keyboardType: TextInputType.emailAddress),
+            _buildTextField(_passController, "Password", Icons.password, true),
+            _buildTextField(_contactController, "Contact", Icons.phone, false,
                 keyboardType: TextInputType.phone),
             _buildTextField(
-                _descriptionController, "Description", Icons.description, false,
-                keyboardType: TextInputType.emailAddress),
-            _buildTextField(
-                _tagLineController, "Tag Line", Icons.storefront, false),
-            _buildTextField(
-                _websiteLinkController, "Website Link", Icons.link, false),
+                _addressController, "Address", Icons.business, false),
+            _buildTextField(_descriptionController, "Description",
+                Icons.description, false),
+            _buildTextField(_locationController, "Location",
+                Icons.location_on_outlined, false),
+            _buildTextField(_cuisineController, "Cuisine type",
+                Icons.restaurant_menu, false),
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -207,17 +215,26 @@ class _AddRestaurantViewState extends State<AddRestaurantView> {
     } else if (_nameController.text.trim().isEmpty) {
       showRedToastMessage("Please Enter Name");
       return false;
-    } else if (_phoneController.text.trim().isEmpty) {
+    } else if (_emailController.text.trim().isEmpty) {
+      showRedToastMessage("Please Enter Email Address");
+      return false;
+    } else if (_passController.text.trim().isEmpty) {
+      showRedToastMessage("Please Enter Password");
+      return false;
+    } else if (_contactController.text.trim().isEmpty) {
       showRedToastMessage("Please Enter Contact Number");
+      return false;
+    } else if (_addressController.text.trim().isEmpty) {
+      showRedToastMessage("Please Enter Address");
       return false;
     } else if (_descriptionController.text.trim().isEmpty) {
       showRedToastMessage("Please Enter Description");
       return false;
-    } else if (_tagLineController.text.trim().isEmpty) {
-      showRedToastMessage("Please Enter Tag Line");
+    } else if (_locationController.text.trim().isEmpty) {
+      showRedToastMessage("Please Enter Location");
       return false;
-    } else if (_websiteLinkController.text.trim().isEmpty) {
-      showRedToastMessage("Please Enter Website Link");
+    } else if (_cuisineController.text.trim().isEmpty) {
+      showRedToastMessage("Please Enter Cuisine type");
       return false;
     } else {
       return true;

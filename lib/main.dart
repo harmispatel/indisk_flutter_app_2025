@@ -20,7 +20,7 @@ Future<void> main() async {
   await initialize(aLocaleLanguageList: languageList());
   Services().configAPI();
   await Future.delayed(const Duration(milliseconds: 300));
-  runApp( AppView());
+  runApp(AppView());
 }
 
 List<LanguageDataModel> languageList() {
@@ -32,7 +32,6 @@ List<LanguageDataModel> languageList() {
         languageCode: 'en',
         fullLanguageCode: 'en_en-US',
         flag: 'assets/flag/ic_us.png'),
-
     LanguageDataModel(
         id: 2,
         name: 'Danish',
@@ -40,8 +39,5 @@ List<LanguageDataModel> languageList() {
         languageCode: 'da',
         fullLanguageCode: 'da-DK',
         flag: 'assets/flag/ic_de.png'),
-
   ];
 }
-
-

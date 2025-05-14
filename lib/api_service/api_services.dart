@@ -10,6 +10,7 @@ import 'base_client.dart';
 import 'base_services.dart';
 import 'models/common_master.dart';
 import 'models/food_list_master.dart';
+import 'models/owner_home_master.dart';
 import 'models/restaurant_master.dart';
 
 class ApiServices extends BaseServices {
@@ -291,7 +292,6 @@ class ApiServices extends BaseServices {
       {required Map<String, String> params,
       required List<FileModel> files,
       required Function(int p1, int p2)? onProgress}) async {
-    // TODO: implement createFood
     dynamic response = await appBaseClient.formDataApi(
         url: ApiUrl.RESTAURANT_CREATE,
         postParams: params,
@@ -312,7 +312,6 @@ class ApiServices extends BaseServices {
   @override
   Future<RestaurantMaster?> getRestaurantList(
       {required Map<String, dynamic> params}) async {
-    // TODO: implement getFoodCategoryList
     dynamic response = await appBaseClient.postApiCall(
       url: ApiUrl.RESTAURANT_LIST,
       postParams: params,
@@ -332,7 +331,6 @@ class ApiServices extends BaseServices {
   @override
   Future<CommonMaster?> deleteRestaurant(
       {required Map<String, dynamic> params}) async {
-    // TODO: implement deleteStaff
     dynamic response = await appBaseClient.deleteApiCall(
       url: ApiUrl.DELETE_RESTAURANT,
       postParams: params,
@@ -340,6 +338,25 @@ class ApiServices extends BaseServices {
     if (response != null) {
       try {
         return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<OwnerHomeMaster?> getOwnerHome(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.GET_OWNER_HOME,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return OwnerHomeMaster.fromJson(response);
       } on Exception catch (e) {
         log("Exception :: $e");
         return null;
