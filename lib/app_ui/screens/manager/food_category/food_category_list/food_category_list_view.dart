@@ -23,7 +23,7 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
     // TODO: implement initState
     super.initState();
     Future.delayed(Duration.zero, () {
-      print("Restaurant Id is :: ${gRestaurentDetails?.sId}");
+      print("Restaurant Id is :: ${gRestaurantDetails?.sId}");
       mViewModel.getFoodCategoryList();
     });
   }

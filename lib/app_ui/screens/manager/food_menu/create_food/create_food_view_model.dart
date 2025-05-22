@@ -48,7 +48,7 @@ class CreateFoodViewModel extends ChangeNotifier {
         params: {
           ApiParams.name: name,
           ApiParams.description: description,
-          ApiParams.restaurant_id: gRestaurentDetails!.sId!,
+          ApiParams.restaurant_id: gRestaurantDetails!.sId!,
           ApiParams.created_by: gLoginDetails!.sId!,
           ApiParams.food_category: selectedFoodCategory!.sId!,
           ApiParams.cooking_time: cookingTime,
@@ -92,7 +92,7 @@ class CreateFoodViewModel extends ChangeNotifier {
       ApiParams.name: name,
       ApiParams.description: decsription,
       ApiParams.is_active: isActive!,
-      ApiParams.restaurant_id: gRestaurentDetails!.sId!,
+      ApiParams.restaurant_id: gRestaurantDetails!.sId!,
       ApiParams.id: id,
     }, files: fileList, onProgress: (bytes, totalBytes) {});
     hideProgressDialog();
@@ -165,7 +165,7 @@ class CreateFoodViewModel extends ChangeNotifier {
     foodCategoryList.clear();
     FoodCategoryMaster? staffListMaster = await services.api!
         .getFoodCategoryList(
-            queryParams: {ApiParams.restaurant_id: gRestaurentDetails!.sId});
+            queryParams: {ApiParams.restaurant_id: gRestaurantDetails!.sId});
     isApiLoading = false;
     notifyListeners();
 

@@ -77,7 +77,7 @@ class CreateFoodCategoryViewModel extends ChangeNotifier {
       ApiParams.name: name,
       ApiParams.description: decsription,
       ApiParams.is_active: isActive!,
-      ApiParams.restaurant_id: gRestaurentDetails!.sId!,
+      ApiParams.restaurant_id: gRestaurantDetails!.sId!,
       // ApiParams.created_by: gLoginDetails!.sId!,
     }, files: [
       FileModel(profileImage!.path, "image_url")
@@ -107,7 +107,7 @@ class CreateFoodCategoryViewModel extends ChangeNotifier {
       ApiParams.name: name,
       ApiParams.description: decsription,
       ApiParams.is_active: isActive!,
-      ApiParams.restaurant_id: gRestaurentDetails!.sId!,
+      ApiParams.restaurant_id: gRestaurantDetails!.sId!,
       ApiParams.id: id,
     }, files: [
       if (profileImage != null) FileModel(profileImage!.path, "image_url")

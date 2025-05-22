@@ -10,7 +10,9 @@ import 'base_client.dart';
 import 'base_services.dart';
 import 'models/common_master.dart';
 import 'models/food_list_master.dart';
+import 'models/get_profile_master.dart';
 import 'models/owner_home_master.dart';
+import 'models/restaurant_details_master.dart';
 import 'models/restaurant_master.dart';
 
 class ApiServices extends BaseServices {
@@ -357,6 +359,111 @@ class ApiServices extends BaseServices {
     if (response != null) {
       try {
         return OwnerHomeMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> editRestaurant(
+      {required Map<String, String> params,
+      required List<FileModel> files,
+      required Function(int p1, int p2)? onProgress}) async {
+    dynamic response = await appBaseClient.formDataApi(
+        url: ApiUrl.EDIT_RESTAURANT,
+        postParams: params,
+        files: files,
+        onProgress: onProgress,
+        requestMethod: "PUT");
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> changePassword(
+      {required Map<String, dynamic> params}) async {
+    // TODO: implement getFoodCategoryList
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.CHANGE_PASSWORD,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<GetProfileMaster?> getProfile(
+      {required Map<String, dynamic> params}) async {
+    // TODO: implement getFoodCategoryList
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.GET_PROFILE,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return GetProfileMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> updateOwnerProfile(
+      {required Map<String, String> params,
+        required List<FileModel> files,
+        required Function(int p1, int p2)? onProgress}) async {
+    dynamic response = await appBaseClient.formDataApi(
+        url: ApiUrl.EDIT_PROFILE,
+        postParams: params,
+        files: files,
+        onProgress: onProgress,
+        requestMethod: "POST");
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<RestaurantDetailsMaster?> getRestaurantDetails(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.GET_RESTAURANT_DETAILS,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return RestaurantDetailsMaster.fromJson(response);
       } on Exception catch (e) {
         log("Exception :: $e");
         return null;

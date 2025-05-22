@@ -29,56 +29,72 @@ class RestaurantMaster {
 
 class RestaurantData {
   String? sId;
-  String? userId;
-  String? restaurantName;
+  String? ownerId;
   String? email;
-  int? contact;
-  String? logo;
+  String? password;
+  String? phone;
+  String? name;
+  String? address;
+  String? image;
+  String? status;
   String? description;
-  String? tagLine;
-  String? isActive;
-  String? websiteLink;
+  String? location;
+  String? cuisineType;
+  String? createdAt;
+  String? updatedAt;
   int? iV;
 
   RestaurantData(
       {this.sId,
-      this.userId,
-      this.restaurantName,
+      this.ownerId,
       this.email,
-      this.contact,
-      this.logo,
+      this.password,
+      this.phone,
+      this.name,
+      this.address,
+      this.image,
+      this.status,
       this.description,
-      this.tagLine,
-      this.isActive,
-      this.websiteLink,
+      this.location,
+      this.cuisineType,
+      this.createdAt,
+      this.updatedAt,
       this.iV});
 
   RestaurantData.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    userId = json['user_id'];
-    restaurantName = json['restaurant_name'];
+    ownerId = json['owner_id'];
     email = json['email'];
-    contact = json['contact'];
-    logo = json['logo'];
+    password = json['password'];
+    phone = json['phone'];
+    name = json['name'];
+    address = json['address'];
+    image = json['image'];
+    status = json['status'];
     description = json['description'];
-    tagLine = json['tagLine'];
-    isActive = json['isActive'];
-    websiteLink = json['website_link'];
+    location = json['location'];
+    cuisineType = json['cuisine_type'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
     iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
-    data['user_id'] = this.userId;
-    data['restaurant_name'] = this.restaurantName;
+    data['owner_id'] = this.ownerId;
     data['email'] = this.email;
-    data['contact'] = this.contact;
-    data['logo'] = this.logo;
+    data['password'] = this.password;
+    data['phone'] = this.phone;
+    data['name'] = this.name;
+    data['address'] = this.address;
+    data['image'] = this.image;
+    data['status'] = this.status;
     data['description'] = this.description;
-    data['tagLine'] = this.tagLine;
-    data['isActive'] = this.isActive;
-    data['website_link'] = this.websiteLink;
+    data['location'] = this.location;
+    data['cuisine_type'] = this.cuisineType;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     data['__v'] = this.iV;
     return data;
   }

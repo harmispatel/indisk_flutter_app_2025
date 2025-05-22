@@ -19,7 +19,7 @@ class FoodCategoryListViewModel extends ChangeNotifier {
     foodCategoryList.clear();
     FoodCategoryMaster? staffListMaster = await services.api!
         .getFoodCategoryList(
-            queryParams: {ApiParams.restaurant_id: gRestaurentDetails?.sId});
+            queryParams: {ApiParams.restaurant_id: gRestaurantDetails?.sId});
     isApiLoading = false;
     notifyListeners();
 

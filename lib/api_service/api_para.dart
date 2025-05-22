@@ -6,6 +6,9 @@ class ApiParams {
   static const String restaurant_name = "restaurant_name";
   static const String phone = "phone";
   static const String email = "email";
+  static const String gender = "gender";
+  static const String currentPassword = "currentPassword";
+  static const String newPassword = "newPassword";
   static const String contact = "contact";
   static const String is_blocked = "is_blocked";
   static const String created_by = "created_by";

@@ -19,8 +19,9 @@ class LoginViewModel extends ChangeNotifier {
       showProgressDialog();
 
       final loginMaster = await services.api?.login(params: {
-        ApiParams.username: username,
+        ApiParams.email: username,
         ApiParams.password: password,
+        ApiParams.role: "owner"
       });
 
       hideProgressDialog();
@@ -50,7 +51,7 @@ class LoginViewModel extends ChangeNotifier {
 
       // Store restaurant details if available
       if (loginMaster.restaurantDetails != null) {
-        gRestaurentDetails = loginMaster.restaurantDetails;
+        gRestaurantDetails = loginMaster.restaurantDetails;
         await SP.instance.setRestaurentDetails(
           jsonEncode(loginMaster.restaurantDetails!),
         );
@@ -62,7 +63,7 @@ class LoginViewModel extends ChangeNotifier {
           pushAndRemoveUntil(ManagerDashboardView());
           break;
         default:
-          pushAndRemoveUntil(OwnerDashoboard());
+          pushAndRemoveUntil(OwnerDashboard());
       }
     } catch (e) {
       hideProgressDialog();

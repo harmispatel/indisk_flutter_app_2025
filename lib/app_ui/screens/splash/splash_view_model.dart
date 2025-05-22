@@ -27,7 +27,7 @@ class SplashViewModel with ChangeNotifier {
     loginDetails = await SP.instance.getUserDetails();
     restaurantDetails = await SP.instance.getRestaurentDetails();
     gLoginDetails = loginDetails;
-    gRestaurentDetails = restaurantDetails;
+    gRestaurantDetails = restaurantDetails;
 
 
     startTimer();

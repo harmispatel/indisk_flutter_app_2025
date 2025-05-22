@@ -9,7 +9,6 @@ import '../../../../utils/global_variables.dart';
 
 class RestaurantListViewModel with ChangeNotifier {
   Services services = Services();
-
   List<RestaurantData> restaurantList = [];
 
   bool isApiLoading = false;
@@ -19,7 +18,7 @@ class RestaurantListViewModel with ChangeNotifier {
     notifyListeners();
     restaurantList.clear();
     RestaurantMaster? staffListMaster = await services.api!
-        .getRestaurantList(params: {ApiParams.user_id: gLoginDetails!.sId!});
+        .getRestaurantList(params: {ApiParams.owner_id: gLoginDetails!.sId!});
     isApiLoading = false;
     notifyListeners();
 
@@ -38,7 +37,7 @@ class RestaurantListViewModel with ChangeNotifier {
   Future<void> deleteRestaurant({String? id}) async {
     showProgressDialog();
     CommonMaster? staffListMaster = await services.api!.deleteRestaurant(
-        params: {ApiParams.id: id, ApiParams.user_id: gLoginDetails!.sId!});
+        params: {ApiParams.id: id, ApiParams.owner_id: gLoginDetails!.sId!});
     hideProgressDialog();
 
     if (staffListMaster != null) {

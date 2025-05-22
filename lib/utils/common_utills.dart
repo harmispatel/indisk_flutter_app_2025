@@ -11,7 +11,6 @@ import 'package:indisk_app/app_ui/screens/app/app_view.dart';
 import 'package:indisk_app/app_ui/screens/manager/manager_dashboard/manager_dasbboard_view.dart';
 import 'package:indisk_app/app_ui/screens/restaurent_owner/owner_dashboard/owner_dashoboard.dart';
 import 'package:indisk_app/utils/app_constants.dart';
-import 'package:indisk_app/utils/common_colors.dart';
 import 'package:intl/intl.dart';
 
 import 'common_styles.dart';
@@ -19,8 +18,8 @@ import 'global_variables.dart';
 import 'local_images.dart';
 
 pushToScreen(Widget screen) {
-
-  Navigator.push(mainNavKey.currentContext!, CupertinoPageRoute(builder: (context){
+  Navigator.push(mainNavKey.currentContext!,
+      CupertinoPageRoute(builder: (context) {
     return screen;
   }));
 
@@ -37,7 +36,7 @@ pushToScreen(Widget screen) {
 pushAndRemoveUntil(Widget screen) {
   Navigator.pushAndRemoveUntil(
     mainNavKey.currentContext!,
-    CupertinoPageRoute(builder: (context){
+    CupertinoPageRoute(builder: (context) {
       return screen;
     }),
     (route) => false,
@@ -315,11 +314,10 @@ bool isValidPhoneNumber(String value) {
   return true;
 }
 
-void redirectBasedOnRole({required LoginDetails loginDetails}){
-  if(loginDetails.role == AppConstants.ROLE_OWNER){
-    pushAndRemoveUntil(OwnerDashoboard());
-  }else if(loginDetails.role == AppConstants.ROLE_MANAGER){
+void redirectBasedOnRole({required LoginDetails loginDetails}) {
+  if (loginDetails.role == AppConstants.ROLE_OWNER) {
+    pushAndRemoveUntil(OwnerDashboard());
+  } else if (loginDetails.role == AppConstants.ROLE_MANAGER) {
     pushAndRemoveUntil(ManagerDashboardView());
   }
-
 }

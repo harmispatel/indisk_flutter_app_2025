@@ -7,7 +7,9 @@ import '../../../../utils/common_colors.dart';
 import '../../../../utils/common_styles.dart';
 import '../../../../utils/common_utills.dart';
 import '../../../common_widget/common_image.dart';
+import '../restaurant_details/restaurant_details_view.dart';
 import 'add_restaurant/add_restaurant_view.dart';
+import 'edit_restaurant/edit_restaurant_view.dart';
 
 class RestaurantListView extends StatefulWidget {
   const RestaurantListView({super.key});
@@ -68,21 +70,19 @@ class _RestaurantListViewState extends State<RestaurantListView> {
                                 height: 100.0,
                                 width: 100.0,
                                 imageUrl:
-                                    mViewModel.restaurantList[index].logo ??
+                                    mViewModel.restaurantList[index].image ??
                                         ''),
                             kSizedBoxH20,
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  mViewModel.restaurantList[index]
-                                          .restaurantName ??
-                                      '',
+                                  mViewModel.restaurantList[index].name ?? '',
                                   style: getBoldTextStyle(fontSize: 20.0),
                                 ),
                                 kSizedBoxV5,
                                 Text(
-                                  "+91 ${mViewModel.restaurantList[index].contact.toString() ?? ''}",
+                                  "+91 ${mViewModel.restaurantList[index].phone.toString() ?? ''}",
                                   style: getNormalTextStyle(fontSize: 16.0),
                                 ),
                                 kSizedBoxV5,
@@ -100,7 +100,43 @@ class _RestaurantListViewState extends State<RestaurantListView> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () async {
+                                    await pushToScreen(
+                                      EditRestaurantView(
+                                        name: mViewModel
+                                                .restaurantList[index].name ??
+                                            '--',
+                                        email: mViewModel
+                                                .restaurantList[index].email ??
+                                            '--',
+                                        contact: mViewModel
+                                                .restaurantList[index].phone ??
+                                            '--',
+                                        address: mViewModel
+                                                .restaurantList[index]
+                                                .address ??
+                                            '--',
+                                        description: mViewModel
+                                                .restaurantList[index]
+                                                .description ??
+                                            '--',
+                                        location: mViewModel
+                                                .restaurantList[index]
+                                                .location ??
+                                            '--',
+                                        cuisine: mViewModel
+                                                .restaurantList[index]
+                                                .cuisineType ??
+                                            '--',
+                                        status: mViewModel
+                                                .restaurantList[index].status ??
+                                            '--',
+                                        image: mViewModel
+                                                .restaurantList[index].image ??
+                                            '--',
+                                      ),
+                                    );
+                                  },
                                   child: Container(
                                       padding: EdgeInsetsDirectional.all(5.0),
                                       decoration: BoxDecoration(
@@ -112,7 +148,7 @@ class _RestaurantListViewState extends State<RestaurantListView> {
                                         color: CommonColors.white,
                                       )),
                                 ),
-                                kSizedBoxV20,
+                                kSizedBoxV10,
                                 InkWell(
                                   onTap: () {
                                     mViewModel.deleteRestaurant(
@@ -129,7 +165,30 @@ class _RestaurantListViewState extends State<RestaurantListView> {
                                         Icons.delete,
                                         color: CommonColors.white,
                                       )),
-                                )
+                                ),
+                                kSizedBoxV10,
+                                InkWell(
+                                  onTap: () async {
+                                    await pushToScreen(
+                                      RestaurantDetailsView(
+                                        restaurantId: mViewModel
+                                                .restaurantList[index].sId ??
+                                            '--',
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsetsDirectional.all(5.0),
+                                    decoration: BoxDecoration(
+                                        color: Colors.deepPurple,
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                    child: Icon(
+                                      Icons.info_outline,
+                                      color: CommonColors.white,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                             kSizedBoxH5

@@ -19,6 +19,7 @@ class CommonTextField extends StatelessWidget {
   final InputBorder? errorBorder;
   final Color? fillColor;
   final bool filled;
+  final bool readOnly;
 
   const CommonTextField({
     Key? key,
@@ -39,6 +40,7 @@ class CommonTextField extends StatelessWidget {
     this.errorBorder,
     this.fillColor,
     this.filled = false,
+    this.readOnly = false,
   }) : super(key: key);
 
   @override
@@ -52,28 +54,26 @@ class CommonTextField extends StatelessWidget {
       enabled: enabled,
       maxLines: maxLines,
       minLines: minLines,
+      readOnly: readOnly,
       decoration: InputDecoration(
         hintText: hintText,
         labelText: labelText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        border: border ?? OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          borderSide: BorderSide(
-            color: CommonColors.primaryColor,
-            width: 2.0,
-
-          )
-        ),
+        border: border ??
+            OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide(
+                  color: CommonColors.primaryColor,
+                  width: 2.0,
+                )),
         focusedBorder: focusedBorder ??
             OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
                 borderSide: BorderSide(
                   color: CommonColors.primaryColor,
                   width: 2.0,
-
-                )
-            ),
+                )),
         errorBorder: errorBorder ??
             OutlineInputBorder(
               borderSide: BorderSide(

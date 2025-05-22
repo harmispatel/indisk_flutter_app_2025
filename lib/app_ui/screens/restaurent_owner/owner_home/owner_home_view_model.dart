@@ -7,29 +7,44 @@ import '../../../../utils/common_utills.dart';
 import '../../../../utils/global_variables.dart';
 
 class OwnerHomeViewModel with ChangeNotifier {
-  Services services = Services();
+  final Services services = Services();
 
   OwnerHomeData? homeData;
-
   bool isApiLoading = false;
+  String? errorMessage;
 
   Future<void> getOwnerHomeApi() async {
-    isApiLoading = true;
-    notifyListeners();
-    OwnerHomeMaster? master = await services.api!
-        .getOwnerHome(params: {ApiParams.user_id: gLoginDetails!.sId!});
-    isApiLoading = false;
-    notifyListeners();
+    try {
+      // Check if user is logged in
+      if (gLoginDetails == null || gLoginDetails?.sId == null) {
+        errorMessage = "User not logged in";
+        isApiLoading = false;
+        notifyListeners();
+        return;
+      }
 
-    if (master != null) {
-      if (master.success != null && master.success!) {
+      isApiLoading = true;
+      errorMessage = null;
+      notifyListeners();
+
+      final master = await services.api!.getOwnerHome(
+        params: {ApiParams.owner_id: gLoginDetails!.sId!},
+      );
+
+      isApiLoading = false;
+
+      if (master != null && master.success == true) {
         homeData = master.data;
       } else {
-        showRedToastMessage("Something went wrong in get data");
+        errorMessage = "Something went wrong";
+        showRedToastMessage(errorMessage!);
       }
-    } else {
-      oopsMSG();
+    } catch (e) {
+      isApiLoading = false;
+      errorMessage = "Failed to load data: ${e.toString()}";
+      showRedToastMessage(errorMessage!);
+    } finally {
+      notifyListeners();
     }
-    notifyListeners();
   }
 }

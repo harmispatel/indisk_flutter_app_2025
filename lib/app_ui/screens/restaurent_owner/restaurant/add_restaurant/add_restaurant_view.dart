@@ -88,7 +88,9 @@ class _AddRestaurantViewState extends State<AddRestaurantView> {
                       //         ? null
                       //         : Icon(Icons.camera_alt, size: 40)
                       //     : null,
-                      child: Icon(Icons.camera_alt, size: 40),
+                      child: mViewModel.profileImage == null
+                          ? Icon(Icons.camera_alt, size: 40)
+                          : null,
                     ),
                     Align(
                       alignment: AlignmentDirectional.bottomEnd,

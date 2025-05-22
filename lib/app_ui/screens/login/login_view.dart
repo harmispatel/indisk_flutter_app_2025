@@ -142,7 +142,8 @@ class _LoginViewState extends State<LoginView> {
                                       username: _emailController.text.trim(),
                                       password: _passwordController.text);
                                 }
-                              }),
+                              },
+                          ),
                         ],
                       ),
                     ),

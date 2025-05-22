@@ -17,8 +17,13 @@ import '../manager/food_menu/edit_food/edit_food_view_model.dart';
 import '../manager/food_menu/food_list/food_list_view_model.dart';
 import '../restaurent_owner/add_manager/add_manager_view_model.dart';
 import '../restaurent_owner/owner_home/owner_home_view_model.dart';
+import '../restaurent_owner/owner_profile/owner_change_password/change_password_view_model.dart';
+import '../restaurent_owner/owner_profile/owner_edit_profile/owner_edit_profile_view_model.dart';
+import '../restaurent_owner/owner_profile/owner_profile_view_model.dart';
 import '../restaurent_owner/restaurant/add_restaurant/add_restaurant_view_model.dart';
+import '../restaurent_owner/restaurant/edit_restaurant/edit_restaurant_view_model.dart';
 import '../restaurent_owner/restaurant/restaurant_list_view_model.dart';
+import '../restaurent_owner/restaurant_details/restaurant_details_view_model.dart';
 import '../restaurent_owner/staff_list/staff_list_view_model.dart';
 import '../splash/splash_view.dart';
 import '../splash/splash_view_model.dart';
@@ -96,26 +101,6 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
     }
 
     log("InternetChanges :: ${_app.connectionStatus}");
-    // if (isNotifyConnectivity) {
-    //   ScaffoldMessenger.of(mainNavKey.currentContext!).hideCurrentSnackBar();
-    //   ScaffoldMessenger.of(mainNavKey.currentContext!).showSnackBar(
-    //     SnackBar(
-    //       elevation: 0,
-    //       content: Text(
-    //         connectivity
-    //             ? S.of(mainNavKey.currentContext!)!.online
-    //             : S.of(mainNavKey.currentContext!)!.offline,
-    //         textAlign: TextAlign.center,
-    //         style: getAppStyle(
-    //           color: CommonColors.mWhite,
-    //         ),
-    //       ),
-    //       padding: const EdgeInsets.all(5),
-    //       backgroundColor:
-    //       connectivity ? CommonColors.greenColor : CommonColors.mRed,
-    //     ),
-    //   );
-    // }
   }
 
   @override
@@ -146,6 +131,16 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => RestaurantListViewModel()),
         ChangeNotifierProvider<OwnerHomeViewModel>(
             create: (_) => OwnerHomeViewModel()),
+        ChangeNotifierProvider<RestaurantEditModel>(
+            create: (_) => RestaurantEditModel()),
+        ChangeNotifierProvider<ChangePasswordViewModel>(
+            create: (_) => ChangePasswordViewModel()),
+        ChangeNotifierProvider<OwnerEditProfileViewModel>(
+            create: (_) => OwnerEditProfileViewModel()),
+        ChangeNotifierProvider<OwnerProfileViewModel>(
+            create: (_) => OwnerProfileViewModel()),
+        ChangeNotifierProvider<RestaurantDetailsViewModel>(
+            create: (_) => RestaurantDetailsViewModel()),
       ],
       child: Consumer<AppModel>(
         builder: (context, appModel, child) => MaterialApp(

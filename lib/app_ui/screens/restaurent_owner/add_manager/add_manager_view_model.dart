@@ -78,7 +78,7 @@ class AddManagerViewModel extends ChangeNotifier {
       ApiParams.email: email,
       ApiParams.password: password,
       ApiParams.is_blocked: "false",
-      ApiParams.restaurant_id: gRestaurentDetails!.sId!,
+      ApiParams.restaurant_id: gRestaurantDetails!.sId!,
       ApiParams.created_by: gLoginDetails!.sId!,
       ApiParams.role: role.toString(),
     }, files: [
@@ -109,7 +109,7 @@ class AddManagerViewModel extends ChangeNotifier {
       ApiParams.email: email,
       ApiParams.password: password,
       ApiParams.is_blocked: "false",
-      ApiParams.restaurant_id: gRestaurentDetails!.sId!,
+      ApiParams.restaurant_id: gRestaurantDetails!.sId!,
       ApiParams.created_by: gLoginDetails!.sId!,
       ApiParams.role: role.toString(),
     }, files: [
