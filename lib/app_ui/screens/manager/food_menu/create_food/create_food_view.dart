@@ -28,11 +28,9 @@ class _CreateFoodViewState extends State<CreateFoodView> {
   final _basePriceController = TextEditingController();
   final _foodUnitController = TextEditingController();
   final _availableQtyController = TextEditingController();
-  final _preparationController = TextEditingController();
-  final _preparationTimeController = TextEditingController();
-  final _cookingTimeController = TextEditingController();
-  final _minimumStockController = TextEditingController();
-  final _contentPerSingleItemController = TextEditingController();
+  final _totalQtyController = TextEditingController();
+  bool isActive = true;
+
 
   @override
   void initState() {
@@ -63,15 +61,12 @@ class _CreateFoodViewState extends State<CreateFoodView> {
                 mViewModel.createFoodCategory(
                     name: _nameController.text.trim(),
                     description: _descController.text.trim(),
-                    cookingTime: _cookingTimeController.text.trim(),
-                    preparationTime: _preparationTimeController.text.trim(),
-                    preparation: _preparationController.text.trim(),
-                    minStock: _minimumStockController.text.trim(),
                     basePrice: _basePriceController.text.trim(),
                     foodUnit: _foodUnitController.text.trim(),
                     qtyAvailable: _availableQtyController.text.trim(),
-                    contentPerSingleItem:
-                        _contentPerSingleItemController.text.trim());
+                    isAvailable: isActive.toString(),
+                    totalAvailable: _totalQtyController.text.trim(),
+                );
               }
             }),
       ),
@@ -185,7 +180,9 @@ class _CreateFoodViewState extends State<CreateFoodView> {
                 ElevatedButton(
                     onPressed: () {
                       mViewModel.quantities.add(QuantityPrice(
-                          quantity: 0, discountPrice: "", price: ""));
+                          quantity: 0,
+                          // discountPrice: "",
+                          price: ""));
                       setState(() {});
                     },
                     child: Text("ADD+"))
@@ -238,26 +235,26 @@ class _CreateFoodViewState extends State<CreateFoodView> {
                         ),
                       ),
                       kSizedBoxH20,
-                      Flexible(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Discount Price',
-                            filled: true,
-                            fillColor: Colors.grey[100],
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none),
-                          ),
-                          onChanged: (String value) {
-                            if (value.isNotEmpty) {
-                              mViewModel.quantities[index].discountPrice =
-                                  value;
-                            }
-                          },
-                          //  enabled: index != 0,
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
+                      // Flexible(
+                      //   child: TextFormField(
+                      //     decoration: InputDecoration(
+                      //       hintText: 'Discount Price',
+                      //       filled: true,
+                      //       fillColor: Colors.grey[100],
+                      //       border: OutlineInputBorder(
+                      //           borderRadius: BorderRadius.circular(12),
+                      //           borderSide: BorderSide.none),
+                      //     ),
+                      //     onChanged: (String value) {
+                      //       if (value.isNotEmpty) {
+                      //         mViewModel.quantities[index].discountPrice =
+                      //             value;
+                      //       }
+                      //     },
+                      //     //  enabled: index != 0,
+                      //     keyboardType: TextInputType.number,
+                      //   ),
+                      // ),
                       if (index > 0) ...[
                         kSizedBoxH20,
                         InkWell(
@@ -289,22 +286,24 @@ class _CreateFoodViewState extends State<CreateFoodView> {
             getColumnTextField(
                 controller: _foodUnitController, lable: "Food Unit"),
             getColumnTextField(
+                controller: _totalQtyController,
+                lable: "Total Quantity"),
+            getColumnTextField(
                 controller: _availableQtyController,
                 lable: "Available Quantity"),
-            getColumnTextField(
-                controller: _contentPerSingleItemController,
-                lable: "Content Per Single Item"),
-            getColumnTextField(
-                controller: _cookingTimeController,
-                lable: "Cooking Time (In Minuites)"),
-            getColumnTextField(
-                controller: _preparationController, lable: "Preparation"),
-            getColumnTextField(
-                controller: _preparationTimeController,
-                lable: "Prepartion Time"),
-            getColumnTextField(
-                controller: _minimumStockController,
-                lable: "Minimum Stock Required"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Active',
+                    style: TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w500)),
+                Switch(
+                  value: isActive,
+                  onChanged: (val) => setState(() => isActive = val),
+                  activeColor: CommonColors.primaryColor,
+                ),
+              ],
+            ),
             kSizedBoxV20,
           ],
         ),
@@ -363,33 +362,18 @@ class _CreateFoodViewState extends State<CreateFoodView> {
       showRedToastMessage("Please enter food base price");
       return false;
     } else if (!isValidQuantityPrice!) {
-      showRedToastMessage("Please check your price with qauntity");
+      showRedToastMessage("Please check your price with quantity");
       return false;
     } else if (_foodUnitController.text.isEmpty) {
       showRedToastMessage("Please enter food unit");
       return false;
+    } else if (_totalQtyController.text.isEmpty) {
+      showRedToastMessage("Please enter total quantity");
+      return false;
     } else if (_availableQtyController.text.isEmpty) {
-      showRedToastMessage("Please enter available qauntity");
+      showRedToastMessage("Please enter available quantity");
       return false;
-    } else if (_contentPerSingleItemController.text.isEmpty) {
-      showRedToastMessage("Please enter content per single item you provide");
-      return false;
-    } else if (_cookingTimeController.text.isEmpty) {
-      showRedToastMessage("Please enter cooking time");
-      return false;
-    } else if (_preparationController.text.isEmpty) {
-      showRedToastMessage("Please enter preparation required items");
-      return false;
-    } else if (_preparationTimeController.text.isEmpty) {
-      showRedToastMessage("Please enter preparation time required");
-      return false;
-    } else if (_preparationTimeController.text.isEmpty) {
-      showRedToastMessage("Please enter preparation time required");
-      return false;
-    } else if (_minimumStockController.text.isEmpty) {
-      showRedToastMessage("Please enter preparation time required");
-      return false;
-    } else {
+    }   else {
       return true;
     }
   }
@@ -398,21 +382,23 @@ class _CreateFoodViewState extends State<CreateFoodView> {
 class QuantityPrice {
   int? quantity;
   String? price;
-  String? discountPrice;
+  // String? discountPrice;
 
-  QuantityPrice({this.quantity, this.price, this.discountPrice});
+  QuantityPrice({this.quantity, this.price,
+    // this.discountPrice
+  });
 
   QuantityPrice.fromJson(Map<String, dynamic> json) {
     quantity = json['quantity'];
     price = json['price'];
-    discountPrice = json['discount_price'];
+    // discountPrice = json['discount_price'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['quantity'] = this.quantity;
     data['price'] = this.price;
-    data['discount_price'] = this.discountPrice;
+    // data['discount_price'] = this.discountPrice;
     return data;
   }
 }

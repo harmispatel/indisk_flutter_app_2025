@@ -29,7 +29,7 @@ class AppBaseClient {
         if (response.statusCode == 200 || response.statusCode == 201) {
           return jsonDecode(response.body);
         } else {
-          return null;
+          return jsonDecode(response.body);
         }
       } on Exception catch (e) {
         log("Exception (getApiCall) :: $e");
@@ -73,7 +73,7 @@ class AppBaseClient {
   Future<dynamic> formDataApi({
     required String url,
     required List<FileModel> files,
-    Map<String, String>? postParams,
+    Map<String, dynamic>? postParams,
     Function(int, int)? onProgress,
     String? requestMethod,
   }) async {
@@ -113,7 +113,7 @@ class AppBaseClient {
         if (response.statusCode == 200 || response.statusCode == 201) {
           return jsonDecode(response.body);
         } else {
-          return null;
+          return jsonDecode(response.body);
         }
       } on Exception catch (e) {
         log('Exception :: $e');
@@ -147,7 +147,7 @@ class AppBaseClient {
         if (response.statusCode == 200 || response.statusCode == 201) {
           return jsonDecode(response.body);
         } else {
-          return null;
+          return jsonDecode(response.body);
         }
       } on Exception catch (e) {
         log("Exception (optionApiCall) :: $e");
@@ -180,7 +180,7 @@ class AppBaseClient {
         if (response.statusCode == 200 || response.statusCode == 201) {
           return jsonDecode(response.body);
         } else {
-          return null;
+          return jsonDecode(response.body);
         }
       } on Exception catch (e) {
         log("Exception (postApiWithTokenCall) :: $e");
@@ -212,7 +212,7 @@ class AppBaseClient {
         if (response.statusCode == 200 || response.statusCode == 201) {
           return jsonDecode(response.body);
         } else {
-          return null;
+          return jsonDecode(response.body);
         }
       } on Exception catch (e) {
         log("Exception (postApiWithTokenCall) :: $e");

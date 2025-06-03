@@ -62,7 +62,7 @@ class StaffListDetails {
     phone = json['phone'];
     email = json['email'];
     password = json['password'];
-    image = json['image'];
+    image = json['profile_picture'];
     isBlocked = json['is_blocked'];
     role = json['role'];
     createdAt = json['createdAt'];
@@ -78,7 +78,7 @@ class StaffListDetails {
     data['phone'] = this.phone;
     data['email'] = this.email;
     data['password'] = this.password;
-    data['image'] = this.image;
+    data['profile_picture'] = this.image;
     data['is_blocked'] = this.isBlocked;
     data['role'] = this.role;
     data['createdAt'] = this.createdAt;

@@ -9,6 +9,7 @@ import 'package:indisk_app/api_service/models/file_model.dart';
 import 'package:indisk_app/app_ui/screens/app/app_view.dart';
 import 'package:indisk_app/utils/common_utills.dart';
 import 'package:indisk_app/utils/global_variables.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../food_category_list/food_category_list_view_model.dart';
@@ -77,8 +78,7 @@ class CreateFoodCategoryViewModel extends ChangeNotifier {
       ApiParams.name: name,
       ApiParams.description: decsription,
       ApiParams.is_active: isActive!,
-      ApiParams.restaurant_id: gRestaurantDetails!.sId!,
-      // ApiParams.created_by: gLoginDetails!.sId!,
+      ApiParams.manager_id: gLoginDetails!.sId!,
     }, files: [
       FileModel(profileImage!.path, "image_url")
     ], onProgress: (bytes, totalBytes) {});
@@ -107,7 +107,7 @@ class CreateFoodCategoryViewModel extends ChangeNotifier {
       ApiParams.name: name,
       ApiParams.description: decsription,
       ApiParams.is_active: isActive!,
-      ApiParams.restaurant_id: gRestaurantDetails!.sId!,
+      ApiParams.manager_id: gLoginDetails!.sId!,
       ApiParams.id: id,
     }, files: [
       if (profileImage != null) FileModel(profileImage!.path, "image_url")

@@ -80,6 +80,7 @@ class PrimaryButton extends StatelessWidget {
                 style: (textStyle ?? theme.textTheme.labelLarge)?.copyWith(
                   color: btnTextColor,
                   fontWeight: FontWeight.w600,
+                  fontSize: 18
                 ),
               ),
             ],

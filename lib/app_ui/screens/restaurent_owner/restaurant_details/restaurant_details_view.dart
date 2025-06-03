@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:indisk_app/app_ui/screens/restaurent_owner/restaurant_details/restaurant_details_view_model.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../utils/app_dimens.dart';
 import '../../../../utils/common_colors.dart';
 import '../../../../utils/local_images.dart';
 
 class RestaurantDetailsView extends StatefulWidget {
   final String restaurantId;
+
   const RestaurantDetailsView({super.key, required this.restaurantId});
 
   @override
@@ -15,16 +15,18 @@ class RestaurantDetailsView extends StatefulWidget {
 }
 
 class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
-
   RestaurantDetailsViewModel? mViewModel;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      mViewModel = Provider.of<RestaurantDetailsViewModel>(context, listen: false);
-      mViewModel?.getRestaurantDetailsApi(restaurantId: widget.restaurantId).catchError((e) {
-      }).then((_) {
+      mViewModel =
+          Provider.of<RestaurantDetailsViewModel>(context, listen: false);
+      mViewModel
+          ?.getRestaurantDetailsApi(restaurantId: widget.restaurantId)
+          .catchError((e) {})
+          .then((_) {
         if (mounted) {
           setState(() {});
         }
@@ -46,15 +48,23 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
 
   Widget _buildDashboardContent(RestaurantDetailsViewModel viewModel) {
     return Padding(
-      padding: const EdgeInsets.only(top: 35,left: 15,right: 15),
+      padding: const EdgeInsets.only(top: 35, left: 15, right: 15),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back_outlined),
+            ),
+            kSizedBoxV20,
             Text(
               viewModel.restaurantDetailsData?.name ?? '--',
               style: TextStyle(fontSize: 18),
             ),
+            kSizedBoxV10,
             SizedBox(
               width: kDeviceWidth,
               child: Card(
@@ -84,7 +94,9 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
                               ),
                               kSizedBoxV10,
                               Text(
-                                viewModel.restaurantDetailsData?.foods?.length.toString() ?? '--',
+                                viewModel.restaurantDetailsData?.foods?.length
+                                        .toString() ??
+                                    '--',
                                 style: TextStyle(fontSize: 18),
                               ),
                             ],
@@ -107,7 +119,9 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
                               ),
                               kSizedBoxV10,
                               Text(
-                                viewModel.restaurantDetailsData?.manager?.name ?? '--',
+                                viewModel
+                                        .restaurantDetailsData?.manager?.name ??
+                                    '--',
                                 style: TextStyle(fontSize: 18),
                               ),
                             ],
@@ -130,7 +144,9 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
                               ),
                               kSizedBoxV10,
                               Text(
-                                  viewModel.restaurantDetailsData?.staff?.length.toString() ?? '--',
+                                viewModel.restaurantDetailsData?.staff?.length
+                                        .toString() ??
+                                    '--',
                                 style: TextStyle(fontSize: 18),
                               ),
                             ],
@@ -148,7 +164,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
               style: TextStyle(fontSize: 18),
             ),
             ListView.builder(
-              itemCount:  viewModel.restaurantDetailsData?.foods?.length ?? 0,
+              itemCount: viewModel.restaurantDetailsData?.foods?.length ?? 0,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
@@ -166,7 +182,8 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15)),
                               child: Image.network(
-                                viewModel.restaurantDetailsData?.foods?[index].image ??
+                                viewModel.restaurantDetailsData?.foods?[index]
+                                        .image ??
                                     'https://dzinejs.lv/wp-content/plugins/lightbox/images/No-image-found.jpg',
                                 height: 100,
                                 width: 100,
@@ -178,13 +195,15 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                viewModel.restaurantDetailsData?.foods?[index].name ??
+                                viewModel.restaurantDetailsData?.foods?[index]
+                                        .name ??
                                     '--',
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w500),
                               ),
                               Text(
-                                viewModel.restaurantDetailsData?.foods?[index].categoryId ??
+                                viewModel.restaurantDetailsData?.foods?[index]
+                                        .categoryId ??
                                     '--',
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w500),

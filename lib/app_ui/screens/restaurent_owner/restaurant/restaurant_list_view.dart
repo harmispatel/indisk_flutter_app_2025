@@ -140,7 +140,7 @@ class _RestaurantListViewState extends State<RestaurantListView> {
                                   child: Container(
                                       padding: EdgeInsetsDirectional.all(5.0),
                                       decoration: BoxDecoration(
-                                          color: CommonColors.blie,
+                                          color: CommonColors.blue,
                                           borderRadius:
                                               BorderRadius.circular(10.0)),
                                       child: Icon(

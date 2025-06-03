@@ -15,6 +15,7 @@ import '../manager/food_category/create_food_category/create_food_category_view_
 import '../manager/food_category/food_category_list/food_category_list_view_model.dart';
 import '../manager/food_menu/edit_food/edit_food_view_model.dart';
 import '../manager/food_menu/food_list/food_list_view_model.dart';
+import '../manager/staff_list/staff_list_view_model.dart';
 import '../restaurent_owner/add_manager/add_manager_view_model.dart';
 import '../restaurent_owner/owner_home/owner_home_view_model.dart';
 import '../restaurent_owner/owner_profile/owner_change_password/change_password_view_model.dart';
@@ -24,9 +25,9 @@ import '../restaurent_owner/restaurant/add_restaurant/add_restaurant_view_model.
 import '../restaurent_owner/restaurant/edit_restaurant/edit_restaurant_view_model.dart';
 import '../restaurent_owner/restaurant/restaurant_list_view_model.dart';
 import '../restaurent_owner/restaurant_details/restaurant_details_view_model.dart';
-import '../restaurent_owner/staff_list/staff_list_view_model.dart';
 import '../splash/splash_view.dart';
 import '../splash/splash_view_model.dart';
+import '../staff/staff_home/staff_home_view_model.dart';
 import 'app_model.dart';
 
 GlobalKey<NavigatorState> mainNavKey = GlobalKey();
@@ -141,6 +142,8 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => OwnerProfileViewModel()),
         ChangeNotifierProvider<RestaurantDetailsViewModel>(
             create: (_) => RestaurantDetailsViewModel()),
+        ChangeNotifierProvider<StaffHomeViewModel>(
+            create: (_) => StaffHomeViewModel()),
       ],
       child: Consumer<AppModel>(
         builder: (context, appModel, child) => MaterialApp(

@@ -19,7 +19,7 @@ class FoodListViewModel extends ChangeNotifier {
     notifyListeners();
     foodList.clear();
     FoodListMaster? staffListMaster = await services.api!
-        .getFoodList(params: {ApiParams.user_id: gLoginDetails!.sId!});
+        .getFoodList(params: {ApiParams.manager_id: gLoginDetails!.sId!});
     isApiLoading = false;
     notifyListeners();
 

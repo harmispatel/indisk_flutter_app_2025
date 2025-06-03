@@ -16,17 +16,19 @@ class StaffListViewModel extends ChangeNotifier {
 
   List<StaffListDetails> staffList = [];
 
-  Future<void> getStaffList({int? role}) async {
+  Future<void> getStaffList() async {
     showProgressDialog();
     staffList.clear();
-    StaffListMaster? staffListMaster = await services.api!
-        .getStaffList(queryParams: {if (role != null) ApiParams.role: role});
+    StaffListMaster? staffListMaster =
+        await services.api!.getStaffList(params: {
+      ApiParams.manager_id: gLoginDetails?.sId!,
+    });
     hideProgressDialog();
 
     if (staffListMaster != null) {
       if (staffListMaster.success != null && staffListMaster.success!) {
         staffList.addAll(staffListMaster.data!);
-      }else{
+      } else {
         showRedToastMessage(staffListMaster.message!);
       }
     } else {
@@ -37,17 +39,15 @@ class StaffListViewModel extends ChangeNotifier {
 
   Future<void> deleteStaff({String? staffId}) async {
     showProgressDialog();
-    CommonMaster? staffListMaster = await services.api!
-        .deleteStaff(params: {
-          ApiParams.id : staffId
-    });
+    CommonMaster? staffListMaster =
+        await services.api!.deleteStaff(params: {ApiParams.id: staffId});
     hideProgressDialog();
 
     if (staffListMaster != null) {
       if (staffListMaster.success != null && staffListMaster.success!) {
-         showGreenToastMessage("Staff deleted successfully!");
-         staffList.removeWhere((staffDetails) =>  staffDetails.sId == staffId);
-      }else{
+        showGreenToastMessage("Staff deleted successfully!");
+        staffList.removeWhere((staffDetails) => staffDetails.sId == staffId);
+      } else {
         showRedToastMessage(staffListMaster.message!);
       }
     } else {

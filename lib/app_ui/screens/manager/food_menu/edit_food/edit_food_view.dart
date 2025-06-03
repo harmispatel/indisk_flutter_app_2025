@@ -62,29 +62,21 @@ class _EditFoodViewState extends State<EditFoodView> {
     _basePriceController.text = foodItem.basePrice?.toString() ?? '';
     _foodUnitController.text = foodItem.unit ?? '';
     _availableQtyController.text = foodItem.availableQty?.toString() ?? '';
-    _contentPerSingleItemController.text = foodItem.contentPerSingleItem ?? '';
-    _cookingTimeController.text = foodItem.cookingTime ?? '';
-    _preparationController.text = foodItem.preparations?.join(', ') ?? '';
-    _preparationTimeController.text = foodItem.preparationsTime ?? '';
-    _minimumStockController.text = foodItem.minStockRequired?.toString() ?? '';
 
     mViewModel.quantities.clear();
 
     for (var priceQty in foodItem.pricesByQuantity!) {
       mViewModel.quantities.add(QuantityPrice(
         quantity: int.tryParse(priceQty.quantity ?? '0') ?? 0,
-        price: priceQty.price ?? '',
-        discountPrice: priceQty.discountPrice ?? '',
+        price: priceQty.price.toString() ?? '',
+
       ));
     }
 
-    if (foodItem.foodCategory != null &&
-        mViewModel.foodCategoryList.isNotEmpty) {
-      mViewModel.setSelectedCategoryFromId(foodItem.foodCategory!.sId);
-    }
 
+    List<String> image = [foodItem.image?.first ?? ''];
     // Handle images
-    mViewModel.setExistingImageUrls(foodItem.imageUrl ?? []);
+    mViewModel.setExistingImageUrls(image ?? []);
 
     setState(() {});
   }
@@ -260,45 +252,45 @@ class _EditFoodViewState extends State<EditFoodView> {
                       ),
                     ),
                     kSizedBoxH20,
-                    Flexible(
-                      child: TextFormField(
-                        initialValue: qtyPrice?.price ?? '',
-                        decoration: InputDecoration(
-                          hintText: 'Price',
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none),
-                        ),
-                        onChanged: (String value) {
-                          if (value.isNotEmpty) {
-                            mViewModel.quantities[index].price = value;
-                          }
-                        },
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    kSizedBoxH20,
-                    Flexible(
-                      child: TextFormField(
-                        initialValue: qtyPrice?.discountPrice ?? '',
-                        decoration: InputDecoration(
-                          hintText: 'Discount Price',
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none),
-                        ),
-                        onChanged: (String value) {
-                          if (value.isNotEmpty) {
-                            mViewModel.quantities[index].discountPrice = value;
-                          }
-                        },
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
+                    // Flexible(
+                    //   child: TextFormField(
+                    //     initialValue: qtyPrice?.price ?? '',
+                    //     decoration: InputDecoration(
+                    //       hintText: 'Price',
+                    //       filled: true,
+                    //       fillColor: Colors.grey[100],
+                    //       border: OutlineInputBorder(
+                    //           borderRadius: BorderRadius.circular(12),
+                    //           borderSide: BorderSide.none),
+                    //     ),
+                    //     onChanged: (String value) {
+                    //       if (value.isNotEmpty) {
+                    //         mViewModel.quantities[index].price = value;
+                    //       }
+                    //     },
+                    //     keyboardType: TextInputType.number,
+                    //   ),
+                    // ),
+                    // kSizedBoxH20,
+                    // Flexible(
+                    //   child: TextFormField(
+                    //     initialValue: qtyPrice?.discountPrice ?? '',
+                    //     decoration: InputDecoration(
+                    //       hintText: 'Discount Price',
+                    //       filled: true,
+                    //       fillColor: Colors.grey[100],
+                    //       border: OutlineInputBorder(
+                    //           borderRadius: BorderRadius.circular(12),
+                    //           borderSide: BorderSide.none),
+                    //     ),
+                    //     onChanged: (String value) {
+                    //       if (value.isNotEmpty) {
+                    //         mViewModel.quantities[index].discountPrice = value;
+                    //       }
+                    //     },
+                    //     keyboardType: TextInputType.number,
+                    //   ),
+                    // ),
                     if (index > 0) ...[
                       kSizedBoxH20,
                       InkWell(

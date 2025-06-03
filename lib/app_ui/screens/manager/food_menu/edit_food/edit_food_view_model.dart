@@ -158,7 +158,7 @@ class EditFoodViewModel with ChangeNotifier {
     foodCategoryList.clear();
     FoodCategoryMaster? staffListMaster = await services.api!
         .getFoodCategoryList(
-            queryParams: {ApiParams.restaurant_id: gRestaurantDetails!.sId});
+            params: {ApiParams.manager_id: gLoginDetails!.sId});
     isApiLoading = false;
     notifyListeners();
 
@@ -175,7 +175,9 @@ class EditFoodViewModel with ChangeNotifier {
   }
 
   void addQuantityPrice() {
-    quantities.add(QuantityPrice(price: "0", quantity: 1, discountPrice: "0"));
+    quantities.add(QuantityPrice(price: "0", quantity: 1,
+        // discountPrice: "0"
+    ));
     notifyListeners();
   }
 }

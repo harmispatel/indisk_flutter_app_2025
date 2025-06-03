@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:indisk_app/app_ui/common_widget/common_appbar.dart';
+import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
 import 'package:indisk_app/app_ui/screens/manager/food_menu/create_food/create_food_view.dart';
 import 'package:provider/provider.dart';
 
@@ -28,11 +29,10 @@ class _FoodListViewState extends State<FoodListView> {
   @override
   Widget build(BuildContext context) {
     mViewModel = Provider.of<FoodListViewModel>(context);
-
-    final isTablet = MediaQuery.of(context).size.width >= 600;
     return Scaffold(
       appBar: CommonAppbar(
         title: "Food List",
+        isBackButtonVisible: false,
         actions: [
           InkWell(
             onTap: () {
@@ -52,31 +52,16 @@ class _FoodListViewState extends State<FoodListView> {
                 )
               : Padding(
                   padding: const EdgeInsets.all(16),
-                  child: isTablet
-                      ? GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 1,
-                            mainAxisExtent: 150,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                          ),
-                          itemCount: mViewModel.foodList.length,
-                          itemBuilder: (context, index) {
-                            return buildFoodCard(
-                                mViewModel.foodList[index], index);
-                          },
-                        )
-                      : ListView.builder(
-                          itemCount: mViewModel.foodList.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: buildFoodCard(
-                                  mViewModel.foodList[index], index),
-                            );
-                          },
-                        ),
+                  child:ListView.builder(
+                    itemCount: mViewModel.foodList.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: buildFoodCard(
+                            mViewModel.foodList[index], index),
+                      );
+                    },
+                  ),
                 ),
     );
   }
@@ -91,57 +76,82 @@ class _FoodListViewState extends State<FoodListView> {
       padding: EdgeInsets.all(12),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+          Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Image.network(
-              item.imageUrl?.first ?? '',
-              width: 120,
-              height: 120,
+              item.image?.first ?? '',
+              width: 70,
+              height: 70,
               fit: BoxFit.cover,
             ),
           ),
           SizedBox(width: 16),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(item.name ?? '',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 6),
-                  Text("Price: ${item.basePrice?.toStringAsFixed(2)} Kr",
-                      style: TextStyle(fontSize: 16)),
-                  Text("Quantity: ${item.availableQty}",
-                      style: TextStyle(fontSize: 16)),
-                ],
-              ),
+          Text(item.name ?? '',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          SizedBox(width: 16),
+          Text("Price: ${item.basePrice?.toStringAsFixed(2)} Kr",
+              style: TextStyle(fontSize: 16)),
+          SizedBox(width: 16),
+          Text(item.isAvailable == "true" ? "In Stock" : "Out Of Stock",
+              style: TextStyle(
+                  fontSize: 16,
+                  color: item.isAvailable == "true" ? Colors.green : Colors.red,
+                  fontWeight: FontWeight.w500)),
+          SizedBox(width: 16),
+          Text("Quantity: ${item.availableQty}",
+              style: TextStyle(fontSize: 16)),
+          Spacer(),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      EditFoodView(foodItem: mViewModel.foodList[index]),
+                ),
+              ).then((_) {
+                mViewModel.getFoodList();
+              });
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.edit,
+                  color: Colors.green,
+                ),
+                Text(
+                  "Edit",
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
+                )
+              ],
             ),
           ),
-          Column(
-            children: [
-              IconButton(
-                icon: Icon(Icons.edit, color: Colors.blue),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EditFoodView(foodItem: mViewModel.foodList[index]),
-                    ),
-                  ).then((_) {
-                    mViewModel.getFoodList();
-                  });
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
-                onPressed: () {
-                  mViewModel.deleteFood(id: mViewModel.foodList[index].sId);
-                },
-              ),
-            ],
+          SizedBox(width: 15),
+          GestureDetector(
+            onTap: () {
+              mViewModel.deleteFood(id: mViewModel.foodList[index].sId);
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.delete_forever,
+                  color: Colors.red,
+                ),
+                Text(
+                  "Delete",
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
+                )
+              ],
+            ),
           ),
         ],
       ),

@@ -19,7 +19,7 @@ class FoodCategoryListViewModel extends ChangeNotifier {
     foodCategoryList.clear();
     FoodCategoryMaster? staffListMaster = await services.api!
         .getFoodCategoryList(
-            queryParams: {ApiParams.restaurant_id: gRestaurantDetails?.sId});
+            params: {ApiParams.manager_id: gLoginDetails?.sId});
     isApiLoading = false;
     notifyListeners();
 
@@ -27,7 +27,7 @@ class FoodCategoryListViewModel extends ChangeNotifier {
       if (staffListMaster.success != null && staffListMaster.success!) {
         foodCategoryList.addAll(staffListMaster.data!);
       } else {
-        showRedToastMessage(staffListMaster.message!);
+        // showRedToastMessage(staffListMaster.message!);
       }
     } else {
       oopsMSG();

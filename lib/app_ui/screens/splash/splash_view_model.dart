@@ -29,26 +29,20 @@ class SplashViewModel with ChangeNotifier {
     gLoginDetails = loginDetails;
     gRestaurantDetails = restaurantDetails;
 
-
     startTimer();
   }
 
   startTimer() async {
     Future.delayed(const Duration(seconds: 2), () async {
-
-      if(languageCode == null || languageCode!.isEmpty){
+      if (languageCode == null || languageCode!.isEmpty) {
         pushAndRemoveUntil(LanguagesView());
-      }else {
-        if(loginDetails != null){
-           redirectBasedOnRole(loginDetails: loginDetails!);
-        }else{
+      } else {
+        if (loginDetails != null) {
+          redirectBasedOnRole(loginDetails: loginDetails!);
+        } else {
           pushAndRemoveUntil(LoginView());
         }
-
       }
-
     });
   }
-
-
 }

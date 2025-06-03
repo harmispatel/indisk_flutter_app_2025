@@ -6,12 +6,16 @@ class ApiParams {
   static const String restaurant_name = "restaurant_name";
   static const String phone = "phone";
   static const String email = "email";
+  static const String staff_id = "staff_id";
   static const String gender = "gender";
   static const String currentPassword = "currentPassword";
   static const String newPassword = "newPassword";
   static const String contact = "contact";
   static const String is_blocked = "is_blocked";
+  static const String manager_id = "manager_id";
   static const String created_by = "created_by";
+  static const String category = "category";
+  static const String is_available = "is_available";
   static const String restaurant_id = "restaurant_id";
   static const String role = "role";
   static const String id = "id";
@@ -23,6 +27,7 @@ class ApiParams {
   static const String websiteLink = "websiteLink";
   static const String food_category = "food_category";
   static const String unit = "unit";
+  static const String total_qty = "total_qty";
   static const String available_qty = "available_qty";
   static const String content_per_single_item = "content_per_single_item";
   static const String cooking_time = "cooking_time";
@@ -38,6 +43,8 @@ class ApiParams {
   static const String image_url = "image_url";
   static const String foodData = "foodData";
   static const String user_id = "user_id";
+  static const String product_id = "product_id";
+  static const String type = "type";
   static const String owner_id = "owner_id";
   static const String address = "address";
   static const String location = "location";

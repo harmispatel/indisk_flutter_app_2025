@@ -6,7 +6,7 @@ class ApiUrl {
   static String CREATE_MANAGER = "${BASE_URL}staff/staff-create";
   static String UPDATE_MANAGER = "${BASE_URL}staff/staff-update";
   static String DELETE_STAFF = "${BASE_URL}staff/staff-delete";
-  static String GET_STAFF_LIST = "${BASE_URL}staff/staff-list";
+  static String GET_STAFF_LIST = "${BASE_URL}manager/staff-list";
   static String CREATE_FOOD_CATEGORY = "${BASE_URL}create-food-category";
   static String UPDATE_FOOD_CATEGORY = "${BASE_URL}update-food-category";
   static String DELETE_FOOD_CATEGORY = "${BASE_URL}delete-food-category";
@@ -25,4 +25,9 @@ class ApiUrl {
   static String GET_PROFILE = "${BASE_URL}get-profile";
   static String EDIT_PROFILE = "${BASE_URL}edit-profile";
   static String GET_RESTAURANT_DETAILS = "${BASE_URL}get-restaurant-details";
+  static String ADD_TO_CART = "${BASE_URL}add-to-cart";
+  static String GET_CART = "${BASE_URL}get-cart";
+  static String UPDATE_QUANTITY = "${BASE_URL}update-quantity";
+  static String CLEAR_CART = "${BASE_URL}clear-cart";
+  static String REMOVE_TO_CART = "${BASE_URL}remove-to-cart";
 }

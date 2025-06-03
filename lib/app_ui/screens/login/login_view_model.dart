@@ -9,19 +9,20 @@ import 'package:indisk_app/utils/common_utills.dart';
 import 'package:indisk_app/utils/global_variables.dart';
 
 import '../../../database/app_preferences.dart';
+import '../staff/staff_dashboard/staff_dasboard_view.dart';
 
 class LoginViewModel extends ChangeNotifier {
   Services services = Services();
 
   Future<void> loginApi(
-      {required String username, required String password}) async {
+      {required String username, required String password,required String role}) async {
     try {
       showProgressDialog();
 
       final loginMaster = await services.api?.login(params: {
         ApiParams.email: username,
         ApiParams.password: password,
-        ApiParams.role: "owner"
+        ApiParams.role: role
       });
 
       hideProgressDialog();
@@ -61,6 +62,9 @@ class LoginViewModel extends ChangeNotifier {
       switch (gLoginDetails?.role?.toLowerCase()) {
         case "manager":
           pushAndRemoveUntil(ManagerDashboardView());
+          break;
+        case "staff":
+          pushAndRemoveUntil(StaffDashboardView());
           break;
         default:
           pushAndRemoveUntil(OwnerDashboard());

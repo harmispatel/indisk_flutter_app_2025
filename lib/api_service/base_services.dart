@@ -8,6 +8,8 @@ import 'models/get_profile_master.dart';
 import 'models/owner_home_master.dart';
 import 'models/restaurant_details_master.dart';
 import 'models/restaurant_master.dart';
+import 'models/staff_cart_master.dart';
+import 'models/staff_home_master.dart';
 import 'models/staff_list_master.dart';
 
 abstract class BaseServices {
@@ -25,7 +27,7 @@ abstract class BaseServices {
   });
 
   Future<StaffListMaster?> getStaffList(
-      {required Map<String, dynamic> queryParams});
+      {required Map<String, dynamic> params});
 
   Future<CommonMaster?> deleteStaff({required Map<String, dynamic> params});
 
@@ -42,13 +44,13 @@ abstract class BaseServices {
   });
 
   Future<FoodCategoryMaster?> getFoodCategoryList(
-      {required Map<String, dynamic> queryParams});
+      {required Map<String, dynamic> params});
 
   Future<CommonMaster?> deleteFoodCategory(
       {required Map<String, dynamic> params});
 
   Future<CommonMaster?> createFood({
-    required Map<String, String> params,
+    required Map<String, dynamic> params,
     required List<FileModel> files,
     required Function(int, int)? onProgress,
   });
@@ -93,5 +95,23 @@ abstract class BaseServices {
         required Function(int p1, int p2)? onProgress});
 
   Future<RestaurantDetailsMaster?> getRestaurantDetails(
+      {required Map<String, dynamic> params});
+
+  Future<StaffHomeMaster?> getStaffFoodList(
+      {required Map<String, dynamic> params});
+
+  Future<CommonMaster?> addToCart(
+      {required Map<String, dynamic> params});
+
+  Future<StaffCartMaster?> getStaffCartList(
+      {required Map<String, dynamic> params});
+
+  Future<CommonMaster?> updateQuantityStaffCart(
+      {required Map<String, dynamic> params});
+
+  Future<CommonMaster?> clearStaffCart(
+      {required Map<String, dynamic> params});
+
+  Future<CommonMaster?> removeItemStaffCart(
       {required Map<String, dynamic> params});
 }

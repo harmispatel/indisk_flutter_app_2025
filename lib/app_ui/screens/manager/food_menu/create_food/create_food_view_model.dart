@@ -34,36 +34,29 @@ class CreateFoodViewModel extends ChangeNotifier {
   Future<void> createFoodCategory({
     required name,
     required description,
-    required cookingTime,
-    required preparationTime,
-    required preparation,
-    required minStock,
     required basePrice,
     required foodUnit,
     required qtyAvailable,
-    required contentPerSingleItem,
+    required totalAvailable,
+    required isAvailable,
   }) async {
     showProgressDialog();
     CommonMaster? commonMaster = await services.api!.createFood(
         params: {
           ApiParams.name: name,
           ApiParams.description: description,
-          ApiParams.restaurant_id: gRestaurantDetails!.sId!,
-          ApiParams.created_by: gLoginDetails!.sId!,
-          ApiParams.food_category: selectedFoodCategory!.sId!,
-          ApiParams.cooking_time: cookingTime,
-          ApiParams.prices_by_quantity: jsonEncode(quantities),
-          ApiParams.preparations_time: preparationTime,
-          ApiParams.preparations: preparation,
-          ApiParams.min_stock_required: minStock,
           ApiParams.base_price: basePrice,
+          ApiParams.prices_by_quantity: jsonEncode(quantities),
+          ApiParams.category: selectedFoodCategory!.sId!,
+          ApiParams.is_available: isAvailable,
+          ApiParams.created_by: gLoginDetails!.sId!,
           ApiParams.unit: foodUnit,
+          ApiParams.total_qty: totalAvailable,
           ApiParams.available_qty: qtyAvailable,
-          ApiParams.content_per_single_item: contentPerSingleItem,
-          ApiParams.priority: "1",
-          ApiParams.shifting_constant: "1.5",
         },
-        files: fileList,
+        files: [
+          FileModel(fileList.first.filePath, "image")
+        ],
         onProgress: (bytes, totalBytes) {
           print("Progress == ${bytes / totalBytes}");
         });
@@ -165,7 +158,7 @@ class CreateFoodViewModel extends ChangeNotifier {
     foodCategoryList.clear();
     FoodCategoryMaster? staffListMaster = await services.api!
         .getFoodCategoryList(
-            queryParams: {ApiParams.restaurant_id: gRestaurantDetails!.sId});
+            params: {ApiParams.manager_id: gLoginDetails!.sId});
     isApiLoading = false;
     notifyListeners();
 
@@ -182,7 +175,9 @@ class CreateFoodViewModel extends ChangeNotifier {
   }
 
   void addQuantityPrice() {
-    quantities.add(QuantityPrice(price: "0", quantity: 1, discountPrice: "0"));
+    quantities.add(QuantityPrice(price: "0", quantity: 1,
+        // discountPrice: "0"
+    ));
     notifyListeners();
   }
 }

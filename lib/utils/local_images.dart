@@ -8,4 +8,5 @@ class LocalImages {
   static final String img_training = "assets/images/img_training.png";
   static final String img_best_seller = "assets/images/img_best_seller.png";
   static final String img_best_seller_2 = "assets/images/img_best_seller_2.png";
+  static final String img_verified = "assets/images/img_verified.png";
 }

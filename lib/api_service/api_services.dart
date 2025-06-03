@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:indisk_app/api_service/models/file_model.dart';
 import 'package:indisk_app/api_service/models/food_category_master.dart';
 import 'package:indisk_app/api_service/models/login_master.dart';
+import 'package:indisk_app/api_service/models/staff_cart_master.dart';
 import 'package:indisk_app/api_service/models/staff_list_master.dart';
 
 import 'api_url.dart';
@@ -14,6 +15,7 @@ import 'models/get_profile_master.dart';
 import 'models/owner_home_master.dart';
 import 'models/restaurant_details_master.dart';
 import 'models/restaurant_master.dart';
+import 'models/staff_home_master.dart';
 
 class ApiServices extends BaseServices {
   AppBaseClient appBaseClient = AppBaseClient();
@@ -85,9 +87,9 @@ class ApiServices extends BaseServices {
 
   @override
   Future<StaffListMaster?> getStaffList(
-      {required Map<String, dynamic> queryParams}) async {
-    dynamic response = await appBaseClient.getApiCall(
-        url: ApiUrl.GET_STAFF_LIST, queryParams: queryParams ?? {});
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.GET_STAFF_LIST, postParams: params);
     if (response != null) {
       try {
         return StaffListMaster.fromJson(response);
@@ -164,10 +166,10 @@ class ApiServices extends BaseServices {
 
   @override
   Future<FoodCategoryMaster?> getFoodCategoryList(
-      {required Map<String, dynamic> queryParams}) async {
+      {required Map<String, dynamic> params}) async {
     // TODO: implement getFoodCategoryList
-    dynamic response = await appBaseClient.getApiCall(
-        url: ApiUrl.GET_FOOD_CATEGORY_LIST, queryParams: queryParams ?? {});
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.GET_FOOD_CATEGORY_LIST, postParams: params ?? {});
     if (response != null) {
       try {
         return FoodCategoryMaster.fromJson(response);
@@ -225,7 +227,7 @@ class ApiServices extends BaseServices {
 
   @override
   Future<CommonMaster?> createFood(
-      {required Map<String, String> params,
+      {required Map<String, dynamic> params,
       required List<FileModel> files,
       required Function(int p1, int p2)? onProgress}) async {
     // TODO: implement createFood
@@ -464,6 +466,120 @@ class ApiServices extends BaseServices {
     if (response != null) {
       try {
         return RestaurantDetailsMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<StaffHomeMaster?> getStaffFoodList(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.GET_FOOD,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return StaffHomeMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> addToCart(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.ADD_TO_CART,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<StaffCartMaster?> getStaffCartList(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.GET_CART,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return StaffCartMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> updateQuantityStaffCart(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.UPDATE_QUANTITY,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> clearStaffCart(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.CLEAR_CART,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> removeItemStaffCart(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.REMOVE_TO_CART,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
       } on Exception catch (e) {
         log("Exception :: $e");
         return null;

@@ -97,7 +97,7 @@ class _CreateFoodCategoryViewState extends State<CreateFoodCategoryView> {
                                   widget.foodCategoryDetails!.imageUrl!,
                                   height: 160,
                                   width: 160,
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.fill,
                                 ),
                               ),
                             )
@@ -112,7 +112,7 @@ class _CreateFoodCategoryViewState extends State<CreateFoodCategoryView> {
                                       mViewModel.profileImage!,
                                       height: 160,
                                       width: double.infinity,
-                                      fit: BoxFit.none,
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
                                 )
