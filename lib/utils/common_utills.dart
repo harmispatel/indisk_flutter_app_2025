@@ -13,6 +13,7 @@ import 'package:indisk_app/app_ui/screens/restaurent_owner/owner_dashboard/owner
 import 'package:indisk_app/utils/app_constants.dart';
 import 'package:intl/intl.dart';
 
+import '../app_ui/screens/kitchen_staff/kitchen_staff_dashboard/kitchen_staff_dashboard_view.dart';
 import '../app_ui/screens/staff/staff_dashboard/staff_dasboard_view.dart';
 import 'common_styles.dart';
 import 'global_variables.dart';
@@ -318,18 +319,23 @@ bool isValidPhoneNumber(String value) {
 void redirectBasedOnRole({required LoginDetails loginDetails}) {
   if (loginDetails.role == AppConstants.ROLE_OWNER) {
     pushAndRemoveUntil(OwnerDashboard());
-    print("Logged User Id............${loginDetails!.sId}");
-    print("Logged User Role..........${loginDetails!.role}");
+    print("Logged User Id............${loginDetails.sId}");
+    print("Logged User Role..........${loginDetails.role}");
 
   } else if (loginDetails.role == AppConstants.ROLE_MANAGER) {
     pushAndRemoveUntil(ManagerDashboardView());
-    print("Logged User Id............${loginDetails!.sId}");
-    print("Logged User Role..........${loginDetails!.role}");
+    print("Logged User Id............${loginDetails.sId}");
+    print("Logged User Role..........${loginDetails.role}");
 
   } else if (loginDetails.role == AppConstants.ROLE_STAFF) {
     pushAndRemoveUntil(StaffDashboardView());
-    print("Logged User Id............${loginDetails!.sId}");
-    print("Logged User Role..........${loginDetails!.role}");
+    print("Logged User Id............${loginDetails.sId}");
+    print("Logged User Role..........${loginDetails.role}");
+
+  } else if (loginDetails.role == AppConstants.ROLE_KITCHEN_STAFF) {
+    pushAndRemoveUntil(KitchenStaffDashboardView());
+    print("Logged User Id............${loginDetails.sId}");
+    print("Logged User Role..........${loginDetails.role}");
 
   }
 }

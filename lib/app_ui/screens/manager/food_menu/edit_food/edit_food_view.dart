@@ -28,21 +28,17 @@ class EditFoodView extends StatefulWidget {
 
 class _EditFoodViewState extends State<EditFoodView> {
   late EditFoodViewModel mViewModel;
+  bool isActive = true;
 
   final _nameController = TextEditingController();
   final _descController = TextEditingController();
   final _basePriceController = TextEditingController();
   final _foodUnitController = TextEditingController();
   final _availableQtyController = TextEditingController();
-  final _preparationController = TextEditingController();
-  final _preparationTimeController = TextEditingController();
-  final _cookingTimeController = TextEditingController();
-  final _minimumStockController = TextEditingController();
-  final _contentPerSingleItemController = TextEditingController();
+  final _totalQtyController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     Future.delayed(Duration.zero, () async {
@@ -62,6 +58,8 @@ class _EditFoodViewState extends State<EditFoodView> {
     _basePriceController.text = foodItem.basePrice?.toString() ?? '';
     _foodUnitController.text = foodItem.unit ?? '';
     _availableQtyController.text = foodItem.availableQty?.toString() ?? '';
+    _totalQtyController.text = foodItem.totalQty?.toString() ?? '';
+    isActive = bool.parse(foodItem.isAvailable ?? 'true');
 
     mViewModel.quantities.clear();
 
@@ -69,14 +67,14 @@ class _EditFoodViewState extends State<EditFoodView> {
       mViewModel.quantities.add(QuantityPrice(
         quantity: int.tryParse(priceQty.quantity ?? '0') ?? 0,
         price: priceQty.price.toString() ?? '',
-
       ));
     }
 
-
     List<String> image = [foodItem.image?.first ?? ''];
-    // Handle images
     mViewModel.setExistingImageUrls(image ?? []);
+
+    // Add this line to set the selected category
+    mViewModel.setSelectedCategoryFromId(foodItem.category?.sId);
 
     setState(() {});
   }
@@ -99,16 +97,12 @@ class _EditFoodViewState extends State<EditFoodView> {
                 mViewModel.updateFood(
                     name: _nameController.text.trim(),
                     description: _descController.text.trim(),
-                    cookingTime: _cookingTimeController.text.trim(),
-                    preparationTime: _preparationTimeController.text.trim(),
-                    preparation: _preparationController.text.trim(),
-                    minStock: _minimumStockController.text.trim(),
                     basePrice: _basePriceController.text.trim(),
                     foodUnit: _foodUnitController.text.trim(),
                     qtyAvailable: _availableQtyController.text.trim(),
-                    contentPerSingleItem:
-                        _contentPerSingleItemController.text.trim(),
-                    id: widget.foodItem.sId);
+                    isAvailable: isActive.toString(),
+                    totalAvailable: _totalQtyController.text.trim(),
+                    id: widget.foodItem.sId, image: widget.foodItem.image?.first);
               }
             }),
       ),
@@ -169,48 +163,46 @@ class _EditFoodViewState extends State<EditFoodView> {
             kSizedBoxV10,
             mViewModel.foodCategoryList.isEmpty
                 ? Container(
-                    height: 40.0,
-                    width: kDeviceWidth,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
+              height: 40.0,
+              width: kDeviceWidth,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
                 : DropdownButtonFormField<FoodCategoryDetails>(
-                    value: mViewModel.foodCategoryList.firstWhere(
-                      (item) =>
-                          item.sId == mViewModel.selectedFoodCategory?.sId,
-                      orElse: () => mViewModel
-                          .foodCategoryList.first, // fallback if not found
-                    ),
-                    decoration: InputDecoration(
-                      filled: true,
-                      hintText: "Select Food Category",
-                      fillColor: Colors.grey[100]!,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey[100]!),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: Colors.grey[100]!, width: 2),
-                      ),
-                    ),
-                    icon: Icon(Icons.arrow_drop_down),
-                    items: mViewModel.foodCategoryList
-                        .map((item) => DropdownMenuItem<FoodCategoryDetails>(
-                              value: item,
-                              child: Text(item.name!),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        mViewModel.selectedFoodCategory = value;
-                      });
-                    },
-                  ),
+              value: mViewModel.foodCategoryList.firstWhere(
+                    (item) => item.sId == mViewModel.selectedFoodCategory?.sId,
+                orElse: () => mViewModel.foodCategoryList.first,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                hintText: "Select Food Category",
+                fillColor: Colors.grey[100]!,
+                contentPadding:
+                EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.grey[100]!),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide:
+                  BorderSide(color: Colors.grey[100]!, width: 2),
+                ),
+              ),
+              icon: Icon(Icons.arrow_drop_down),
+              items: mViewModel.foodCategoryList
+                  .map((item) => DropdownMenuItem<FoodCategoryDetails>(
+                value: item,
+                child: Text(item.name!),
+              ))
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  mViewModel.selectedFoodCategory = value;
+                });
+              },
+            ),
             kSizedBoxV20,
             getColumnTextField(
                 controller: _descController, lable: "Description"),
@@ -222,121 +214,114 @@ class _EditFoodViewState extends State<EditFoodView> {
                   mViewModel.quantities[0].quantity = 1;
                   setState(() {});
                 }),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                FormFieldLabel(label: "Quantity Price"),
+                ElevatedButton(
+                    onPressed: () {
+                      mViewModel.quantities.add(QuantityPrice(
+                          quantity: 0,
+                          price: ""));
+                      setState(() {});
+                    },
+                    child: Text("ADD+"))
+              ],
+            ),
             kSizedBoxV10,
             ListView.separated(
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                // Get the current quantity price item
-                final qtyPrice = widget.foodItem.pricesByQuantity?[index];
-
-                return Row(
-                  children: [
-                    Flexible(
-                      child: TextFormField(
-                        initialValue: qtyPrice?.quantity?.toString() ?? '',
-                        decoration: InputDecoration(
-                          hintText: 'Quantity',
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none),
-                        ),
-                        onChanged: (String value) {
-                          if (value.isNotEmpty) {
-                            mViewModel.quantities[index].quantity =
-                                int.parse(value);
-                          }
-                        },
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    kSizedBoxH20,
-                    // Flexible(
-                    //   child: TextFormField(
-                    //     initialValue: qtyPrice?.price ?? '',
-                    //     decoration: InputDecoration(
-                    //       hintText: 'Price',
-                    //       filled: true,
-                    //       fillColor: Colors.grey[100],
-                    //       border: OutlineInputBorder(
-                    //           borderRadius: BorderRadius.circular(12),
-                    //           borderSide: BorderSide.none),
-                    //     ),
-                    //     onChanged: (String value) {
-                    //       if (value.isNotEmpty) {
-                    //         mViewModel.quantities[index].price = value;
-                    //       }
-                    //     },
-                    //     keyboardType: TextInputType.number,
-                    //   ),
-                    // ),
-                    // kSizedBoxH20,
-                    // Flexible(
-                    //   child: TextFormField(
-                    //     initialValue: qtyPrice?.discountPrice ?? '',
-                    //     decoration: InputDecoration(
-                    //       hintText: 'Discount Price',
-                    //       filled: true,
-                    //       fillColor: Colors.grey[100],
-                    //       border: OutlineInputBorder(
-                    //           borderRadius: BorderRadius.circular(12),
-                    //           borderSide: BorderSide.none),
-                    //     ),
-                    //     onChanged: (String value) {
-                    //       if (value.isNotEmpty) {
-                    //         mViewModel.quantities[index].discountPrice = value;
-                    //       }
-                    //     },
-                    //     keyboardType: TextInputType.number,
-                    //   ),
-                    // ),
-                    if (index > 0) ...[
-                      kSizedBoxH20,
-                      InkWell(
-                        onTap: () {
-                          widget.foodItem.pricesByQuantity?.removeAt(index);
-                          mViewModel.quantities.removeAt(index);
-                          setState(() {});
-                        },
-                        child: Container(
-                          padding: EdgeInsetsDirectional.all(10.0),
-                          child: Text(
-                            "Remove",
-                            style: getNormalTextStyle(
-                                fontSize: 10.0, fontColor: CommonColors.white),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final qtyPrice = widget.foodItem.pricesByQuantity?[index];
+                  return Row(
+                    children: [
+                      Flexible(
+                        child: TextFormField(
+                          initialValue: qtyPrice?.quantity?.toString() ?? '',
+                          decoration: InputDecoration(
+                            hintText: 'Quantity',
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none),
                           ),
-                          decoration: BoxDecoration(
-                              color: CommonColors.red,
-                              borderRadius: BorderRadius.circular(1000)),
+                          onChanged: (String value) {
+                            if (value.isNotEmpty) {
+                              mViewModel.quantities[index].quantity =
+                                  int.parse(value);
+                            }
+                          },
+                          keyboardType: TextInputType.number,
                         ),
-                      )
-                    ]
-                  ],
-                );
-              },
-              separatorBuilder: (context, index) => kSizedBoxV10,
-              itemCount: widget.foodItem.pricesByQuantity!.length,
-            ),
+                      ),
+                      kSizedBoxH20,
+                      Flexible(
+                        child: TextFormField(
+                          initialValue: qtyPrice?.price.toString() ?? '',
+                          decoration: InputDecoration(
+                            hintText: 'Price',
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none),
+                          ),
+                          onChanged: (String value) {
+                            if (value.isNotEmpty) {
+                              mViewModel.quantities[index].price = value;
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      if (index > 0) ...[
+                        kSizedBoxH20,
+                        InkWell(
+                          onTap: () {
+                            widget.foodItem.pricesByQuantity?.removeAt(index);
+                            mViewModel.quantities.removeAt(index);
+                            setState(() {});
+                          },
+                          child: Container(
+                            padding: EdgeInsetsDirectional.all(10.0),
+                            child: Text(
+                              "Remove",
+                              style: getNormalTextStyle(
+                                  fontSize: 10.0, fontColor: CommonColors.white),
+                            ),
+                            decoration: BoxDecoration(
+                                color: CommonColors.red,
+                                borderRadius: BorderRadius.circular(1000)),
+                          ),
+                        )
+                      ]
+                    ],
+                  );
+                },
+                separatorBuilder: (context, index) => kSizedBoxV10,
+                itemCount: widget.foodItem.pricesByQuantity!.length),
             getColumnTextField(
                 controller: _foodUnitController, lable: "Food Unit"),
             getColumnTextField(
+                controller: _totalQtyController,
+                lable: "Total Quantity"),
+            getColumnTextField(
                 controller: _availableQtyController,
                 lable: "Available Quantity"),
-            getColumnTextField(
-                controller: _contentPerSingleItemController,
-                lable: "Content Per Single Item"),
-            getColumnTextField(
-                controller: _cookingTimeController,
-                lable: "Cooking Time (In Minuites)"),
-            getColumnTextField(
-                controller: _preparationController, lable: "Preparation"),
-            getColumnTextField(
-                controller: _preparationTimeController,
-                lable: "Prepartion Time"),
-            getColumnTextField(
-                controller: _minimumStockController,
-                lable: "Minimum Stock Required"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Active',
+                    style: TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w500)),
+                Switch(
+                  value: isActive,
+                  onChanged: (val) => setState(() => isActive = val),
+                  activeColor: CommonColors.primaryColor,
+                ),
+              ],
+            ),
             kSizedBoxV20,
           ],
         ),
@@ -346,10 +331,10 @@ class _EditFoodViewState extends State<EditFoodView> {
 
   Widget getColumnTextField(
       {required TextEditingController controller,
-      required String lable,
-      String? hinttext,
-      Function(String)? onTextChange,
-      TextInputType? textInputType}) {
+        required String lable,
+        String? hinttext,
+        Function(String)? onTextChange,
+        TextInputType? textInputType}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -386,9 +371,6 @@ class _EditFoodViewState extends State<EditFoodView> {
         mViewModel.images.isEmpty) {
       showRedToastMessage("Please select food image");
       return false;
-    } else if (mViewModel.selectedFoodCategory == null) {
-      showRedToastMessage("Please select food category");
-      return false;
     } else if (_descController.text.isEmpty) {
       showRedToastMessage("Please enter food description");
       return false;
@@ -401,26 +383,11 @@ class _EditFoodViewState extends State<EditFoodView> {
     } else if (_foodUnitController.text.isEmpty) {
       showRedToastMessage("Please enter food unit");
       return false;
+    } else if (_totalQtyController.text.isEmpty) {
+      showRedToastMessage("Please enter total quantity");
+      return false;
     } else if (_availableQtyController.text.isEmpty) {
       showRedToastMessage("Please enter available qauntity");
-      return false;
-    } else if (_contentPerSingleItemController.text.isEmpty) {
-      showRedToastMessage("Please enter content per single item you provide");
-      return false;
-    } else if (_cookingTimeController.text.isEmpty) {
-      showRedToastMessage("Please enter cooking time");
-      return false;
-    } else if (_preparationController.text.isEmpty) {
-      showRedToastMessage("Please enter preparation required items");
-      return false;
-    } else if (_preparationTimeController.text.isEmpty) {
-      showRedToastMessage("Please enter preparation time required");
-      return false;
-    } else if (_preparationTimeController.text.isEmpty) {
-      showRedToastMessage("Please enter preparation time required");
-      return false;
-    } else if (_minimumStockController.text.isEmpty) {
-      showRedToastMessage("Please enter preparation time required");
       return false;
     } else {
       return true;

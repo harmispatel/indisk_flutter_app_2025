@@ -30,16 +30,17 @@ class _FoodListViewState extends State<FoodListView> {
   Widget build(BuildContext context) {
     mViewModel = Provider.of<FoodListViewModel>(context);
     return Scaffold(
-      appBar: CommonAppbar(
-        title: "Food List",
-        isBackButtonVisible: false,
+      appBar: AppBar(
+        title: Text('Food List', style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
         actions: [
-          InkWell(
-            onTap: () {
+          IconButton(
+            icon: Icon(Icons.add, size: 28),
+            tooltip: 'Add Category',
+            onPressed: () {
               pushToScreen(CreateFoodView());
             },
-            child: Icon(Icons.add),
-          )
+          ),
         ],
       ),
       body: mViewModel.isApiLoading

@@ -15,12 +15,6 @@ class ManagerProfileView extends StatefulWidget {
 }
 
 class _ManagerProfileViewState extends State<ManagerProfileView> {
-  final List<Map<String, dynamic>> _menuItems = [
-    {'title': 'Dashboard', 'icon': Icons.dashboard},
-    {'title': 'Employees', 'icon': Icons.people},
-    {'title': 'Schedule', 'icon': Icons.calendar_today},
-    {'title': 'Settings', 'icon': Icons.settings},
-  ];
 
   @override
   Widget build(BuildContext context) {

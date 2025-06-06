@@ -14,7 +14,7 @@ import 'models/staff_list_master.dart';
 
 abstract class BaseServices {
   Future<LoginMaster?> login({required Map<String, dynamic> params});
-  Future<CommonMaster?> createManager({
+  Future<CommonMaster?> createStaff({
     required Map<String, String> params,
     required List<FileModel> files,
     required Function(int, int)? onProgress,

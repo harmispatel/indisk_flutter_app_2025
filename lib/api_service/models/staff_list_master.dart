@@ -30,60 +30,64 @@ class StaffListMaster {
 class StaffListDetails {
   String? sId;
   String? name;
-  String? username;
-  String? phone;
   String? email;
   String? password;
-  String? image;
-  String? isBlocked;
-  int? role;
+  String? phone;
+  String? gender;
+  String? profilePicture;
+  String? address;
+  String? managerId;
+  String? status;
   String? createdAt;
+  String? updatedAt;
   int? iV;
-  String? roleName;
 
   StaffListDetails(
       {this.sId,
         this.name,
-        this.username,
-        this.phone,
         this.email,
         this.password,
-        this.image,
-        this.isBlocked,
-        this.role,
+        this.phone,
+        this.gender,
+        this.profilePicture,
+        this.address,
+        this.managerId,
+        this.status,
         this.createdAt,
-        this.iV,
-        this.roleName});
+        this.updatedAt,
+        this.iV});
 
   StaffListDetails.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'];
-    username = json['username'];
-    phone = json['phone'];
     email = json['email'];
     password = json['password'];
-    image = json['profile_picture'];
-    isBlocked = json['is_blocked'];
-    role = json['role'];
-    createdAt = json['createdAt'];
+    phone = json['phone'];
+    gender = json['gender'];
+    profilePicture = json['profile_picture'];
+    address = json['address'];
+    managerId = json['manager_id'];
+    status = json['status'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
     iV = json['__v'];
-    roleName = json['role_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     data['name'] = this.name;
-    data['username'] = this.username;
-    data['phone'] = this.phone;
     data['email'] = this.email;
     data['password'] = this.password;
-    data['profile_picture'] = this.image;
-    data['is_blocked'] = this.isBlocked;
-    data['role'] = this.role;
-    data['createdAt'] = this.createdAt;
+    data['phone'] = this.phone;
+    data['gender'] = this.gender;
+    data['profile_picture'] = this.profilePicture;
+    data['address'] = this.address;
+    data['manager_id'] = this.managerId;
+    data['status'] = this.status;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     data['__v'] = this.iV;
-    data['role_name'] = this.roleName;
     return data;
   }
 }

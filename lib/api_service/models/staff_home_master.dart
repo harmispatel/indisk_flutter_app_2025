@@ -35,6 +35,7 @@ class StaffHomeData {
   int? price;
   int? cartCount;
   String? isAvailable;
+  Category? category;
 
   StaffHomeData(
       {this.id,
@@ -43,7 +44,8 @@ class StaffHomeData {
         this.description,
         this.price,
         this.cartCount,
-        this.isAvailable});
+        this.isAvailable,
+        this.category});
 
   StaffHomeData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -53,6 +55,9 @@ class StaffHomeData {
     price = json['price'];
     cartCount = json['cartCount'];
     isAvailable = json['isAvailable'];
+    category = json['category'] != null
+        ? new Category.fromJson(json['category'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -64,6 +69,29 @@ class StaffHomeData {
     data['price'] = this.price;
     data['cartCount'] = this.cartCount;
     data['isAvailable'] = this.isAvailable;
+    if (this.category != null) {
+      data['category'] = this.category!.toJson();
+    }
+    return data;
+  }
+}
+
+
+class Category {
+  String? sId;
+  String? name;
+
+  Category({this.sId, this.name});
+
+  Category.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['name'] = this.name;
     return data;
   }
 }

@@ -7,7 +7,6 @@ import '../../../../database/app_preferences.dart';
 import '../../../common_widget/common_appbar.dart';
 import '../food_category/food_category_list/food_category_list_view.dart';
 import '../food_menu/food_list/food_list_view.dart';
-import '../kitchen_dashboard/kitchen_dashboard_view.dart';
 import '../manager_home/manager_home_view.dart';
 import '../manager_profile/manager_profile_view.dart';
 import '../staff_list/staff_list_view.dart';
@@ -51,7 +50,6 @@ class _ManagerDashboardViewState extends State<ManagerDashboardView> {
                 _buildNavItem(Icons.fastfood, 2),
                 _buildNavItem(Icons.group, 3),
                 _buildNavItem(Icons.settings, 4),
-                _buildNavItem(Icons.restaurant, 5),
               ],
             ),
           ),
@@ -71,7 +69,6 @@ class _ManagerDashboardViewState extends State<ManagerDashboardView> {
                 FoodListView(),
                 StaffListView(),
                 ManagerProfileView(),
-                KitchenDashboardView()
               ],
             ),
           ),

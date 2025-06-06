@@ -3,9 +3,9 @@ String BASE_URL = "https://indisk-app.harmistechnology.com/api/";
 
 class ApiUrl {
   static String LOGIN = "${BASE_URL}login";
-  static String CREATE_MANAGER = "${BASE_URL}staff/staff-create";
-  static String UPDATE_MANAGER = "${BASE_URL}staff/staff-update";
-  static String DELETE_STAFF = "${BASE_URL}staff/staff-delete";
+  static String CREATE_STAFF = "${BASE_URL}create-staff";
+  static String UPDATE_MANAGER = "${BASE_URL}update-staff";
+  static String DELETE_STAFF = "${BASE_URL}delete-staff";
   static String GET_STAFF_LIST = "${BASE_URL}manager/staff-list";
   static String CREATE_FOOD_CATEGORY = "${BASE_URL}create-food-category";
   static String UPDATE_FOOD_CATEGORY = "${BASE_URL}update-food-category";

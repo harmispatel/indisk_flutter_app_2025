@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:indisk_app/api_service/models/food_category_master.dart';
 import 'package:indisk_app/api_service/models/staff_cart_master.dart';
 
 import '../../../../api_service/api_para.dart';
@@ -10,10 +11,9 @@ import '../../../../utils/global_variables.dart';
 
 class StaffHomeViewModel with ChangeNotifier {
   Services services = Services();
-
   bool? isApiLoading = false;
   bool? isCartApiLoading = false;
-
+  bool? isFoodCategoryLoading = false;
   List<StaffHomeData> staffFoodList = [];
   List<StaffCartData> staffCartFoodList = [];
   String subTotal = '';
@@ -21,9 +21,41 @@ class StaffHomeViewModel with ChangeNotifier {
   String gst = '';
   String cartTotal = '';
 
+  List<FoodCategoryDetails> foodCategoryList = [];
+
+  Future<void> getFoodCategoryList() async {
+    isFoodCategoryLoading = true;
+    isCartApiLoading = true;
+
+    notifyListeners();
+    foodCategoryList.clear();
+    try {
+      FoodCategoryMaster? staffListMaster = await services.api!
+          .getFoodCategoryList(
+          params: {ApiParams.staff_id: gLoginDetails?.sId});
+
+      isFoodCategoryLoading = false;
+
+      if (staffListMaster != null) {
+        if (staffListMaster.success != null && staffListMaster.success!) {
+          foodCategoryList.addAll(staffListMaster.data ?? []);
+        } else {
+          showRedToastMessage(staffListMaster.message ?? 'Failed to load categories');
+        }
+      } else {
+        oopsMSG();
+      }
+    } catch (e) {
+      isFoodCategoryLoading = false;
+      showRedToastMessage('Error loading categories');
+      debugPrint('Error loading categories: $e');
+    }
+    notifyListeners();
+  }
+
+
   Future<void> getStaffFoodList() async {
     isApiLoading = true;
-    isCartApiLoading = true;
 
     notifyListeners();
     staffFoodList.clear();
@@ -79,10 +111,10 @@ class StaffHomeViewModel with ChangeNotifier {
     if (master != null) {
       if (master.success != null && master.success!) {
         staffCartFoodList.addAll(master.cart ?? []);
-         subTotal = master.subtotal.toString();
-         cartQty = master.totalQuantity.toString();
-         gst = master.gst5Percent.toString();
-         cartTotal = master.totalWithGst.toString();
+        subTotal = master.subtotal.toString();
+        cartQty = master.totalQuantity.toString();
+        gst = master.gst5Percent.toString();
+        cartTotal = master.totalWithGst.toString();
       } else {
         showRedToastMessage(master.message!);
       }
@@ -92,7 +124,8 @@ class StaffHomeViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateQuantity({required String productId, required String type}) async {
+  Future<void> updateQuantity(
+      {required String productId, required String type}) async {
     showProgressDialog();
     CommonMaster? master = await services.api!.updateQuantityStaffCart(params: {
       ApiParams.user_id: gLoginDetails!.sId!,
@@ -103,7 +136,6 @@ class StaffHomeViewModel with ChangeNotifier {
 
     if (master != null) {
       if (master.success != null && master.success!) {
-
         for (var cartItem in staffCartFoodList) {
           if (cartItem.foodItemId == productId) {
             if (type == 'increase') {
@@ -118,13 +150,14 @@ class StaffHomeViewModel with ChangeNotifier {
         for (var product in staffFoodList) {
           if (product.id == productId) {
             product.cartCount = staffCartFoodList
-                .firstWhere((item) => item.foodItemId == productId,
-                orElse: () => StaffCartData(quantity: 0))
-                .quantity ?? 0;
+                    .firstWhere((item) => item.foodItemId == productId,
+                        orElse: () => StaffCartData(quantity: 0))
+                    .quantity ??
+                0;
             break;
           }
         }
-         getStaffCartList();
+        getStaffCartList();
       } else {
         showRedToastMessage(master.message!);
       }
@@ -168,9 +201,10 @@ class StaffHomeViewModel with ChangeNotifier {
         for (var product in staffFoodList) {
           if (product.id == productId) {
             product.cartCount = staffCartFoodList
-                .firstWhere((item) => item.foodItemId == productId,
-                orElse: () => StaffCartData(quantity: 0))
-                .quantity ?? 0;
+                    .firstWhere((item) => item.foodItemId == productId,
+                        orElse: () => StaffCartData(quantity: 0))
+                    .quantity ??
+                0;
             break;
           }
         }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:indisk_app/app_ui/screens/login/login_view.dart';
 import 'package:indisk_app/utils/common_utills.dart';
+import 'package:indisk_app/utils/common_colors.dart';
 
 import '../../../../database/app_preferences.dart';
 import '../../../common_widget/common_appbar.dart';
@@ -17,12 +18,10 @@ class OwnerDashboard extends StatefulWidget {
 
 class _OwnerDashboardState extends State<OwnerDashboard> {
   int _selectedIndex = 0;
-
   final _pageController = PageController();
 
   void _onItemTapped(int index) {
     print("Navigating to index $index");
-
     setState(() {
       _selectedIndex = index;
       _pageController.jumpToPage(index);
@@ -38,57 +37,71 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppbar(
-        title: 'Welcome Owner',
-        isBackButtonVisible: false,
-        actions: [
-          InkWell(
-            onTap: () async {
-              await SP.instance.removeLoginDetails();
-              pushAndRemoveUntil(LoginView());
-            },
-            child: Icon(Icons.logout),
-          )
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.restaurant),
-            label: 'Restaurant',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-      ),
-      body: PageView(
-        physics: ClampingScrollPhysics(),
-        controller: _pageController,
-        onPageChanged: (int? currentPage) {
-          _selectedIndex = currentPage!;
-          setState(() {});
-        },
+      body: Row(
         children: [
-          DashboardPage(),
-          // Container(color: Colors.red, child: Center(child: Text("TEST PAGE"))),
+          Container(
+            width: 80,
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              border: Border(
+                right: BorderSide(color: Colors.grey.shade300, width: 2),
+              ),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                _buildNavItem(Icons.home, 0, 'Home'),
+                _buildNavItem(Icons.restaurant, 1, 'Restaurants'),
+                _buildNavItem(Icons.person, 2, 'Profile'),
+              ],
+            ),
+          ),
 
-          RestaurantListView(),
-          OwnerProfileView(),
-          // BeautifulFoodOrderList(),
-          // StaffListView(),
-          // SaleListView(),
+          // Main Content Area
+          Expanded(
+            child: PageView(
+              physics: const NeverScrollableScrollPhysics(), // Disable swiping
+              controller: _pageController,
+              onPageChanged: (int? currentPage) {
+                _selectedIndex = currentPage!;
+                setState(() {});
+              },
+              children: [
+                DashboardPage(),
+                RestaurantListView(),
+                OwnerProfileView(),
+              ],
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildNavItem(IconData icon, int index, String tooltip) {
+    final isSelected = _selectedIndex == index;
+    return InkWell(
+      onTap: () => _onItemTapped(index),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? CommonColors.primaryColor : Colors.grey,
+              size: 30,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              tooltip,
+              style: TextStyle(
+                color: isSelected ? CommonColors.primaryColor : Colors.grey,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -20,22 +20,8 @@ class StaffHomeView extends StatefulWidget {
 
 class _StaffHomeViewState extends State<StaffHomeView> {
   StaffHomeViewModel? mViewModel;
-  final List<String> _categories = [
-    'All',
-    'Burgers',
-    'Pizzas',
-    'Pastas',
-    'Salads',
-    'Sandwiches',
-    'Japanese',
-    'Appetizers',
-    'Mexican',
-    'Mains',
-    'Asian',
-    'Desserts',
-  ];
-
-  String _selectedCategory = 'All';
+  String? _selectedCategoryId;
+  String _selectedCategoryName = 'All';
 
   @override
   void initState() {
@@ -44,15 +30,30 @@ class _StaffHomeViewState extends State<StaffHomeView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print("Initializing dashboard data");
       mViewModel = Provider.of<StaffHomeViewModel>(context, listen: false);
-      mViewModel?.getStaffFoodList().catchError((e) {
-        print("Dashboard init error: $e");
-      }).then((_) {
-        mViewModel?.getStaffCartList();
-        if (mounted) {
-          setState(() {});
-        }
+      mViewModel?.getFoodCategoryList().then((_) {
+        mViewModel?.getStaffFoodList().catchError((e) {
+          print("Dashboard init error: $e");
+        }).then((_) {
+          mViewModel?.getStaffCartList();
+          if (mounted) {
+            setState(() {});
+          }
+        });
       });
     });
+  }
+
+  List<Map<String, dynamic>> getCategories() {
+    final categories = [
+      {'id': null, 'name': 'All'} // 'All' has null ID
+    ];
+    if (mViewModel?.foodCategoryList != null) {
+      categories.addAll(mViewModel!.foodCategoryList.map((e) => {
+        'id': e.sId,
+        'name': e.name ?? 'Unnamed'
+      }));
+    }
+    return categories;
   }
 
   @override
@@ -64,7 +65,7 @@ class _StaffHomeViewState extends State<StaffHomeView> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top: 40, left: 15, right: 15),
+              padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -93,13 +94,6 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                           ),
                         ),
                         kSizedBoxH20,
-                        InkWell(
-                          onTap: () async {
-                            await SP.instance.removeLoginDetails();
-                            pushAndRemoveUntil(LoginView());
-                          },
-                          child: Icon(Icons.logout),
-                        ),
                       ],
                     ),
                     kSizedBoxV20,
@@ -116,117 +110,103 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                         ),
                       ),
                     ),
-                    viewModel.isApiLoading == true
+                    viewModel.isApiLoading == true || viewModel.isFoodCategoryLoading == true
                         ? Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 300),
-                              child: CircularProgressIndicator(),
-                            ),
-                          )
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 300),
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
                         : Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 50,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: _categories.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ChoiceChip(
-                                          showCheckmark: false,
-                                          label: Text(_categories[index]),
-                                          selected: _selectedCategory == _categories[index],
-                                          onSelected: (selected) {
-                                            setState(() {
-                                              _selectedCategory = _categories[index];
-                                            });
-                                          },
-                                          selectedColor: CommonColors.primaryColor,
-                                          labelStyle: TextStyle(
-                                            color: _selectedCategory == _categories[index]
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                      );
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 50,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: getCategories().length,
+                              itemBuilder: (context, index) {
+                                final category = getCategories()[index];
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ChoiceChip(
+                                    showCheckmark: false,
+                                    label: Text(category['name']),
+                                    selected: _selectedCategoryId == category['id'],
+                                    onSelected: (selected) {
+                                      setState(() {
+                                        _selectedCategoryId = category['id'];
+                                        _selectedCategoryName = category['name'];
+                                      });
                                     },
+                                    selectedColor: CommonColors.primaryColor,
+                                    labelStyle: TextStyle(
+                                      color: _selectedCategoryId == category['id']
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                                   ),
-                                ),
-                                GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    crossAxisSpacing: 16.0,
-                                    mainAxisSpacing: 16.0,
-                                    childAspectRatio: 0.8,
-                                  ),
-                                  itemCount: viewModel.staffFoodList.length,
-                                  itemBuilder: (context, index) {
-                                    return ProductCard(
-                                      image: viewModel
-                                              .staffFoodList[index].image?.first ??
-                                          '--',
-                                      name: viewModel.staffFoodList[index].name ??
-                                          '--',
-                                      price: viewModel.staffFoodList[index].price
-                                              .toString() ??
-                                          '--',
-                                      description: viewModel
-                                              .staffFoodList[index].description ??
-                                          '--',
-                                      onAddToCartTap: () {
-                                        setState(() {
-                                          final currentCount = viewModel
-                                                  .staffFoodList[index].cartCount ??
-                                              0;
-                                          viewModel.staffFoodList[index].cartCount =
-                                              currentCount + 1;
-                                        });
-                                        viewModel.addToCart(
-                                            productId:
-                                                viewModel.staffFoodList[index].id ??
-                                                    '--');
-                                      },
-                                      cartCount: viewModel
-                                              .staffFoodList[index].cartCount ??
-                                          0,
-                                      onIncreaseTap: () {
-                                        setState(() {
-                                          final currentCount = viewModel
-                                                  .staffFoodList[index].cartCount ??
-                                              0;
-                                          viewModel.staffFoodList[index].cartCount =
-                                              currentCount + 1;
-                                        });
-                                        viewModel.updateQuantity(
-                                            productId:
-                                                viewModel.staffFoodList[index].id ??
-                                                    '--',
-                                            type: 'increase');
-                                      },
-                                      onDecreaseTap: () {
-                                        setState(() {
-                                          final currentCount = viewModel
-                                                  .staffFoodList[index].cartCount ??
-                                              0;
-                                          viewModel.staffFoodList[index].cartCount =
-                                              currentCount - 1;
-                                        });
-                                        viewModel.updateQuantity(
-                                            productId:
-                                                viewModel.staffFoodList[index].id ??
-                                                    '--',
-                                            type: 'decrease');
-                                      },
-                                    );
-                                  },
-                                ),
+                                );
+                              },
+                            ),
+                          ),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 16.0,
+                              mainAxisSpacing: 16.0,
+                              childAspectRatio: 0.8,
+                            ),
+                            itemCount: _selectedCategoryId == null
+                                ? viewModel.staffFoodList.length
+                                : viewModel.staffFoodList
+                                .where((item) => item.category?.sId == _selectedCategoryId)
+                                .length,
+                            itemBuilder: (context, index) {
+                              final foodItem = _selectedCategoryId == null
+                                  ? viewModel.staffFoodList[index]
+                                  : viewModel.staffFoodList
+                                  .where((item) => item.category?.sId == _selectedCategoryId)
+                                  .toList()[index];
+
+                              return ProductCard(
+                                image: foodItem.image?.first ?? '--',
+                                name: foodItem.name ?? '--',
+                                price: foodItem.price.toString() ?? '--',
+                                description: foodItem.description ?? '--',
+                                onAddToCartTap: () {
+                                  setState(() {
+                                    final currentCount = foodItem.cartCount ?? 0;
+                                    foodItem.cartCount = currentCount + 1;
+                                  });
+                                  viewModel.addToCart(
+                                      productId: foodItem.id ?? '--');
+                                },
+                                cartCount: foodItem.cartCount ?? 0,
+                                onIncreaseTap: () {
+                                  setState(() {
+                                    final currentCount = foodItem.cartCount ?? 0;
+                                    foodItem.cartCount = currentCount + 1;
+                                  });
+                                  viewModel.updateQuantity(
+                                      productId: foodItem.id ?? '--',
+                                      type: 'increase');
+                                },
+                                onDecreaseTap: () {
+                                  setState(() {
+                                    final currentCount = foodItem.cartCount ?? 0;
+                                    foodItem.cartCount = currentCount - 1;
+                                  });
+                                  viewModel.updateQuantity(
+                                      productId: foodItem.id ?? '--',
+                                      type: 'decrease');
+                                },
+                              );
+                            },
+                          ),
                               ],
                             ),
                           ),
@@ -240,7 +220,6 @@ class _StaffHomeViewState extends State<StaffHomeView> {
             width: kDeviceWidth / 3.5,
             child: Column(
               children: [
-                kSizedBoxV20,
                 kSizedBoxV20,
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),

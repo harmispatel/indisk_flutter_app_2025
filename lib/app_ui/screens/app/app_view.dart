@@ -15,8 +15,8 @@ import '../manager/food_category/create_food_category/create_food_category_view_
 import '../manager/food_category/food_category_list/food_category_list_view_model.dart';
 import '../manager/food_menu/edit_food/edit_food_view_model.dart';
 import '../manager/food_menu/food_list/food_list_view_model.dart';
+import '../manager/staff_list/add_staff/add_staff_view_model.dart';
 import '../manager/staff_list/staff_list_view_model.dart';
-import '../restaurent_owner/add_manager/add_manager_view_model.dart';
 import '../restaurent_owner/owner_home/owner_home_view_model.dart';
 import '../restaurent_owner/owner_profile/owner_change_password/change_password_view_model.dart';
 import '../restaurent_owner/owner_profile/owner_edit_profile/owner_edit_profile_view_model.dart';
@@ -112,8 +112,8 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
         ChangeNotifierProvider<SplashViewModel>(
             create: (_) => SplashViewModel()),
         ChangeNotifierProvider<LoginViewModel>(create: (_) => LoginViewModel()),
-        ChangeNotifierProvider<AddManagerViewModel>(
-            create: (_) => AddManagerViewModel()),
+        ChangeNotifierProvider<AddStaffViewModel>(
+            create: (_) => AddStaffViewModel()),
         ChangeNotifierProvider<StaffListViewModel>(
             create: (_) => StaffListViewModel()),
         ChangeNotifierProvider<FoodCategoryListViewModel>(

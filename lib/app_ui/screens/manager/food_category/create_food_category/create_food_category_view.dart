@@ -59,6 +59,7 @@ class _CreateFoodCategoryViewState extends State<CreateFoodCategoryView> {
   void dispose() {
     _nameController.dispose();
     _descController.dispose();
+    mViewModel.profileImage = null;
     super.dispose();
   }
 

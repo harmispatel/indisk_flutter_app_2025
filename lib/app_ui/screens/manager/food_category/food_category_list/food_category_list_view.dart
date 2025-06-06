@@ -231,7 +231,7 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              child: Text("Delete"),
+              child: Text("Delete",style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop();
                 onConfirm();

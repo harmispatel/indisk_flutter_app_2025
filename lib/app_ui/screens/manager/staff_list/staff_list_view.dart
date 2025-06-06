@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:indisk_app/api_service/models/staff_list_master.dart';
 import 'package:indisk_app/app_ui/common_widget/common_image.dart';
-import 'package:indisk_app/app_ui/screens/restaurent_owner/add_manager/add_manager_view.dart';
 import 'package:indisk_app/utils/common_colors.dart';
 import 'package:indisk_app/utils/common_styles.dart';
 import 'package:indisk_app/utils/common_utills.dart';
@@ -9,6 +8,7 @@ import 'package:indisk_app/utils/local_images.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../utils/app_dimens.dart';
+import 'add_staff/add_staff_view.dart';
 import 'staff_list_view_model.dart';
 
 class StaffListView extends StatefulWidget {
@@ -18,13 +18,6 @@ class StaffListView extends StatefulWidget {
 
 class _StaffListViewState extends State<StaffListView> {
   late StaffListViewModel mViewModel;
-
-  void _addStaff({StaffListDetails? staffListDetails}) async {
-    await pushToScreen(AddManagerView(
-      staffListDetails: staffListDetails,
-    ));
-    mViewModel.getStaffList();
-  }
 
   @override
   void initState() {
@@ -53,7 +46,7 @@ class _StaffListViewState extends State<StaffListView> {
                   child: CommonImage(
                     height: 80.0,
                     width: 80.0,
-                    imageUrl: staff.image!,
+                    imageUrl: staff.profilePicture!,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -74,9 +67,9 @@ class _StaffListViewState extends State<StaffListView> {
             SizedBox(height: 12),
             GestureDetector(
               onTap: () {
-                // pushToScreen(AddManagerView(
-                //   staffListDetails: staff,
-                // ));
+                pushToScreen(AddStaffView(
+                  staffListDetails: staff,
+                ));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -153,8 +146,11 @@ class _StaffListViewState extends State<StaffListView> {
           IconButton(
             icon: Icon(Icons.add, size: 28),
             tooltip: 'Add Staff',
-            onPressed: (){},
-            // onPressed: _addStaff,
+            onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddStaffView())).then((_){
+                mViewModel.getStaffList();
+              });
+            },
           ),
         ],
       ),
@@ -225,7 +221,7 @@ class _StaffListViewState extends State<StaffListView> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              child: Text("Delete"),
+              child: Text("Delete",style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop();
                 onConfirm();

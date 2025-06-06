@@ -41,12 +41,13 @@ class EditFoodViewModel with ChangeNotifier {
   }
 
   void setSelectedCategoryFromId(String? categoryId) {
-    if (categoryId != null) {
+    if (categoryId != null && foodCategoryList.isNotEmpty) {
       selectedFoodCategory = foodCategoryList.firstWhere(
         (category) => category.sId == categoryId,
+        orElse: () => foodCategoryList.first,
       );
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void resetAll() {
@@ -58,41 +59,45 @@ class EditFoodViewModel with ChangeNotifier {
   Future<void> updateFood({
     required name,
     required description,
-    required cookingTime,
-    required preparationTime,
-    required preparation,
-    required minStock,
     required basePrice,
     required foodUnit,
     required qtyAvailable,
-    required contentPerSingleItem,
+    required totalAvailable,
+    required isAvailable,
     required id,
+    required image,
   }) async {
     showProgressDialog();
+
+    // Prepare files list - only include new images if they exist
+    List<FileModel> filesToUpload = [];
+    if (fileList.isNotEmpty) {
+      // If user has selected new images, use those
+      filesToUpload = [FileModel(fileList.first.filePath, "image")];
+    } else if (image != null && image is String && image.startsWith('http')) {
+      // If keeping existing image (URL), don't include it in files to upload
+      filesToUpload = [];
+    }
+
     CommonMaster? commonMaster = await services.api!.updateFood(
-        params: {
-          ApiParams.name: name,
-          ApiParams.description: description,
-          ApiParams.restaurant_id: gRestaurantDetails!.sId!,
-          ApiParams.created_by: gLoginDetails!.sId!,
-          ApiParams.food_category: selectedFoodCategory!.sId!,
-          ApiParams.cooking_time: cookingTime,
-          ApiParams.prices_by_quantity: jsonEncode(quantities),
-          ApiParams.preparations_time: preparationTime,
-          ApiParams.preparations: preparation,
-          ApiParams.min_stock_required: minStock,
-          ApiParams.base_price: basePrice,
-          ApiParams.unit: foodUnit,
-          ApiParams.available_qty: qtyAvailable,
-          ApiParams.content_per_single_item: contentPerSingleItem,
-          ApiParams.priority: "1",
-          ApiParams.shifting_constant: "1.5",
-          ApiParams.id: id,
-        },
-        files: fileList,
-        onProgress: (bytes, totalBytes) {
-          print("Progress == ${bytes / totalBytes}");
-        });
+      params: {
+        ApiParams.id: id,
+        ApiParams.name: name,
+        ApiParams.description: description,
+        ApiParams.base_price: basePrice,
+        ApiParams.prices_by_quantity: jsonEncode(quantities),
+        ApiParams.category: selectedFoodCategory?.sId ?? '',
+        ApiParams.is_available: isAvailable,
+        ApiParams.created_by: gLoginDetails!.sId!,
+        ApiParams.unit: foodUnit,
+        ApiParams.total_qty: totalAvailable,
+        ApiParams.available_qty: qtyAvailable,
+      },
+      files: filesToUpload,
+      onProgress: (bytes, totalBytes) {
+        print("Progress == ${bytes / totalBytes}");
+      },
+    );
 
     hideProgressDialog();
 
@@ -165,6 +170,9 @@ class EditFoodViewModel with ChangeNotifier {
     if (staffListMaster != null) {
       if (staffListMaster.success != null && staffListMaster.success!) {
         foodCategoryList.addAll(staffListMaster.data!);
+        if (selectedFoodCategory == null && foodCategoryList.isNotEmpty) {
+          selectedFoodCategory = foodCategoryList.first;
+        }
       } else {
         showRedToastMessage(staffListMaster.message!);
       }
@@ -175,8 +183,9 @@ class EditFoodViewModel with ChangeNotifier {
   }
 
   void addQuantityPrice() {
-    quantities.add(QuantityPrice(price: "0", quantity: 1,
-        // discountPrice: "0"
+    quantities.add(QuantityPrice(
+      price: "0", quantity: 1,
+      // discountPrice: "0"
     ));
     notifyListeners();
   }

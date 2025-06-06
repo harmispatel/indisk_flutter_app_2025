@@ -1,13 +1,13 @@
 class FoodCategoryMaster {
-  String? message;
   bool? success;
+  String? message;
   List<FoodCategoryDetails>? data;
 
-  FoodCategoryMaster({this.message, this.success, this.data});
+  FoodCategoryMaster({this.success, this.message, this.data});
 
   FoodCategoryMaster.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
     success = json['success'];
+    message = json['message'];
     if (json['data'] != null) {
       data = <FoodCategoryDetails>[];
       json['data'].forEach((v) {
@@ -18,8 +18,8 @@ class FoodCategoryMaster {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
     data['success'] = this.success;
+    data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -31,6 +31,7 @@ class FoodCategoryDetails {
   String? sId;
   String? name;
   String? description;
+  String? managerId;
   String? restaurantId;
   String? imageUrl;
   String? isActive;
@@ -42,6 +43,7 @@ class FoodCategoryDetails {
       {this.sId,
         this.name,
         this.description,
+        this.managerId,
         this.restaurantId,
         this.imageUrl,
         this.isActive,
@@ -53,6 +55,7 @@ class FoodCategoryDetails {
     sId = json['_id'];
     name = json['name'];
     description = json['description'];
+    managerId = json['manager_id'];
     restaurantId = json['restaurant_id'];
     imageUrl = json['image_url'];
     isActive = json['is_active'];
@@ -66,6 +69,7 @@ class FoodCategoryDetails {
     data['_id'] = this.sId;
     data['name'] = this.name;
     data['description'] = this.description;
+    data['manager_id'] = this.managerId;
     data['restaurant_id'] = this.restaurantId;
     data['image_url'] = this.imageUrl;
     data['is_active'] = this.isActive;
@@ -75,5 +79,3 @@ class FoodCategoryDetails {
     return data;
   }
 }
-
-

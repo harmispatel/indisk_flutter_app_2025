@@ -39,13 +39,13 @@ class ApiServices extends BaseServices {
   }
 
   @override
-  Future<CommonMaster?> createManager({
+  Future<CommonMaster?> createStaff({
     required Map<String, String> params,
     required List<FileModel> files,
     required Function(int, int)? onProgress,
   }) async {
     dynamic response = await appBaseClient.formDataApi(
-        url: ApiUrl.CREATE_MANAGER,
+        url: ApiUrl.CREATE_STAFF,
         postParams: params,
         files: files,
         onProgress: onProgress);

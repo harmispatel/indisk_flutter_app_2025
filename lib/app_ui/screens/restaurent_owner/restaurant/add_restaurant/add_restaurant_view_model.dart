@@ -93,12 +93,10 @@ class RestaurantViewModel with ChangeNotifier {
     hideProgressDialog();
 
     if (commonMaster != null) {
-      if (commonMaster.success != null && commonMaster.success!) {
+      if (commonMaster.success) {
         showGreenToastMessage("${commonMaster.message}");
         Navigator.pop(mainNavKey.currentContext!, true);
-        Provider.of<RestaurantListViewModel>(mainNavKey.currentContext!,
-                listen: false)
-            .getRestaurantList();
+        Provider.of<RestaurantListViewModel>(mainNavKey.currentContext!, listen: false).getRestaurantList();
       } else {
         showRedToastMessage("${commonMaster.message}");
       }

@@ -170,6 +170,38 @@ class _LoginViewState extends State<LoginView> {
                                   ],
                                 ),
                               ),
+
+                              SizedBox(width: 20),
+
+                              // Inactive option
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    role = 'kitchenStaff';
+                                  });
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Radio<String>(
+                                      value: 'kitchenStaff',
+                                      groupValue: role,
+                                      activeColor: CommonColors.primaryColor,
+                                      hoverColor: CommonColors.primaryColor,
+                                      focusColor: CommonColors.primaryColor,
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          role = value!;
+                                        });
+                                      },
+                                    ),
+                                    Text(
+                                      'Kitchen Staff',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),

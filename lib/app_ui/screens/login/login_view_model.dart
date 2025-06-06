@@ -9,13 +9,16 @@ import 'package:indisk_app/utils/common_utills.dart';
 import 'package:indisk_app/utils/global_variables.dart';
 
 import '../../../database/app_preferences.dart';
+import '../kitchen_staff/kitchen_staff_dashboard/kitchen_staff_dashboard_view.dart';
 import '../staff/staff_dashboard/staff_dasboard_view.dart';
 
 class LoginViewModel extends ChangeNotifier {
   Services services = Services();
 
   Future<void> loginApi(
-      {required String username, required String password,required String role}) async {
+      {required String username,
+      required String password,
+      required String role}) async {
     try {
       showProgressDialog();
 
@@ -65,6 +68,9 @@ class LoginViewModel extends ChangeNotifier {
           break;
         case "staff":
           pushAndRemoveUntil(StaffDashboardView());
+          break;
+        case "kitchenstaff":
+          pushAndRemoveUntil(KitchenStaffDashboardView());
           break;
         default:
           pushAndRemoveUntil(OwnerDashboard());
