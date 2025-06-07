@@ -11,6 +11,7 @@ import 'models/restaurant_master.dart';
 import 'models/staff_cart_master.dart';
 import 'models/staff_home_master.dart';
 import 'models/staff_list_master.dart';
+import 'models/table_master.dart';
 
 abstract class BaseServices {
   Future<LoginMaster?> login({required Map<String, dynamic> params});
@@ -113,5 +114,11 @@ abstract class BaseServices {
       {required Map<String, dynamic> params});
 
   Future<CommonMaster?> removeItemStaffCart(
+      {required Map<String, dynamic> params});
+
+  Future<CommonMaster?> addTable(
+      {required Map<String, dynamic> params});
+
+  Future<TableMaster?> getTable(
       {required Map<String, dynamic> params});
 }

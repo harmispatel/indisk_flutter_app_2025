@@ -13,6 +13,7 @@ class ApiParams {
   static const String contact = "contact";
   static const String is_blocked = "is_blocked";
   static const String manager_id = "manager_id";
+  static const String table_no = "table_no";
   static const String created_by = "created_by";
   static const String category = "category";
   static const String is_available = "is_available";

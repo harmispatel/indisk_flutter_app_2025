@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:indisk_app/app_ui/screens/login/login_view.dart';
 import 'package:indisk_app/utils/common_colors.dart';
-import 'package:indisk_app/utils/common_utills.dart';
-
-import '../../../../database/app_preferences.dart';
-import '../../../common_widget/common_appbar.dart';
 import '../food_category/food_category_list/food_category_list_view.dart';
 import '../food_menu/food_list/food_list_view.dart';
 import '../manager_home/manager_home_view.dart';
 import '../manager_profile/manager_profile_view.dart';
 import '../staff_list/staff_list_view.dart';
+import '../tables/tables_view.dart';
 
 class ManagerDashboardView extends StatefulWidget {
   const ManagerDashboardView({super.key});
@@ -38,7 +34,6 @@ class _ManagerDashboardViewState extends State<ManagerDashboardView> {
             width: 80,
             decoration: BoxDecoration(
               color: Colors.grey[100],
-
               border: Border(right: BorderSide(color: Colors.grey.shade300, width: 2),
               ),
             ),
@@ -48,8 +43,9 @@ class _ManagerDashboardViewState extends State<ManagerDashboardView> {
                 _buildNavItem(Icons.home, 0),
                 _buildNavItem(Icons.category, 1),
                 _buildNavItem(Icons.fastfood, 2),
-                _buildNavItem(Icons.group, 3),
-                _buildNavItem(Icons.settings, 4),
+                _buildNavItem(Icons.table_bar_rounded, 3),
+                _buildNavItem(Icons.group, 4),
+                _buildNavItem(Icons.settings, 5),
               ],
             ),
           ),
@@ -67,6 +63,7 @@ class _ManagerDashboardViewState extends State<ManagerDashboardView> {
                 ManagerHomeView(),
                 FoodCategoryListView(),
                 FoodListView(),
+                TablesView(),
                 StaffListView(),
                 ManagerProfileView(),
               ],

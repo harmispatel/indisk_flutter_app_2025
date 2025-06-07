@@ -11,6 +11,8 @@ class ApiUrl {
   static String UPDATE_FOOD_CATEGORY = "${BASE_URL}update-food-category";
   static String DELETE_FOOD_CATEGORY = "${BASE_URL}delete-food-category";
   static String GET_FOOD_CATEGORY_LIST = "${BASE_URL}food-category-list";
+  static String CREATE_TABLE = "${BASE_URL}create-table";
+  static String GET_TABLES = "${BASE_URL}get-tables";
 
   static String CREATE_FOOD = "${BASE_URL}create-food";
   static String UPDATE_FOOD = "${BASE_URL}update-food";

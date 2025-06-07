@@ -147,7 +147,6 @@ class _DashboardPageState extends State<DashboardPage> {
                 ],
               ),
               const SizedBox(height: 24),
-
               // Sales Chart
               Card(
                 elevation: 3,

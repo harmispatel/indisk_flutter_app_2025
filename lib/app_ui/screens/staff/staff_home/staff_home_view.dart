@@ -1,5 +1,6 @@
  import 'package:flutter/material.dart';
 import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
+import 'package:indisk_app/app_ui/screens/staff/staff_home/proceed_to_checkout/proceed_to_checkout_view.dart';
 import 'package:indisk_app/app_ui/screens/staff/staff_home/staff_home_view_model.dart';
 import 'package:indisk_app/utils/common_colors.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,8 @@ import '../../../common_widget/common_textfield.dart';
 import '../../login/login_view.dart';
 
 class StaffHomeView extends StatefulWidget {
-  const StaffHomeView({super.key});
+  final String tableNo;
+  const StaffHomeView({super.key, required this.tableNo});
 
   @override
   State<StaffHomeView> createState() => _StaffHomeViewState();
@@ -45,7 +47,7 @@ class _StaffHomeViewState extends State<StaffHomeView> {
 
   List<Map<String, dynamic>> getCategories() {
     final categories = [
-      {'id': null, 'name': 'All'} // 'All' has null ID
+      {'id': null, 'name': 'All'}
     ];
     if (mViewModel?.foodCategoryList != null) {
       categories.addAll(mViewModel!.foodCategoryList.map((e) => {
@@ -71,21 +73,10 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          "In",
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
-                              color: CommonColors.primaryColor),
-                        ),
-                        Text(
-                          "disk",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        kSizedBoxH20,
+                        IconButton(onPressed: (){
+                          Navigator.pop(context);
+                        }, icon: Icon(Icons.arrow_back)),
+                        kSizedBoxH10,
                         Expanded(
                           child: CommonTextField(
                             keyboardType: TextInputType.emailAddress,
@@ -97,12 +88,12 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                       ],
                     ),
                     kSizedBoxV20,
-                    const Padding(
+                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15.0),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Special Menu For You',
+                          'Select Items For Table No. ${widget.tableNo}',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -227,9 +218,10 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                     children: [
                       Text('Order Details',
                           style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.w500)),
+                              fontSize: 22, fontWeight: FontWeight.w500),
+                      ),
                       Spacer(),
-                      if(viewModel.staffCartFoodList.isNotEmpty)
+                      if(viewModel.staffCartFoodList.isNotEmpty && viewModel.isCartApiLoading == false)
                       GestureDetector(
                         onTap: () {
                           viewModel.clearCart();
@@ -361,9 +353,7 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                         SizedBox(
                           width: double.infinity,
                           child: PrimaryButton(
-                            onPressed: () {
-                              viewModel.clearCart();
-                            },
+                            onPressed: () {},
                             text: 'Proceed to checkout',
                           ),
                         ),

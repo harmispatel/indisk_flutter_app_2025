@@ -16,6 +16,7 @@ import 'models/owner_home_master.dart';
 import 'models/restaurant_details_master.dart';
 import 'models/restaurant_master.dart';
 import 'models/staff_home_master.dart';
+import 'models/table_master.dart';
 
 class ApiServices extends BaseServices {
   AppBaseClient appBaseClient = AppBaseClient();
@@ -580,6 +581,40 @@ class ApiServices extends BaseServices {
     if (response != null) {
       try {
         return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> addTable(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.CREATE_TABLE, postParams: params ?? {});
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<TableMaster?> getTable(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.GET_TABLES, postParams: params ?? {});
+    if (response != null) {
+      try {
+        return TableMaster.fromJson(response);
       } on Exception catch (e) {
         log("Exception :: $e");
         return null;
