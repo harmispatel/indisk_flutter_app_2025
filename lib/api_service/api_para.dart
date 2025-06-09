@@ -14,6 +14,7 @@ class ApiParams {
   static const String is_blocked = "is_blocked";
   static const String manager_id = "manager_id";
   static const String table_no = "table_no";
+  static const String payment_type = "payment_type";
   static const String created_by = "created_by";
   static const String category = "category";
   static const String is_available = "is_available";
@@ -45,6 +46,7 @@ class ApiParams {
   static const String foodData = "foodData";
   static const String user_id = "user_id";
   static const String product_id = "product_id";
+  static const String quantity = "quantity";
   static const String type = "type";
   static const String owner_id = "owner_id";
   static const String address = "address";

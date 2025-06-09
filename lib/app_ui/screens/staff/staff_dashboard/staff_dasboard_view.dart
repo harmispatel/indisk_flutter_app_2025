@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:indisk_app/app_ui/screens/login/login_view.dart';
 import 'package:indisk_app/utils/common_colors.dart';
-import 'package:indisk_app/utils/common_utills.dart';
-import '../../../../database/app_preferences.dart';
-import '../../../common_widget/common_appbar.dart';
-import '../staff_home/proceed_to_checkout/proceed_to_checkout_view.dart';
-import '../staff_home/staff_home_view.dart';
+import '../staff_home/select_table_view.dart';
 import '../staff_profile/staff_profile_view.dart';
 
 class StaffDashboardView extends StatefulWidget {
@@ -58,7 +53,7 @@ class _StaffDashboardViewState extends State<StaffDashboardView> {
                 setState(() {});
               },
               children: [
-                ProceedToCheckoutView(),
+                SelectTableView(),
                 Container(),
                 Container(),
                 Container(),

@@ -1,27 +1,27 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
-import 'package:indisk_app/app_ui/screens/staff/staff_home/proceed_to_checkout/proceed_to_checkout_view.dart';
-import 'package:indisk_app/app_ui/screens/staff/staff_home/staff_home_view_model.dart';
+import 'package:indisk_app/app_ui/screens/staff/staff_home/select_product/staff_select_product_view_model.dart';
 import 'package:indisk_app/utils/common_colors.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../api_service/models/staff_cart_master.dart';
-import '../../../../database/app_preferences.dart';
-import '../../../../utils/app_dimens.dart';
-import '../../../../utils/common_utills.dart';
-import '../../../common_widget/common_textfield.dart';
-import '../../login/login_view.dart';
+import '../../../../../api_service/models/staff_cart_master.dart';
+import '../../../../../database/app_preferences.dart';
+import '../../../../../utils/app_dimens.dart';
+import '../../../../../utils/common_utills.dart';
+import '../../../../common_widget/common_textfield.dart';
+import '../../../login/login_view.dart';
 
-class StaffHomeView extends StatefulWidget {
+class StaffSelectProductView extends StatefulWidget {
   final String tableNo;
-  const StaffHomeView({super.key, required this.tableNo});
+
+  const StaffSelectProductView({super.key, required this.tableNo});
 
   @override
-  State<StaffHomeView> createState() => _StaffHomeViewState();
+  State<StaffSelectProductView> createState() => _StaffSelectProductViewState();
 }
 
-class _StaffHomeViewState extends State<StaffHomeView> {
-  StaffHomeViewModel? mViewModel;
+class _StaffSelectProductViewState extends State<StaffSelectProductView> {
+  StaffSelectProductViewModel? mViewModel;
   String? _selectedCategoryId;
   String _selectedCategoryName = 'All';
 
@@ -31,7 +31,8 @@ class _StaffHomeViewState extends State<StaffHomeView> {
     print("DashboardPage initState");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print("Initializing dashboard data");
-      mViewModel = Provider.of<StaffHomeViewModel>(context, listen: false);
+      mViewModel =
+          Provider.of<StaffSelectProductViewModel>(context, listen: false);
       mViewModel?.getFoodCategoryList().then((_) {
         mViewModel?.getStaffFoodList().catchError((e) {
           print("Dashboard init error: $e");
@@ -50,17 +51,16 @@ class _StaffHomeViewState extends State<StaffHomeView> {
       {'id': null, 'name': 'All'}
     ];
     if (mViewModel?.foodCategoryList != null) {
-      categories.addAll(mViewModel!.foodCategoryList.map((e) => {
-        'id': e.sId,
-        'name': e.name ?? 'Unnamed'
-      }));
+      categories.addAll(mViewModel!.foodCategoryList
+          .map((e) => {'id': e.sId, 'name': e.name ?? 'Unnamed'}));
     }
     return categories;
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = mViewModel ?? Provider.of<StaffHomeViewModel>(context);
+    final viewModel =
+        mViewModel ?? Provider.of<StaffSelectProductViewModel>(context);
     return Scaffold(
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,9 +73,11 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                   children: [
                     Row(
                       children: [
-                        IconButton(onPressed: (){
-                          Navigator.pop(context);
-                        }, icon: Icon(Icons.arrow_back)),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(Icons.arrow_back)),
                         kSizedBoxH10,
                         Expanded(
                           child: CommonTextField(
@@ -88,7 +90,7 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                       ],
                     ),
                     kSizedBoxV20,
-                     Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15.0),
                       child: Align(
                         alignment: Alignment.centerLeft,
@@ -101,103 +103,118 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                         ),
                       ),
                     ),
-                    viewModel.isApiLoading == true || viewModel.isFoodCategoryLoading == true
+                    viewModel.isApiLoading == true ||
+                            viewModel.isFoodCategoryLoading == true
                         ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 300),
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 300),
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
                         : Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 50,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: getCategories().length,
-                              itemBuilder: (context, index) {
-                                final category = getCategories()[index];
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ChoiceChip(
-                                    showCheckmark: false,
-                                    label: Text(category['name']),
-                                    selected: _selectedCategoryId == category['id'],
-                                    onSelected: (selected) {
-                                      setState(() {
-                                        _selectedCategoryId = category['id'];
-                                        _selectedCategoryName = category['name'];
-                                      });
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 50,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: getCategories().length,
+                                    itemBuilder: (context, index) {
+                                      final category = getCategories()[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ChoiceChip(
+                                          showCheckmark: false,
+                                          label: Text(category['name']),
+                                          selected: _selectedCategoryId ==
+                                              category['id'],
+                                          onSelected: (selected) {
+                                            setState(() {
+                                              _selectedCategoryId =
+                                                  category['id'];
+                                              _selectedCategoryName =
+                                                  category['name'];
+                                            });
+                                          },
+                                          selectedColor:
+                                              CommonColors.primaryColor,
+                                          labelStyle: TextStyle(
+                                            color: _selectedCategoryId ==
+                                                    category['id']
+                                                ? Colors.white
+                                                : Colors.black,
+                                          ),
+                                        ),
+                                      );
                                     },
-                                    selectedColor: CommonColors.primaryColor,
-                                    labelStyle: TextStyle(
-                                      color: _selectedCategoryId == category['id']
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
                                   ),
-                                );
-                              },
-                            ),
-                          ),
-                          GridView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 16.0,
-                              mainAxisSpacing: 16.0,
-                              childAspectRatio: 0.8,
-                            ),
-                            itemCount: _selectedCategoryId == null
-                                ? viewModel.staffFoodList.length
-                                : viewModel.staffFoodList
-                                .where((item) => item.category?.sId == _selectedCategoryId)
-                                .length,
-                            itemBuilder: (context, index) {
-                              final foodItem = _selectedCategoryId == null
-                                  ? viewModel.staffFoodList[index]
-                                  : viewModel.staffFoodList
-                                  .where((item) => item.category?.sId == _selectedCategoryId)
-                                  .toList()[index];
+                                ),
+                                GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 16.0,
+                                    mainAxisSpacing: 16.0,
+                                    childAspectRatio: 0.8,
+                                  ),
+                                  itemCount: _selectedCategoryId == null
+                                      ? viewModel.staffFoodList.length
+                                      : viewModel.staffFoodList
+                                          .where((item) =>
+                                              item.category?.sId ==
+                                              _selectedCategoryId)
+                                          .length,
+                                  itemBuilder: (context, index) {
+                                    final foodItem = _selectedCategoryId == null
+                                        ? viewModel.staffFoodList[index]
+                                        : viewModel.staffFoodList
+                                            .where((item) =>
+                                                item.category?.sId ==
+                                                _selectedCategoryId)
+                                            .toList()[index];
 
-                              return ProductCard(
-                                image: foodItem.image?.first ?? '--',
-                                name: foodItem.name ?? '--',
-                                price: foodItem.price.toString() ?? '--',
-                                description: foodItem.description ?? '--',
-                                onAddToCartTap: () {
-                                  setState(() {
-                                    final currentCount = foodItem.cartCount ?? 0;
-                                    foodItem.cartCount = currentCount + 1;
-                                  });
-                                  viewModel.addToCart(
-                                      productId: foodItem.id ?? '--');
-                                },
-                                cartCount: foodItem.cartCount ?? 0,
-                                onIncreaseTap: () {
-                                  setState(() {
-                                    final currentCount = foodItem.cartCount ?? 0;
-                                    foodItem.cartCount = currentCount + 1;
-                                  });
-                                  viewModel.updateQuantity(
-                                      productId: foodItem.id ?? '--',
-                                      type: 'increase');
-                                },
-                                onDecreaseTap: () {
-                                  setState(() {
-                                    final currentCount = foodItem.cartCount ?? 0;
-                                    foodItem.cartCount = currentCount - 1;
-                                  });
-                                  viewModel.updateQuantity(
-                                      productId: foodItem.id ?? '--',
-                                      type: 'decrease');
-                                },
-                              );
-                            },
-                          ),
+                                    return ProductCard(
+                                      image: foodItem.image?.first ?? '--',
+                                      name: foodItem.name ?? '--',
+                                      price: foodItem.price.toString() ?? '--',
+                                      description: foodItem.description ?? '--',
+                                      onAddToCartTap: () {
+                                        setState(() {
+                                          final currentCount =
+                                              foodItem.cartCount ?? 0;
+                                          foodItem.cartCount = currentCount + 1;
+                                        });
+                                        viewModel.addToCart(
+                                            productId: foodItem.id ?? '--');
+                                      },
+                                      cartCount: foodItem.cartCount ?? 0,
+                                      onIncreaseTap: () {
+                                        setState(() {
+                                          final currentCount =
+                                              foodItem.cartCount ?? 0;
+                                          foodItem.cartCount = currentCount + 1;
+                                        });
+                                        viewModel.updateQuantity(
+                                            productId: foodItem.id ?? '--',
+                                            type: 'increase');
+                                      },
+                                      onDecreaseTap: () {
+                                        setState(() {
+                                          final currentCount =
+                                              foodItem.cartCount ?? 0;
+                                          foodItem.cartCount = currentCount - 1;
+                                        });
+                                        viewModel.updateQuantity(
+                                            productId: foodItem.id ?? '--',
+                                            type: 'decrease');
+                                      },
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                           ),
@@ -216,30 +233,32 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     children: [
-                      Text('Order Details',
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.w500),
+                      Text(
+                        'Order Details',
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w500),
                       ),
                       Spacer(),
-                      if(viewModel.staffCartFoodList.isNotEmpty && viewModel.isCartApiLoading == false)
-                      GestureDetector(
-                        onTap: () {
-                          viewModel.clearCart();
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 17, vertical: 5),
-                            child: Text(
-                              "Clear all",
-                              style: TextStyle(color: Colors.white),
+                      if (viewModel.staffCartFoodList.isNotEmpty &&
+                          viewModel.isCartApiLoading == false)
+                        GestureDetector(
+                          onTap: () {
+                            viewModel.clearCart();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 17, vertical: 5),
+                              child: Text(
+                                "Clear all",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
-                        ),
-                      )
+                        )
                     ],
                   ),
                 ),
@@ -353,7 +372,14 @@ class _StaffHomeViewState extends State<StaffHomeView> {
                         SizedBox(
                           width: double.infinity,
                           child: PrimaryButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return PaymentMethodDialog(tableNo: widget.tableNo,);
+                                },
+                              );
+                            },
                             text: 'Proceed to checkout',
                           ),
                         ),
@@ -365,6 +391,129 @@ class _StaffHomeViewState extends State<StaffHomeView> {
               ],
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class PaymentMethodDialog extends StatefulWidget {
+  final String tableNo;
+  const PaymentMethodDialog({super.key, required this.tableNo});
+
+  @override
+  _PaymentMethodDialogState createState() => _PaymentMethodDialogState();
+}
+
+class _PaymentMethodDialogState extends State<PaymentMethodDialog> {
+  String selectedPayment = '';
+  StaffSelectProductViewModel? mViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      mViewModel =
+          Provider.of<StaffSelectProductViewModel>(context, listen: false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel =
+        mViewModel ?? Provider.of<StaffSelectProductViewModel>(context);
+    return AlertDialog(
+      title: const Text(
+        'Select Payment Method',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    selectedPayment = 'viva';
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: selectedPayment == 'viva'
+                            ? CommonColors.primaryColor
+                            : Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Image.network(
+                        'https://ibsintelligence.com/wp-content/uploads/2020/07/vivawallet1.jpg',
+                        width: 100,
+                        height: 80,
+                        fit: BoxFit.fill,
+                      ),
+                      const SizedBox(height: 8),
+                      Text('Viva',
+                          style: TextStyle(
+                              color: selectedPayment == 'viva'
+                                  ? CommonColors.primaryColor
+                                  : Colors.grey)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    selectedPayment = 'cash';
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: selectedPayment == 'cash'
+                            ? CommonColors.primaryColor
+                            : Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Image.network(
+                        'https://www.shutterstock.com/image-vector/doller-money-icon-vector-png-600nw-2086977352.jpg',
+                        width: 100,
+                        height: 80,
+                        fit: BoxFit.fill,
+                      ),
+                      const SizedBox(height: 8),
+                      Text('Cash',
+                          style: TextStyle(
+                              color: selectedPayment == 'cash'
+                                  ? CommonColors.primaryColor
+                                  : Colors.grey)),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (selectedPayment != '') ...[
+            const SizedBox(height: 20),
+            PrimaryButton(
+              height: 45,
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                viewModel.placeOrderApi(
+                    tableNo: widget.tableNo, paymentType: selectedPayment);
+              },
+              text: 'Submit',
+            )
+          ]
         ],
       ),
     );
@@ -603,11 +752,11 @@ class CartItemWidget extends StatelessWidget {
             ),
           ),
           GestureDetector(
-              onTap: onDelete,
-              child: Icon(
-                Icons.delete_forever,
-                color: Colors.red,
-              ),
+            onTap: onDelete,
+            child: Icon(
+              Icons.delete_forever,
+              color: Colors.red,
+            ),
           )
         ],
       ),

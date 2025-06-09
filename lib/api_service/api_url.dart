@@ -1,5 +1,5 @@
 String BASE_URL = "https://indisk-app.harmistechnology.com/api/";
-// String BASE_URL = "https://indisk.harmistechnology.com/api/";
+// String BASE_URL = "https://indisk-app.harmistechnology.com/api/";
 
 class ApiUrl {
   static String LOGIN = "${BASE_URL}login";
@@ -13,6 +13,7 @@ class ApiUrl {
   static String GET_FOOD_CATEGORY_LIST = "${BASE_URL}food-category-list";
   static String CREATE_TABLE = "${BASE_URL}create-table";
   static String GET_TABLES = "${BASE_URL}get-tables";
+  static String PLACE_ORDER = "${BASE_URL}place-order";
 
   static String CREATE_FOOD = "${BASE_URL}create-food";
   static String UPDATE_FOOD = "${BASE_URL}update-food";

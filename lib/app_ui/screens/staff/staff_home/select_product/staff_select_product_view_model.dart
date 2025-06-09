@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:indisk_app/api_service/models/food_category_master.dart';
 import 'package:indisk_app/api_service/models/staff_cart_master.dart';
 
-import '../../../../api_service/api_para.dart';
-import '../../../../api_service/index.dart';
-import '../../../../api_service/models/common_master.dart';
-import '../../../../api_service/models/staff_home_master.dart';
-import '../../../../utils/common_utills.dart';
-import '../../../../utils/global_variables.dart';
+import '../../../../../api_service/api_para.dart';
+import '../../../../../api_service/index.dart';
+import '../../../../../api_service/models/common_master.dart';
+import '../../../../../api_service/models/staff_home_master.dart';
+import '../../../../../utils/common_utills.dart';
+import '../../../../../utils/global_variables.dart';
+import '../../../app/app_view.dart';
 
-class StaffHomeViewModel with ChangeNotifier {
+class StaffSelectProductViewModel with ChangeNotifier {
   Services services = Services();
   bool? isApiLoading = false;
   bool? isCartApiLoading = false;
@@ -23,6 +24,31 @@ class StaffHomeViewModel with ChangeNotifier {
 
   List<FoodCategoryDetails> foodCategoryList = [];
 
+  Future<void> placeOrderApi(
+      {required String tableNo, required String paymentType}) async {
+    isApiLoading = true;
+    showProgressDialog();
+    CommonMaster? master = await services.api!.placeOrder(params: {
+      ApiParams.user_id: gLoginDetails!.sId!,
+      ApiParams.table_no: tableNo,
+      ApiParams.payment_type: paymentType,
+    });
+    hideProgressDialog();
+    isApiLoading = false;
+    if (master != null) {
+      if (master.success) {
+        staffCartFoodList.clear();
+        Navigator.pop(mainNavKey.currentContext!, true);
+        Navigator.pop(mainNavKey.currentContext!, true);
+      } else {
+        showRedToastMessage(master.message);
+      }
+    } else {
+      oopsMSG();
+    }
+    notifyListeners();
+  }
+
   Future<void> getFoodCategoryList() async {
     isFoodCategoryLoading = true;
     isCartApiLoading = true;
@@ -32,7 +58,7 @@ class StaffHomeViewModel with ChangeNotifier {
     try {
       FoodCategoryMaster? staffListMaster = await services.api!
           .getFoodCategoryList(
-          params: {ApiParams.staff_id: gLoginDetails?.sId});
+              params: {ApiParams.staff_id: gLoginDetails?.sId});
 
       isFoodCategoryLoading = false;
 
@@ -40,7 +66,8 @@ class StaffHomeViewModel with ChangeNotifier {
         if (staffListMaster.success != null && staffListMaster.success!) {
           foodCategoryList.addAll(staffListMaster.data ?? []);
         } else {
-          showRedToastMessage(staffListMaster.message ?? 'Failed to load categories');
+          showRedToastMessage(
+              staffListMaster.message ?? 'Failed to load categories');
         }
       } else {
         oopsMSG();
@@ -52,7 +79,6 @@ class StaffHomeViewModel with ChangeNotifier {
     }
     notifyListeners();
   }
-
 
   Future<void> getStaffFoodList() async {
     isApiLoading = true;
@@ -82,7 +108,8 @@ class StaffHomeViewModel with ChangeNotifier {
 
     CommonMaster? master = await services.api!.addToCart(params: {
       ApiParams.user_id: gLoginDetails!.sId!,
-      ApiParams.product_id: productId
+      ApiParams.product_id: productId,
+      ApiParams.quantity: 1
     });
     hideProgressDialog();
 

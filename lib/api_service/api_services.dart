@@ -623,4 +623,21 @@ class ApiServices extends BaseServices {
       return null;
     }
   }
+
+  @override
+  Future<CommonMaster?> placeOrder(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.PLACE_ORDER, postParams: params ?? {});
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
 }

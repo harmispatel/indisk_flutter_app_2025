@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:indisk_app/utils/common_utills.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../utils/local_images.dart';
 import 'add_table/add_table_view.dart';
 import 'add_table/add_table_view_model.dart';
@@ -109,7 +107,7 @@ class _TablesViewState extends State<TablesView> {
                                   padding: const EdgeInsets.only(right: 8),
                                   child: Text(
                                     mViewModel.tablesList[index].orderTime ??
-                                        '--',
+                                        '',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.grey[800],

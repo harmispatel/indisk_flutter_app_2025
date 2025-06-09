@@ -121,4 +121,7 @@ abstract class BaseServices {
 
   Future<TableMaster?> getTable(
       {required Map<String, dynamic> params});
+
+  Future<CommonMaster?> placeOrder(
+      {required Map<String, dynamic> params});
 }

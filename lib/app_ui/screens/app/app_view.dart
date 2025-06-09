@@ -28,8 +28,8 @@ import '../restaurent_owner/restaurant/restaurant_list_view_model.dart';
 import '../restaurent_owner/restaurant_details/restaurant_details_view_model.dart';
 import '../splash/splash_view.dart';
 import '../splash/splash_view_model.dart';
-import '../staff/staff_home/proceed_to_checkout/proceed_to_checkout_view_model.dart';
-import '../staff/staff_home/staff_home_view_model.dart';
+import '../staff/staff_home/select_product/staff_select_product_view_model.dart';
+import '../staff/staff_home/select_table_view_model.dart';
 import 'app_model.dart';
 
 GlobalKey<NavigatorState> mainNavKey = GlobalKey();
@@ -144,12 +144,12 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => OwnerProfileViewModel()),
         ChangeNotifierProvider<RestaurantDetailsViewModel>(
             create: (_) => RestaurantDetailsViewModel()),
-        ChangeNotifierProvider<StaffHomeViewModel>(
-            create: (_) => StaffHomeViewModel()),
+        ChangeNotifierProvider<StaffSelectProductViewModel>(
+            create: (_) => StaffSelectProductViewModel()),
         ChangeNotifierProvider<AddTableViewModel>(
             create: (_) => AddTableViewModel()),
-        ChangeNotifierProvider<ProceedToCheckOutViewModel>(
-            create: (_) => ProceedToCheckOutViewModel()),
+        ChangeNotifierProvider<SelectTableViewModel>(
+            create: (_) => SelectTableViewModel()),
       ],
       child: Consumer<AppModel>(
         builder: (context, appModel, child) => MaterialApp(
