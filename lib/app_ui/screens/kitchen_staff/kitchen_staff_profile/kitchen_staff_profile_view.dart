@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import '../../../../database/app_preferences.dart';
 import '../../../../utils/app_dimens.dart';
 import '../../../../utils/common_utills.dart';
+import '../../../../utils/global_variables.dart';
+import '../../../common_screen/change_password/change_password_view.dart';
 import '../../login/login_view.dart';
 
 class KitchenStaffProfileView extends StatefulWidget {
   const KitchenStaffProfileView({super.key});
 
   @override
-  State<KitchenStaffProfileView> createState() => _KitchenStaffProfileViewState();
+  State<KitchenStaffProfileView> createState() =>
+      _KitchenStaffProfileViewState();
 }
 
 class _KitchenStaffProfileViewState extends State<KitchenStaffProfileView> {
@@ -38,23 +41,29 @@ class _KitchenStaffProfileViewState extends State<KitchenStaffProfileView> {
               ),
               kSizedBoxV20,
               Text(
-                "Manager Name",
+                gLoginDetails!.username ?? "Kitchen Staff Name",
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
               ),
               kSizedBoxV20,
-
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.grey.shade200
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80,vertical: 8),
-                  child: Text("Change Password",style: TextStyle(fontSize :18),),
+              GestureDetector(
+                onTap: () {
+                  pushToScreen(ChangePasswordView());
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey.shade200),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 80, vertical: 8),
+                    child: Text(
+                      "Change Password",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
                 ),
               ),
               kSizedBoxV20,
-
               GestureDetector(
                 onTap: () async {
                   await SP.instance.removeLoginDetails();
@@ -63,11 +72,14 @@ class _KitchenStaffProfileViewState extends State<KitchenStaffProfileView> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Colors.red
-                  ),
+                      color: Colors.red),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 80,vertical: 8),
-                    child: Text("Logout",style: TextStyle(fontSize :18,color: Colors.white),),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 80, vertical: 8),
+                    child: Text(
+                      "Logout",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
                   ),
                 ),
               )
@@ -77,5 +89,4 @@ class _KitchenStaffProfileViewState extends State<KitchenStaffProfileView> {
       ),
     );
   }
-
 }

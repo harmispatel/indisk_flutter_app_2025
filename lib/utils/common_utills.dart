@@ -9,11 +9,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:indisk_app/api_service/models/login_master.dart';
 import 'package:indisk_app/app_ui/screens/app/app_view.dart';
 import 'package:indisk_app/app_ui/screens/manager/manager_dashboard/manager_dasbboard_view.dart';
-import 'package:indisk_app/app_ui/screens/restaurent_owner/owner_dashboard/owner_dashoboard.dart';
 import 'package:indisk_app/utils/app_constants.dart';
 import 'package:intl/intl.dart';
 
 import '../app_ui/screens/kitchen_staff/kitchen_staff_dashboard/kitchen_staff_dashboard_view.dart';
+import '../app_ui/screens/owner/owner_dashboard/owner_dashoboard.dart';
 import '../app_ui/screens/staff/staff_dashboard/staff_dasboard_view.dart';
 import 'common_styles.dart';
 import 'global_variables.dart';

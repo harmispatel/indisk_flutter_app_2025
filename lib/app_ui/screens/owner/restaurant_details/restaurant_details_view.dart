@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:indisk_app/app_ui/screens/restaurent_owner/restaurant_details/restaurant_details_view_model.dart';
+import 'package:indisk_app/app_ui/screens/owner/restaurant_details/restaurant_details_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../../../utils/app_dimens.dart';
 import '../../../../utils/common_colors.dart';

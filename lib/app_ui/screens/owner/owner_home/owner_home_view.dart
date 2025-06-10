@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:indisk_app/app_ui/screens/restaurent_owner/owner_home/sales_summary/sales_summary_view.dart';
+import 'package:indisk_app/app_ui/screens/owner/owner_home/sales_summary/sales_summary_view.dart';
 import 'owner_home_view_model.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -219,7 +219,6 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ),
               const SizedBox(height: 24),
-
               // Reports Grid
               Text(
                 'Sales Reports',
@@ -284,7 +283,7 @@ class _DashboardPageState extends State<DashboardPage> {
       String title,
       IconData icon,
       Color color,
-      Widget screen, // Add screen parameter
+      Widget screen,
       ) {
     return InkWell(
       onTap: () {

@@ -5,8 +5,8 @@ import '../../../../database/app_preferences.dart';
 import '../../../../utils/app_dimens.dart';
 import '../../../../utils/common_utills.dart';
 import '../../../../utils/global_variables.dart';
+import '../../../common_screen/change_password/change_password_view.dart';
 import '../../login/login_view.dart';
-import 'owner_change_password/owner_change_password_view.dart';
 import 'owner_edit_profile/owner_edit_profile_view.dart';
 import 'owner_profile_view_model.dart';
 
@@ -64,12 +64,12 @@ class _OwnerProfileViewState extends State<OwnerProfileView> {
                       ),
                       kSizedBoxV10,
                       Text(
-                        viewModel.profileData?.username ?? '',
+                        viewModel.profileData?.username ?? 'Owner Name',
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       kSizedBoxV5,
                       Text(
-                        gLoginDetails!.email!,
+                        viewModel.profileData?.email ?? 'Owner Email',
                         style:
                             TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                       ),
@@ -104,7 +104,7 @@ class _OwnerProfileViewState extends State<OwnerProfileView> {
                         width: kDeviceWidth,
                         child: InkWell(
                           onTap: () {
-                            pushToScreen(OwnerChangePasswordView());
+                            pushToScreen(ChangePasswordView());
                           },
                           child: Card(
                             child: Padding(

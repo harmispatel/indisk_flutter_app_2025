@@ -3,20 +3,20 @@ import 'package:provider/provider.dart';
 
 import '../../../../../utils/common_utills.dart';
 import '../../../../../utils/global_variables.dart';
-import '../../../../common_widget/common_appbar.dart';
-import '../../../../common_widget/common_textfield.dart';
-import '../../../../common_widget/primary_button.dart';
+import '../../common_widget/common_appbar.dart';
+import '../../common_widget/common_textfield.dart';
+import '../../common_widget/primary_button.dart';
 import 'change_password_view_model.dart';
 
-class OwnerChangePasswordView extends StatefulWidget {
-  const OwnerChangePasswordView({super.key});
+class ChangePasswordView extends StatefulWidget {
+  const ChangePasswordView({super.key});
 
   @override
-  State<OwnerChangePasswordView> createState() =>
-      _OwnerChangePasswordViewState();
+  State<ChangePasswordView> createState() =>
+      _ChangePasswordViewState();
 }
 
-class _OwnerChangePasswordViewState extends State<OwnerChangePasswordView> {
+class _ChangePasswordViewState extends State<ChangePasswordView> {
   late ChangePasswordViewModel mViewModel;
 
   final _currentPassController = TextEditingController();

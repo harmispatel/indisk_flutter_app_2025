@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,25 +6,24 @@ import 'package:indisk_app/app_ui/screens/login/login_view_model.dart';
 import 'package:indisk_app/app_ui/screens/manager/food_menu/create_food/create_food_view_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
-
 import '../../../language/app_localizations.dart';
 import '../../../utils/common_colors.dart';
 import '../../../utils/global_variables.dart';
+import '../../common_screen/change_password/change_password_view_model.dart';
 import '../manager/food_category/create_food_category/create_food_category_view_model.dart';
 import '../manager/food_category/food_category_list/food_category_list_view_model.dart';
 import '../manager/food_menu/edit_food/edit_food_view_model.dart';
 import '../manager/food_menu/food_list/food_list_view_model.dart';
 import '../manager/staff_list/add_staff/add_staff_view_model.dart';
 import '../manager/staff_list/staff_list_view_model.dart';
-import '../manager/tables/add_table/add_table_view_model.dart';
-import '../restaurent_owner/owner_home/owner_home_view_model.dart';
-import '../restaurent_owner/owner_profile/owner_change_password/change_password_view_model.dart';
-import '../restaurent_owner/owner_profile/owner_edit_profile/owner_edit_profile_view_model.dart';
-import '../restaurent_owner/owner_profile/owner_profile_view_model.dart';
-import '../restaurent_owner/restaurant/add_restaurant/add_restaurant_view_model.dart';
-import '../restaurent_owner/restaurant/edit_restaurant/edit_restaurant_view_model.dart';
-import '../restaurent_owner/restaurant/restaurant_list_view_model.dart';
-import '../restaurent_owner/restaurant_details/restaurant_details_view_model.dart';
+import '../manager/tables/table_view_model.dart';
+import '../owner/owner_home/owner_home_view_model.dart';
+import '../owner/owner_profile/owner_edit_profile/owner_edit_profile_view_model.dart';
+import '../owner/owner_profile/owner_profile_view_model.dart';
+import '../owner/restaurant/add_restaurant/add_restaurant_view_model.dart';
+import '../owner/restaurant/edit_restaurant/edit_restaurant_view_model.dart';
+import '../owner/restaurant/restaurant_list_view_model.dart';
+import '../owner/restaurant_details/restaurant_details_view_model.dart';
 import '../splash/splash_view.dart';
 import '../splash/splash_view_model.dart';
 import '../staff/staff_home/select_product/staff_select_product_view_model.dart';
@@ -146,8 +144,8 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => RestaurantDetailsViewModel()),
         ChangeNotifierProvider<StaffSelectProductViewModel>(
             create: (_) => StaffSelectProductViewModel()),
-        ChangeNotifierProvider<AddTableViewModel>(
-            create: (_) => AddTableViewModel()),
+        ChangeNotifierProvider<TableViewModel>(
+            create: (_) => TableViewModel()),
         ChangeNotifierProvider<SelectTableViewModel>(
             create: (_) => SelectTableViewModel()),
       ],
@@ -168,8 +166,6 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
           localeResolutionCallback: (locale, supportedLocales) => locale,
           locale: Locale(appModel.locale),
           home: SplashView(),
-
-          // home: const MyHomePage(),
         ),
       ),
     );

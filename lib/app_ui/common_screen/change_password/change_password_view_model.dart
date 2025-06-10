@@ -5,7 +5,7 @@ import '../../../../../api_service/api_para.dart';
 import '../../../../../api_service/index.dart';
 import '../../../../../database/app_preferences.dart';
 import '../../../../../utils/common_utills.dart';
-import '../../../login/login_view.dart';
+import '../../screens/login/login_view.dart';
 
 class ChangePasswordViewModel with ChangeNotifier {
   final Services services = Services();
@@ -31,11 +31,11 @@ class ChangePasswordViewModel with ChangeNotifier {
       }
 
       if (master.success == true) {
-        showGreenToastMessage(master.message ?? 'Password changed successfully');
+        showGreenToastMessage(master.message);
         await SP.instance.removeLoginDetails();
         pushAndRemoveUntil(LoginView());
       } else {
-        showRedToastMessage(master.message ?? 'Failed to change password');
+        showRedToastMessage(master.message);
       }
     } catch (e) {
       hideProgressDialog();

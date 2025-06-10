@@ -66,7 +66,7 @@ class _OwnerEditProfileViewState extends State<OwnerEditProfileView> {
             Center(
               child: GestureDetector(
                 onTap: mViewModel.showImagePickerOptions,
-                child: Container(
+                child: SizedBox(
                   height: 150.0,
                   width: 150.0,
                   child: Stack(

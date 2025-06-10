@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:indisk_app/api_service/api_para.dart';
 import 'package:indisk_app/api_service/index.dart';
 import 'package:indisk_app/app_ui/screens/manager/manager_dashboard/manager_dasbboard_view.dart';
-import 'package:indisk_app/app_ui/screens/restaurent_owner/owner_dashboard/owner_dashoboard.dart';
 import 'package:indisk_app/utils/common_utills.dart';
 import 'package:indisk_app/utils/global_variables.dart';
 
 import '../../../database/app_preferences.dart';
 import '../kitchen_staff/kitchen_staff_dashboard/kitchen_staff_dashboard_view.dart';
+import '../owner/owner_dashboard/owner_dashoboard.dart';
 import '../staff/staff_dashboard/staff_dasboard_view.dart';
 
 class LoginViewModel extends ChangeNotifier {

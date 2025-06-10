@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:indisk_app/api_service/models/table_master.dart';
 
-import '../../../../../api_service/api_para.dart';
-import '../../../../../api_service/index.dart';
-import '../../../../../api_service/models/common_master.dart';
-import '../../../../../utils/common_utills.dart';
-import '../../../../../utils/global_variables.dart';
-import '../../../app/app_view.dart';
+import '../../../../api_service/api_para.dart';
+import '../../../../api_service/index.dart';
+import '../../../../api_service/models/common_master.dart';
+import '../../../../utils/common_utills.dart';
+import '../../../../utils/global_variables.dart';
+import '../../app/app_view.dart';
 
-class AddTableViewModel with ChangeNotifier {
+class TableViewModel with ChangeNotifier {
   Services services = Services();
   List<TableData> tablesList = [];
   bool isApiLoading = false;
