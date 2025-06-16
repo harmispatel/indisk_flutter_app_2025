@@ -31,8 +31,7 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
     print("DashboardPage initState");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print("Initializing dashboard data");
-      mViewModel =
-          Provider.of<StaffSelectProductViewModel>(context, listen: false);
+      mViewModel = Provider.of<StaffSelectProductViewModel>(context, listen: false);
       mViewModel?.getFoodCategoryList().then((_) {
         mViewModel?.getStaffFoodList().catchError((e) {
           print("Dashboard init error: $e");
@@ -380,7 +379,7 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                                 },
                               );
                             },
-                            text: 'Proceed to checkout',
+                            text: 'Save',
                           ),
                         ),
                         SizedBox(height: 16),
@@ -420,8 +419,7 @@ class _PaymentMethodDialogState extends State<PaymentMethodDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel =
-        mViewModel ?? Provider.of<StaffSelectProductViewModel>(context);
+    final viewModel = mViewModel ?? Provider.of<StaffSelectProductViewModel>(context);
     return AlertDialog(
       title: const Text(
         'Select Payment Method',
@@ -495,7 +493,8 @@ class _PaymentMethodDialogState extends State<PaymentMethodDialog> {
                           style: TextStyle(
                               color: selectedPayment == 'cash'
                                   ? CommonColors.primaryColor
-                                  : Colors.grey)),
+                                  : Colors.grey),
+                      ),
                     ],
                   ),
                 ),

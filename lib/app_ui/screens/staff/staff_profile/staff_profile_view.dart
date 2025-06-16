@@ -35,10 +35,10 @@ class _StaffProfileViewState extends State<StaffProfileView> {
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = mViewModel ?? Provider.of<OwnerProfileViewModel>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),

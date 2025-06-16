@@ -144,9 +144,7 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
                               ),
                               kSizedBoxV10,
                               Text(
-                                viewModel.restaurantDetailsData?.staff?.length
-                                        .toString() ??
-                                    '--',
+                                viewModel.restaurantDetailsData?.staff?.length.toString() ?? '--',
                                 style: TextStyle(fontSize: 18),
                               ),
                             ],
