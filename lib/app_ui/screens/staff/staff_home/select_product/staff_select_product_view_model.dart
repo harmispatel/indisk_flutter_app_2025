@@ -114,10 +114,10 @@ class StaffSelectProductViewModel with ChangeNotifier {
     hideProgressDialog();
 
     if (master != null) {
-      if (master.success != null && master.success!) {
+      if (master.success) {
         getStaffCartList();
       } else {
-        showRedToastMessage(master.message!);
+        showRedToastMessage(master.message);
       }
     } else {
       oopsMSG();
@@ -186,7 +186,7 @@ class StaffSelectProductViewModel with ChangeNotifier {
         }
         getStaffCartList();
       } else {
-        showRedToastMessage(master.message!);
+        showRedToastMessage(master.message);
       }
     } else {
       oopsMSG();
@@ -202,11 +202,11 @@ class StaffSelectProductViewModel with ChangeNotifier {
     hideProgressDialog();
 
     if (master != null) {
-      if (master.success != null && master.success!) {
+      if (master.success) {
         getStaffFoodList();
         getStaffCartList();
       } else {
-        showRedToastMessage(master.message!);
+        showRedToastMessage(master.message);
       }
     } else {
       oopsMSG();
@@ -223,7 +223,7 @@ class StaffSelectProductViewModel with ChangeNotifier {
     hideProgressDialog();
 
     if (master != null) {
-      if (master.success != null && master.success!) {
+      if (master.success) {
         getStaffCartList();
         for (var product in staffFoodList) {
           if (product.id == productId) {
@@ -236,7 +236,7 @@ class StaffSelectProductViewModel with ChangeNotifier {
           }
         }
       } else {
-        showRedToastMessage(master.message!);
+        showRedToastMessage(master.message);
       }
     } else {
       oopsMSG();

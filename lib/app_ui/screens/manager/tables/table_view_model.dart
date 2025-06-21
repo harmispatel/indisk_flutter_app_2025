@@ -23,7 +23,6 @@ class TableViewModel with ChangeNotifier {
     if (commonMaster != null) {
       if (commonMaster.success) {
         showGreenToastMessage(commonMaster.message);
-        Navigator.pop(mainNavKey.currentContext!, true);
       } else {
         showRedToastMessage(commonMaster.message);
       }
@@ -43,9 +42,7 @@ class TableViewModel with ChangeNotifier {
     if (master != null) {
       if (master.success!) {
         tablesList = master.data ?? [];
-      } else {
-        showRedToastMessage(master.message ?? 'Error to get tables');
-      }
+      } else {}
     } else {
       oopsMSG();
     }

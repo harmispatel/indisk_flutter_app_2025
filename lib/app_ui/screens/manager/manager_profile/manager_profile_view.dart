@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:indisk_app/utils/app_dimens.dart';
 import 'package:provider/provider.dart';
 
@@ -8,8 +6,8 @@ import '../../../../database/app_preferences.dart';
 import '../../../../utils/common_utills.dart';
 import '../../../../utils/global_variables.dart';
 import '../../../common_screen/change_password/change_password_view.dart';
+import '../../../common_screen/profile/profile_view_model.dart';
 import '../../login/login_view.dart';
-import '../../owner/owner_profile/owner_profile_view_model.dart';
 
 class ManagerProfileView extends StatefulWidget {
   const ManagerProfileView({super.key});
@@ -19,7 +17,7 @@ class ManagerProfileView extends StatefulWidget {
 }
 
 class _ManagerProfileViewState extends State<ManagerProfileView> {
-  OwnerProfileViewModel? mViewModel;
+  ProfileViewModel? mViewModel;
 
   @override
   void initState() {
@@ -27,7 +25,7 @@ class _ManagerProfileViewState extends State<ManagerProfileView> {
     print("DashboardPage initState");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print("Initializing dashboard data");
-      mViewModel = Provider.of<OwnerProfileViewModel>(context, listen: false);
+      mViewModel = Provider.of<ProfileViewModel>(context, listen: false);
       mViewModel?.getProfileApi(email: gLoginDetails!.email!).catchError((e) {
         print("Dashboard init error: $e");
       }).then((_) {
@@ -40,8 +38,7 @@ class _ManagerProfileViewState extends State<ManagerProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = mViewModel ?? Provider.of<OwnerProfileViewModel>(context);
-
+    final viewModel = mViewModel ?? Provider.of<ProfileViewModel>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Accounts'),
@@ -90,7 +87,6 @@ class _ManagerProfileViewState extends State<ManagerProfileView> {
                 ),
               ),
               kSizedBoxV20,
-
               GestureDetector(
                 onTap: () async {
                   await SP.instance.removeLoginDetails();

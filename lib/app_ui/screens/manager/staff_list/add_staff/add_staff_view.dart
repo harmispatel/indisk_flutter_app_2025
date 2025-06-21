@@ -4,9 +4,7 @@ import 'package:indisk_app/app_ui/common_widget/common_appbar.dart';
 import 'package:indisk_app/app_ui/common_widget/common_textfield.dart';
 import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
 import 'package:indisk_app/main.dart';
-import 'package:indisk_app/utils/app_constants.dart';
 import 'package:indisk_app/utils/common_utills.dart';
-import 'package:indisk_app/utils/global_variables.dart';
 import 'package:provider/provider.dart';
 import '../../../../../utils/common_colors.dart';
 import 'add_staff_view_model.dart';
@@ -25,6 +23,7 @@ class _AddStaffViewState extends State<AddStaffView> {
   final _formKey = GlobalKey<FormState>();
   String _status = 'active';
   String _gender = 'male';
+  String _role = 'waiter';
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -58,6 +57,7 @@ class _AddStaffViewState extends State<AddStaffView> {
             status: _status,
             address: _addressController.text.trim(),
             gender: _gender,
+            role: _role
           );
         }
       }
@@ -163,11 +163,66 @@ class _AddStaffViewState extends State<AddStaffView> {
               _buildTextField(
                   _addressController, "Address", Icons.home, false,
                   keyboardType: TextInputType.phone),
-              Column(
-                children: [
-                  Text("Gender", style: TextStyle(fontSize: 18),),
-                ],
+              Text("Role", style: TextStyle(fontSize: 18),),
+              Center(
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _role = 'waiter';
+                        });
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Radio<String>(
+                            value: 'waiter',
+                            groupValue: _role,
+                            onChanged: (String? value) {
+                              setState(() {
+                                _role = value!;
+                              });
+                            },
+                          ),
+                          Text(
+                            'Waiter',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    // Inactive option
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _role = 'kitchen-staff';
+                        });
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Radio<String>(
+                            value: 'kitchen-staff',
+                            groupValue: _role,
+                            onChanged: (String? value) {
+                              setState(() {
+                                _role = value!;
+                              });
+                            },
+                          ),
+                          Text(
+                            'Kitchen Staff',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              Text("Gender", style: TextStyle(fontSize: 18),),
               Center(
                 child: Row(
                   children: [

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../utils/common_colors.dart';
+import 'kitchen_staff_home_view_model.dart';
 
 class KitchenStaffHomeView extends StatefulWidget {
   const KitchenStaffHomeView({super.key});
@@ -10,184 +13,61 @@ class KitchenStaffHomeView extends StatefulWidget {
 }
 
 class _KitchenStaffHomeViewState extends State<KitchenStaffHomeView> {
-  // Static food list data with added categories
-  final List<Map<String, dynamic>> _foodList = [
-    {
-      'id': '1',
-      'name': 'Burger',
-      'price': '1',
-      'description': 'Juicy beef burger with cheese and special sauce',
-      'image': 'https://cdn.pixabay.com/photo/2016/03/05/19/02/hamburger-1238246_1280.jpg',
-      'ingredients': 'Beef patty, Cheese, Lettuce, Tomato, Special sauce',
-      'prepTime': '15 mins',
-      'category': 'Burgers',
-    },
-    {
-      'id': '2',
-      'name': 'Pizza',
-      'price': '5',
-      'description': 'Margherita pizza with fresh basil and mozzarella',
-      'image': 'https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg',
-      'ingredients': 'Dough, Tomato sauce, Mozzarella, Basil, Olive oil',
-      'prepTime': '20 mins',
-      'category': 'Pizzas',
-    },
-    {
-      'id': '3',
-      'name': 'Pasta',
-      'price': '6',
-      'description': 'Creamy Alfredo pasta with mushrooms',
-      'image': 'https://cdn.pixabay.com/photo/2017/11/08/22/18/spaghetti-2931846_1280.jpg',
-      'ingredients': 'Pasta, Cream, Parmesan, Mushrooms, Garlic',
-      'prepTime': '25 mins',
-      'category': 'Pastas',
-    },
-    {
-      'id': '4',
-      'name': 'Salad',
-      'price': '5',
-      'description': 'Fresh garden salad with vinaigrette',
-      'image': 'https://cdn.pixabay.com/photo/2017/09/16/19/21/salad-2756467_1280.jpg',
-      'ingredients': 'Lettuce, Cucumber, Tomato, Olives, Feta cheese',
-      'prepTime': '10 mins',
-      'category': 'Salads',
-    },
-    {
-      'id': '5',
-      'name': 'Sandwich',
-      'price': '9',
-      'description': 'Club sandwich with fries',
-      'image': 'https://cdn.pixabay.com/photo/2016/03/05/20/02/sandwich-1238615_1280.jpg',
-      'ingredients': 'Bread, Chicken, Bacon, Lettuce, Mayo',
-      'prepTime': '12 mins',
-      'category': 'Sandwiches',
-    },
-    {
-      'id': '6',
-      'name': 'Sushi',
-      'price': '3',
-      'description': 'Assorted sushi platter with wasabi and soy sauce',
-      'image': 'https://cdn.pixabay.com/photo/2014/05/23/23/17/sushi-352420_1280.jpg',
-      'ingredients': 'Rice, Salmon, Tuna, Avocado, Nori',
-      'prepTime': '30 mins',
-      'category': 'Japanese',
-    },
-    {
-      'id': '7',
-      'name': 'Chicken Wings',
-      'price': '8',
-      'description': 'Crispy fried chicken wings with spicy buffalo sauce',
-      'image': 'https://cdn.pixabay.com/photo/2017/09/30/15/10/plate-2802332_1280.jpg',
-      'ingredients': 'Chicken wings, Flour, Spices, Buffalo sauce, Butter',
-      'prepTime': '20 mins',
-      'category': 'Appetizers',
-    },
-    {
-      'id': '8',
-      'name': 'Tacos',
-      'price': '7',
-      'description': 'Authentic Mexican tacos with seasoned ground beef',
-      'image': 'https://cdn.pixabay.com/photo/2017/12/10/14/47/taco-3011568_1280.jpg',
-      'ingredients': 'Tortillas, Ground beef, Lettuce, Cheese, Salsa',
-      'prepTime': '15 mins',
-      'category': 'Mexican',
-    },
-    {
-      'id': '9',
-      'name': 'Steak',
-      'price': '18',
-      'description': 'Juicy ribeye steak cooked to perfection',
-      'image': 'https://cdn.pixabay.com/photo/2018/09/14/11/12/food-3676796_1280.jpg',
-      'ingredients': 'Ribeye steak, Salt, Pepper, Butter, Garlic',
-      'prepTime': '25 mins',
-      'category': 'Mains',
-    },
-    {
-      'id': '10',
-      'name': 'Ramen',
-      'price': '12',
-      'description': 'Japanese ramen with rich pork broth and noodles',
-      'image': 'https://cdn.pixabay.com/photo/2017/06/30/20/33/ramen-2459941_1280.jpg',
-      'ingredients': 'Noodles, Pork broth, Chashu pork, Egg, Green onions',
-      'prepTime': '30 mins',
-      'category': 'Japanese',
-    },
-    {
-      'id': '11',
-      'name': 'Fried Rice',
-      'price': '9',
-      'description': 'Classic Asian-style fried rice with vegetables',
-      'image': 'https://cdn.pixabay.com/photo/2017/06/30/04/58/fried-rice-2457321_1280.jpg',
-      'ingredients': 'Rice, Eggs, Vegetables, Soy sauce, Chicken',
-      'prepTime': '15 mins',
-      'category': 'Asian',
-    },
-    {
-      'id': '12',
-      'name': 'Cheesecake',
-      'price': '6',
-      'description': 'Creamy New York style cheesecake with berry topping',
-      'image': 'https://cdn.pixabay.com/photo/2017/01/11/11/33/cake-1971552_1280.jpg',
-      'ingredients': 'Cream cheese, Sugar, Eggs, Graham crackers, Berries',
-      'prepTime': '40 mins',
-      'category': 'Desserts',
-    },
-    {
-      'id': '13',
-      'name': 'Chocolate Cake',
-      'price': '7',
-      'description': 'Rich chocolate cake with fudge frosting',
-      'image': 'https://cdn.pixabay.com/photo/2016/11/22/18/52/cake-1850011_1280.jpg',
-      'ingredients': 'Flour, Cocoa, Sugar, Eggs, Butter, Chocolate',
-      'prepTime': '45 mins',
-      'category': 'Desserts',
-    },
-    {
-      'id': '14',
-      'name': 'Ice Cream',
-      'price': '4',
-      'description': 'Creamy vanilla ice cream with chocolate sauce',
-      'image': 'https://cdn.pixabay.com/photo/2018/03/18/17/05/ice-cream-3237928_1280.jpg',
-      'ingredients': 'Milk, Cream, Sugar, Vanilla, Chocolate sauce',
-      'prepTime': '10 mins',
-      'category': 'Desserts',
-    },
-  ];
+  late KitchenStaffHomeViewModel mViewModel;
+  int? _selectedTable;
+  List<Map<String, dynamic>> _selectedTableItems = [];
 
-  // Define categories
-  final List<String> _categories = [
-    'All',
-    'Burgers',
-    'Pizzas',
-    'Pastas',
-    'Salads',
-    'Sandwiches',
-    'Japanese',
-    'Appetizers',
-    'Mexican',
-    'Mains',
-    'Asian',
-    'Desserts',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      mViewModel.getKitchenStaffOrderList();
+    });
+  }
 
-  String _selectedCategory = 'All';
-  Map<String, dynamic>? _selectedProduct;
+  Map<int, List<Map<String, dynamic>>> _groupItemsByTable() {
+    final Map<int, List<Map<String, dynamic>>> tableItems = {};
 
-  // Get filtered food list based on selected category
-  List<Map<String, dynamic>> get _filteredFoodList {
-    if (_selectedCategory == 'All') {
-      return _foodList;
+    for (var order in mViewModel.kitchenOrders) {
+      if (order.items != null && order.tableNo != null) {
+        final tableNo = order.tableNo!;
+
+        if (!tableItems.containsKey(tableNo)) {
+          tableItems[tableNo] = [];
+        }
+
+        for (var item in order.items!) {
+          if (item.foodItem != null) {
+            tableItems[tableNo]!.add({
+              'id': item.sId,
+              'name': item.foodItem!.name,
+              'quantity': item.quantity?.toString() ?? '0',
+              'description': item.foodItem!.description,
+              'image': item.foodItem!.image?.isNotEmpty == true
+                  ? item.foodItem!.image!.first
+                  : '',
+              'tableNo': order.tableNo?.toString() ?? '',
+              'orderId': order.sId,
+            });
+          }
+        }
+      }
     }
-    return _foodList.where((item) => item['category'] == _selectedCategory).toList();
+    return tableItems;
   }
 
   @override
   Widget build(BuildContext context) {
+
+    mViewModel = Provider.of<KitchenStaffHomeViewModel>(context);
+    final tableItems = _groupItemsByTable();
+    final tableNumbers = tableItems.keys.toList()..sort();
+
     return Scaffold(
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left side - Product Grid
+          // Left side - Tables List
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 40, left: 15, right: 15),
@@ -199,7 +79,7 @@ class _KitchenStaffHomeViewState extends State<KitchenStaffHomeView> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Today's Order",
+                          "Today's Orders",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -207,59 +87,32 @@ class _KitchenStaffHomeViewState extends State<KitchenStaffHomeView> {
                         ),
                       ),
                     ),
-
-                    // Category tabs
-                    SizedBox(
-                      height: 50,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _categories.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ChoiceChip(
-                              showCheckmark: false,
-                              label: Text(_categories[index]),
-                              selected: _selectedCategory == _categories[index],
-                              onSelected: (selected) {
-                                setState(() {
-                                  _selectedCategory = _categories[index];
-                                });
-                              },
-                              selectedColor: CommonColors.primaryColor,
-                              labelStyle: TextStyle(
-                                color: _selectedCategory == _categories[index]
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-
+                    const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           crossAxisSpacing: 16.0,
                           mainAxisSpacing: 16.0,
-                          childAspectRatio: 0.8,
+                          childAspectRatio: 0.9,
                         ),
-                        itemCount: _filteredFoodList.length,
+                        itemCount: tableNumbers.length,
                         itemBuilder: (context, index) {
-                          return ProductCard(
-                            image: _filteredFoodList[index]['image'],
-                            name: _filteredFoodList[index]['name'],
-                            price: _filteredFoodList[index]['price'],
-                            description: _filteredFoodList[index]['description'],
+                          final tableNo = tableNumbers[index];
+                          final items = tableItems[tableNo]!;
+
+                          return TableCard(
+                            tableNo: tableNo.toString(),
+                            totalItems: items.length,
+                            isSelected: _selectedTable == tableNo,
                             onTap: () {
                               setState(() {
-                                _selectedProduct = _filteredFoodList[index];
+                                _selectedTable = tableNo;
+                                _selectedTableItems = items;
                               });
                             },
                           );
@@ -272,183 +125,92 @@ class _KitchenStaffHomeViewState extends State<KitchenStaffHomeView> {
             ),
           ),
 
-          // Right side - Product Details
+          // Right side - Table Order Details
           Container(
             color: Colors.grey[100],
             width: MediaQuery.of(context).size.width / 3.5,
-            child: _selectedProduct == null
+            child: _selectedTable == null
                 ? const Center(
-              child: Text(
-                "Select a product to view details",
-                style: TextStyle(color: Colors.grey, fontSize: 18),
-              ),
-            )
+                    child: Text(
+                      "Select a table to view orders",
+                      style: TextStyle(color: Colors.grey, fontSize: 18),
+                    ),
+                  )
                 : Column(
-              children: [
-                const SizedBox(height: 20),
-                const SizedBox(height: 20),
-
-                // Product details header
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
                     children: [
-                      const Text(
-                        'Order Details',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () {
-                          setState(() {
-                            _selectedProduct = null;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Product image
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  margin: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.grey[200],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      _selectedProduct!['image'],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.fastfood, size: 50, color: Colors.grey),
-                    ),
-                  ),
-                ),
-
-                // Product details
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _selectedProduct!['name'],
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Qty ${_selectedProduct!['price']}',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Description:',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          _selectedProduct!['description'],
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Ingredients:',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          _selectedProduct!['ingredients'],
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Preparation Time:',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          _selectedProduct!['prepTime'],
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Action buttons
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          onPressed: () {
-                            // Cancel action
-                            setState(() {
-                              _selectedProduct = null;
-                            });
-                          },
-                          child: const Text(
-                            'Cancel',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          onPressed: () {
-                            // Ready action
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('${_selectedProduct!['name']} marked as ready'),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Table $_selectedTable',
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
                               ),
+                            ),
+                            Text(
+                              'Items: ${_selectedTableItems.length}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () {
+                                setState(() {
+                                  _selectedTable = null;
+                                  _selectedTableItems = [];
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: _selectedTableItems.length,
+                          itemBuilder: (context, index) {
+                            final item = _selectedTableItems[index];
+                            return OrderItemCard(
+                              image: item['image'],
+                              name: item['name'],
+                              quantity: item['quantity'],
+                              description: item['description'],
                             );
-                            setState(() {
-                              _selectedProduct = null;
-                            });
                           },
-                          child: const Text(
-                            'Ready',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: PrimaryButton(
+                          text: "Order marked as ready",
+                          onPressed: () {
+                            final orderIds = _selectedTableItems
+                                .map((item) => item['orderId'] as String)
+                                .toSet()
+                                .toList();
+
+                            // Update status for all orders (you might want to handle this differently)
+                            for (final orderId in orderIds) {
+                              mViewModel.updateFoodStatus(
+                                  orderId: orderId,
+                                  status: "Prepared"
+                              ).whenComplete(() {
+                                setState(() {
+                                  _selectedTable = null;
+                                  _selectedTableItems = [];
+                                });
+                                mViewModel.getKitchenStaffOrderList();
+                              });
+                            }
+                          },
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
           ),
         ],
       ),
@@ -456,95 +218,158 @@ class _KitchenStaffHomeViewState extends State<KitchenStaffHomeView> {
   }
 }
 
-class ProductCard extends StatelessWidget {
-  final String image;
-  final String name;
-  final String price;
-  final String description;
+class TableCard extends StatelessWidget {
+  final String tableNo;
+  final int totalItems;
+  final bool isSelected;
   final GestureTapCallback onTap;
 
-  const ProductCard({
-    Key? key,
-    required this.image,
-    required this.name,
-    required this.price,
-    required this.description,
+  const TableCard({
+    super.key,
+    required this.tableNo,
+    required this.totalItems,
+    required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(
+      child: Container(
+        decoration: BoxDecoration(
+          color: isSelected
+              ? CommonColors.primaryColor.withOpacity(0.2)
+              : Colors.white,
           borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Product image
-              Container(
-                height: 140,
-                width: double.infinity,
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey[200],
-                ),
-                child: Image.network(
-                  image,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.fastfood, size: 50, color: Colors.grey),
-                ),
+              // Table icon with number
+              Icon(
+                Icons.table_restaurant,
+                size: 50,
+                color: isSelected ? CommonColors.primaryColor : Colors.grey,
               ),
               const SizedBox(height: 8),
 
-              // Product name
+              // Table number
               Text(
-                name,
-                style: const TextStyle(
+                'Table $tableNo',
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: isSelected ? CommonColors.primaryColor : Colors.black,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
 
-              // Product description
+              // Total items count
               Text(
-                description,
-                style: const TextStyle(
+                'Items: $totalItems',
+                style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color: Colors.grey[600],
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const Spacer(),
-
-              // Product price
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Qty ${price}",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.green[700],
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right, color: Colors.grey),
-                ],
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class OrderItemCard extends StatelessWidget {
+  final String image;
+  final String name;
+  final String quantity;
+  final String description;
+
+  const OrderItemCard({
+    super.key,
+    required this.image,
+    required this.name,
+    required this.quantity,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Food image
+            Container(
+              height: 60,
+              width: 60,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.grey[200],
+              ),
+              child: image.isNotEmpty
+                  ? Image.network(
+                      image,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => const Icon(
+                          Icons.fastfood,
+                          size: 30,
+                          color: Colors.grey),
+                    )
+                  : const Icon(Icons.fastfood, size: 30, color: Colors.grey),
+            ),
+            const SizedBox(width: 12),
+
+            // Food details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Qty: $quantity',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  if (description.isNotEmpty)
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[500],
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,5 +1,5 @@
-String BASE_URL = "https://indisk-app.harmistechnology.com/api/";
 // String BASE_URL = "https://indisk-app.harmistechnology.com/api/";
+String BASE_URL = "https://2cad-2401-4900-1f3f-cd72-d959-fb48-bd22-7dd.ngrok-free.app/api/";
 
 class ApiUrl {
   static String LOGIN = "${BASE_URL}login";
@@ -33,4 +33,6 @@ class ApiUrl {
   static String UPDATE_QUANTITY = "${BASE_URL}update-quantity";
   static String CLEAR_CART = "${BASE_URL}clear-cart";
   static String REMOVE_TO_CART = "${BASE_URL}remove-to-cart";
+  static String GET_KITCHEN_STAFF_ORDERS = "${BASE_URL}orders/kitchen";
+  static String UPDATE_ORDER_STATUS = "${BASE_URL}orders/status";
 }

@@ -10,4 +10,6 @@ class LocalImages {
   static final String img_best_seller_2 = "assets/images/img_best_seller_2.png";
   static final String img_verified = "assets/images/img_verified.png";
   static final String img_table = "assets/images/img_table.png";
+  static final String img_waiter = "assets/images/img_waiter.png";
+  static final String food_preparing_view = "assets/images/food_preparing_view.gif";
 }

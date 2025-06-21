@@ -1,11 +1,8 @@
-
- class AppConstants{
-
+class AppConstants {
   static final String LANGUAGE_ENGLISH = "en";
   static final String LANGUAGE_DANISH = "da";
   static final String ROLE_OWNER = "owner";
   static final String ROLE_MANAGER = "manager";
-  static final String ROLE_STAFF = "staff";
-  static final String ROLE_KITCHEN_STAFF = "kitchenStaff";
-
- }
+  static final String ROLE_STAFF = "waiter";
+  static final String ROLE_KITCHEN_STAFF = "kitchen-staff";
+}

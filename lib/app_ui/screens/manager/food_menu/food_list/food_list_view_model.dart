@@ -18,16 +18,16 @@ class FoodListViewModel extends ChangeNotifier {
     isApiLoading = true;
     notifyListeners();
     foodList.clear();
-    FoodListMaster? staffListMaster = await services.api!
+    FoodListMaster? master = await services.api!
         .getFoodList(params: {ApiParams.manager_id: gLoginDetails!.sId!});
     isApiLoading = false;
     notifyListeners();
 
-    if (staffListMaster != null) {
-      if (staffListMaster.success != null && staffListMaster.success!) {
-        foodList.addAll(staffListMaster.data!);
+    if (master != null) {
+      if (master.success != null && master.success!) {
+        foodList = master.data ?? [];
       } else {
-        showRedToastMessage(staffListMaster.message!);
+        showRedToastMessage(master.message!);
       }
     } else {
       oopsMSG();

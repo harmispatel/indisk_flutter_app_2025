@@ -19,20 +19,27 @@ import 'common_styles.dart';
 import 'global_variables.dart';
 import 'local_images.dart';
 
-pushToScreen(Widget screen) {
-  Navigator.push(mainNavKey.currentContext!,
-      CupertinoPageRoute(builder: (context) {
-    return screen;
-  }));
+// pushToScreen(Widget screen) {
+//   Navigator.push(mainNavKey.currentContext!,
+//       CupertinoPageRoute(builder: (context) {
+//     return screen;
+//   }));
+//
+//   // Navigator.push(
+//   //   mainNavKey.currentContext!,
+//   //   PageRouteBuilder(
+//   //     pageBuilder: (_, __, ___) => screen,
+//   //     transitionDuration: Duration(seconds: 1),
+//   //     transitionsBuilder: (_, a, __, c) => SlideTransition(position: ),
+//   //   ),
+//   // );
+// }
 
-  // Navigator.push(
-  //   mainNavKey.currentContext!,
-  //   PageRouteBuilder(
-  //     pageBuilder: (_, __, ___) => screen,
-  //     transitionDuration: Duration(seconds: 1),
-  //     transitionsBuilder: (_, a, __, c) => SlideTransition(position: ),
-  //   ),
-  // );
+Future<T?> pushToScreen<T>(Widget screen) {
+  return Navigator.push<T>(
+    mainNavKey.currentContext!,
+    CupertinoPageRoute(builder: (context) => screen),
+  );
 }
 
 pushAndRemoveUntil(Widget screen) {
@@ -336,6 +343,5 @@ void redirectBasedOnRole({required LoginDetails loginDetails}) {
     pushAndRemoveUntil(KitchenStaffDashboardView());
     print("Logged User Id............${loginDetails.sId}");
     print("Logged User Role..........${loginDetails.role}");
-
   }
 }

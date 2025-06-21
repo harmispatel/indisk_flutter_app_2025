@@ -12,6 +12,7 @@ import 'base_services.dart';
 import 'models/common_master.dart';
 import 'models/food_list_master.dart';
 import 'models/get_profile_master.dart';
+import 'models/kitchen_staff_order_master.dart';
 import 'models/owner_home_master.dart';
 import 'models/restaurant_details_master.dart';
 import 'models/restaurant_master.dart';
@@ -629,6 +630,49 @@ class ApiServices extends BaseServices {
       {required Map<String, dynamic> params}) async {
     dynamic response = await appBaseClient.postApiCall(
         url: ApiUrl.PLACE_ORDER, postParams: params ?? {});
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<KitchenStaffOrderMaster?> getKitchenStaffOrder() async {
+    try {
+      dynamic response = await appBaseClient.getApiCall(
+        url: ApiUrl.GET_KITCHEN_STAFF_ORDERS,
+      );
+
+      if (response is Map<String, dynamic>) {
+        return KitchenStaffOrderMaster.fromJson(response);
+      } else if (response is String) {
+        log("Unexpected string response: $response");
+      }
+      return null;
+    } catch (e) {
+      log("Error in getKitchenStaffOrder: $e");
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> updateFoodStatus(
+      {required Map<String, String> params,
+        required List<FileModel> files,
+        required Function(int p1, int p2)? onProgress}) async {
+    // TODO: implement updateManager
+    dynamic response = await appBaseClient.formDataApi(
+        url: ApiUrl.UPDATE_ORDER_STATUS,
+        postParams: params,
+        requestMethod: "PUT",
+        files: files,
+        onProgress: onProgress);
     if (response != null) {
       try {
         return CommonMaster.fromJson(response);

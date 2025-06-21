@@ -74,7 +74,9 @@ class AddStaffViewModel extends ChangeNotifier {
       required String phone,
       required String status,
       required String address,
-      required String gender}) async {
+      required String gender,
+      required String role
+      }) async {
     showProgressDialog();
     CommonMaster? commonMaster = await services.api!.createStaff(params: {
       ApiParams.name: name,
@@ -84,6 +86,7 @@ class AddStaffViewModel extends ChangeNotifier {
       ApiParams.status: status,
       ApiParams.address: address,
       ApiParams.gender: gender,
+      ApiParams.role: role,
       ApiParams.manager_id: gLoginDetails!.sId!
     }, files: [
       FileModel(profileImage!.path, "profile_picture")
@@ -91,7 +94,7 @@ class AddStaffViewModel extends ChangeNotifier {
     hideProgressDialog();
 
     if (commonMaster != null) {
-      if (commonMaster.success != null && commonMaster.success!) {
+      if (commonMaster.success) {
         showGreenToastMessage("${commonMaster.message}");
         Navigator.pop(mainNavKey.currentContext!, true);
       } else {
@@ -120,9 +123,8 @@ class AddStaffViewModel extends ChangeNotifier {
       if (profileImage != null) FileModel(profileImage!.path, "image")
     ], onProgress: (bytes, totalBytes) {});
     hideProgressDialog();
-
     if (commonMaster != null) {
-      if (commonMaster.success != null && commonMaster.success!) {
+      if (commonMaster.success) {
         showGreenToastMessage("${commonMaster.message}");
         Navigator.pop(mainNavKey.currentContext!, true);
       } else {

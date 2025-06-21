@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../utils/common_colors.dart';
+import '../../../common_screen/profile/profile_view.dart';
 import '../kitchen_staff_home/kitchen_staff_home_view.dart';
 import '../kitchen_staff_profile/kitchen_staff_profile_view.dart';
 
@@ -58,7 +59,7 @@ class _KitchenStaffDashboardViewState extends State<KitchenStaffDashboardView> {
                 KitchenStaffHomeView(),
                 Container(),
                 Container(),
-                KitchenStaffProfileView(),
+                ProfileView(),
               ],
             ),
           ),

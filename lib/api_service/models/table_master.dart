@@ -36,6 +36,7 @@ class TableData {
   int? iV;
   String? orderTime;
   bool? available;
+  String? orderStatus;
   int? orderedItemsCount;
 
   TableData(
@@ -47,6 +48,7 @@ class TableData {
         this.iV,
         this.orderTime,
         this.available,
+        this.orderStatus,
         this.orderedItemsCount});
 
   TableData.fromJson(Map<String, dynamic> json) {
@@ -58,6 +60,7 @@ class TableData {
     iV = json['__v'];
     orderTime = json['order_time'];
     available = json['available'];
+    orderStatus = json['order_status'];
     orderedItemsCount = json['ordered_items_count'];
   }
 
@@ -71,6 +74,7 @@ class TableData {
     data['__v'] = this.iV;
     data['order_time'] = this.orderTime;
     data['available'] = this.available;
+    data['order_status'] = this.orderStatus;
     data['ordered_items_count'] = this.orderedItemsCount;
     return data;
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:indisk_app/utils/common_colors.dart';
+import '../../../common_screen/profile/profile_view.dart';
 import '../food_category/food_category_list/food_category_list_view.dart';
 import '../food_menu/food_list/food_list_view.dart';
 import '../manager_home/manager_home_view.dart';
@@ -65,7 +66,7 @@ class _ManagerDashboardViewState extends State<ManagerDashboardView> {
                 FoodListView(),
                 TablesView(),
                 StaffListView(),
-                ManagerProfileView(),
+                ProfileView(),
               ],
             ),
           ),

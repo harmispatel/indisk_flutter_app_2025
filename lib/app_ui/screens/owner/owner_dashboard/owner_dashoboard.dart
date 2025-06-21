@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:indisk_app/app_ui/screens/login/login_view.dart';
-import 'package:indisk_app/utils/common_utills.dart';
 import 'package:indisk_app/utils/common_colors.dart';
-
-import '../../../../database/app_preferences.dart';
-import '../../../common_widget/common_appbar.dart';
+import '../../../common_screen/profile/profile_view.dart';
 import '../owner_home/owner_home_view.dart';
-import '../owner_profile/owner_profile_view.dart';
 import '../restaurant/restaurant_list_view.dart';
 
 class OwnerDashboard extends StatefulWidget {
@@ -69,7 +64,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
               children: [
                 DashboardPage(),
                 RestaurantListView(),
-                OwnerProfileView(),
+                ProfileView(),
               ],
             ),
           ),

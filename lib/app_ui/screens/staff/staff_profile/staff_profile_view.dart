@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../database/app_preferences.dart';
 import '../../../../utils/app_dimens.dart';
 import '../../../../utils/common_utills.dart';
 import '../../../../utils/global_variables.dart';
 import '../../../common_screen/change_password/change_password_view.dart';
+import '../../../common_screen/profile/profile_view_model.dart';
 import '../../login/login_view.dart';
-import '../../owner/owner_profile/owner_profile_view_model.dart';
 
 class StaffProfileView extends StatefulWidget {
   const StaffProfileView({super.key});
@@ -17,7 +16,7 @@ class StaffProfileView extends StatefulWidget {
 }
 
 class _StaffProfileViewState extends State<StaffProfileView> {
-  OwnerProfileViewModel? mViewModel;
+  ProfileViewModel? mViewModel;
 
   @override
   void initState() {
@@ -25,7 +24,7 @@ class _StaffProfileViewState extends State<StaffProfileView> {
     print("DashboardPage initState");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print("Initializing dashboard data");
-      mViewModel = Provider.of<OwnerProfileViewModel>(context, listen: false);
+      mViewModel = Provider.of<ProfileViewModel>(context, listen: false);
       mViewModel?.getProfileApi(email: gLoginDetails!.email!).catchError((e) {
         print("Dashboard init error: $e");
       }).then((_) {
@@ -38,7 +37,7 @@ class _StaffProfileViewState extends State<StaffProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = mViewModel ?? Provider.of<OwnerProfileViewModel>(context);
+    final viewModel = mViewModel ?? Provider.of<ProfileViewModel>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -49,6 +48,7 @@ class _StaffProfileViewState extends State<StaffProfileView> {
         padding: const EdgeInsets.all(15.0),
         child: Center(
           child: Column(
+
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -66,6 +66,7 @@ class _StaffProfileViewState extends State<StaffProfileView> {
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
               ),
               kSizedBoxV5,
+
               Text(
                 viewModel.profileData?.email ?? 'Staff Email',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),

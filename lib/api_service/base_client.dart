@@ -15,28 +15,38 @@ class AppBaseClient {
     String? url,
     Map<String, dynamic>? queryParams
   }) async {
-    if (connectivity) {
-      try {
-        Map<String,String> headers = _getHeaders();
-        http.Response response = await http
-            .get(
-                Uri.parse(generateQueryUrl(url: url, queryParams: queryParams)),
-                headers: headers)
-            .timeout(const Duration(seconds: 45));
-
-        _printApiResponse(postParams: {},headers: headers,queryParams: queryParams,url: generateQueryUrl(url: url, queryParams: queryParams),response: response.body);
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          return jsonDecode(response.body);
-        } else {
-          return jsonDecode(response.body);
-        }
-      } on Exception catch (e) {
-        log("Exception (getApiCall) :: $e");
-        return null;
-      }
-    } else {
+    if (!connectivity) {
       showSnackBar(language.noInternet, color: CommonColors.red);
+      return null;
+    }
+
+    try {
+      Map<String,String> headers = _getHeaders();
+      final fullUrl = generateQueryUrl(url: url, queryParams: queryParams);
+
+      http.Response response = await http
+          .get(Uri.parse(fullUrl), headers: headers)
+          .timeout(const Duration(seconds: 45));
+
+      _printApiResponse(
+        postParams: {},
+        headers: headers,
+        queryParams: queryParams,
+        url: fullUrl,
+        response: response.body,
+      );
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        try {
+          return jsonDecode(response.body);
+        } catch (e) {
+          return response.body; // return raw body if not JSON
+        }
+      } else {
+        return jsonDecode(response.body);
+      }
+    } on Exception catch (e) {
+      log("Exception (getApiCall) :: $e");
       return null;
     }
   }
@@ -248,22 +258,21 @@ class AppBaseClient {
     return headers;
   }
 
-  _printApiResponse(
-      {String? url,
-      Map<String, dynamic>? headers,
-      Map<String, dynamic>? postParams,
-      Map<String, dynamic>? queryParams,
-      String? response}) {
-    if (kDebugMode) {
-      log("URL $url ");
-      log("HEADERS ${jsonEncode(headers)} ");
-      if (postParams!.isNotEmpty) {
-        log("POST PARAMS ${jsonEncode(postParams)} ");
-      }
-      if (queryParams!.isNotEmpty) {
-        log("QUERY PARAMS ${jsonEncode(postParams)} ");
-      }
-      log("RESPONSE $response ");
+  void _printApiResponse({
+    Map<String, dynamic>? postParams,
+    Map<String, String>? headers,
+    Map<String, dynamic>? queryParams,
+    String? url,
+    dynamic response,
+  }) {
+    try {
+      log("URL $url");
+      log("HEADERS ${headers ?? {}}");
+      log("QUERY PARAMS ${queryParams ?? {}}");
+      log("POST PARAMS ${postParams ?? {}}");
+      log("RESPONSE ${response ?? 'NULL_RESPONSE'}");
+    } catch (e) {
+      log("Error printing API response: $e");
     }
   }
 }

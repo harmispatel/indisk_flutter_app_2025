@@ -66,10 +66,10 @@ class LoginViewModel extends ChangeNotifier {
         case "manager":
           pushAndRemoveUntil(ManagerDashboardView());
           break;
-        case "staff":
+        case "waiter":
           pushAndRemoveUntil(StaffDashboardView());
           break;
-        case "kitchenstaff":
+        case "kitchen-staff":
           pushAndRemoveUntil(KitchenStaffDashboardView());
           break;
         default:

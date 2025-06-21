@@ -145,14 +145,14 @@ class _LoginViewState extends State<LoginView> {
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    role = 'staff';
+                                    role = 'waiter';
                                   });
                                 },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Radio<String>(
-                                      value: 'staff',
+                                      value: 'waiter',
                                       groupValue: role,
                                       activeColor: CommonColors.primaryColor,
                                       hoverColor: CommonColors.primaryColor,
@@ -164,7 +164,7 @@ class _LoginViewState extends State<LoginView> {
                                       },
                                     ),
                                     Text(
-                                      'Staff',
+                                      'Waiter',
                                       style: TextStyle(fontSize: 18),
                                     ),
                                   ],
@@ -177,14 +177,14 @@ class _LoginViewState extends State<LoginView> {
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    role = 'kitchenStaff';
+                                    role = 'kitchen-staff';
                                   });
                                 },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Radio<String>(
-                                      value: 'kitchenStaff',
+                                      value: 'kitchen-staff',
                                       groupValue: role,
                                       activeColor: CommonColors.primaryColor,
                                       hoverColor: CommonColors.primaryColor,
@@ -196,7 +196,7 @@ class _LoginViewState extends State<LoginView> {
                                       },
                                     ),
                                     Text(
-                                      'Kitchen Staff',
+                                      'Kitchen staff',
                                       style: TextStyle(fontSize: 18),
                                     ),
                                   ],
@@ -216,13 +216,12 @@ class _LoginViewState extends State<LoginView> {
                                 CommonTextField(
                                   controller: _emailController,
                                   keyboardType: TextInputType.emailAddress,
-                                  labelText: "${language.userName}",
+                                  labelText: language.userName,
                                   prefixIcon: Icon(Icons.email),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return '${language.pleaseEnterUsername}';
+                                      return language.pleaseEnterUsername;
                                     }
-                    
                                     return null;
                                   },
                                 ),
@@ -232,7 +231,7 @@ class _LoginViewState extends State<LoginView> {
                                 CommonTextField(
                                   controller: _passwordController,
                                   obscureText: _obscurePassword,
-                                  labelText: "${language.password}",
+                                  labelText: language.password,
                                   prefixIcon: Icon(Icons.lock),
                                   suffixIcon: IconButton(
                                     icon: Icon(
@@ -248,7 +247,7 @@ class _LoginViewState extends State<LoginView> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return '${language.pleaseEnterPassword}';
+                                      return language.pleaseEnterPassword;
                                     }
                     
                                     return null;
@@ -256,7 +255,6 @@ class _LoginViewState extends State<LoginView> {
                                 ),
                                 kSizedBoxV30,
                                 kSizedBoxV20,
-
                                 PrimaryButton(
                                     text: "Sign in",
                                     onPressed: () {

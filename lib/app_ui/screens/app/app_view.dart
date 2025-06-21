@@ -10,6 +10,9 @@ import '../../../language/app_localizations.dart';
 import '../../../utils/common_colors.dart';
 import '../../../utils/global_variables.dart';
 import '../../common_screen/change_password/change_password_view_model.dart';
+import '../../common_screen/edit_profile/edit_profile_view_model.dart';
+import '../../common_screen/profile/profile_view_model.dart';
+import '../kitchen_staff/kitchen_staff_home/kitchen_staff_home_view_model.dart';
 import '../manager/food_category/create_food_category/create_food_category_view_model.dart';
 import '../manager/food_category/food_category_list/food_category_list_view_model.dart';
 import '../manager/food_menu/edit_food/edit_food_view_model.dart';
@@ -18,8 +21,6 @@ import '../manager/staff_list/add_staff/add_staff_view_model.dart';
 import '../manager/staff_list/staff_list_view_model.dart';
 import '../manager/tables/table_view_model.dart';
 import '../owner/owner_home/owner_home_view_model.dart';
-import '../owner/owner_profile/owner_edit_profile/owner_edit_profile_view_model.dart';
-import '../owner/owner_profile/owner_profile_view_model.dart';
 import '../owner/restaurant/add_restaurant/add_restaurant_view_model.dart';
 import '../owner/restaurant/edit_restaurant/edit_restaurant_view_model.dart';
 import '../owner/restaurant/restaurant_list_view_model.dart';
@@ -136,10 +137,10 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => RestaurantEditModel()),
         ChangeNotifierProvider<ChangePasswordViewModel>(
             create: (_) => ChangePasswordViewModel()),
-        ChangeNotifierProvider<OwnerEditProfileViewModel>(
-            create: (_) => OwnerEditProfileViewModel()),
-        ChangeNotifierProvider<OwnerProfileViewModel>(
-            create: (_) => OwnerProfileViewModel()),
+        ChangeNotifierProvider<EditProfileViewModel>(
+            create: (_) => EditProfileViewModel()),
+        ChangeNotifierProvider<ProfileViewModel>(
+            create: (_) => ProfileViewModel()),
         ChangeNotifierProvider<RestaurantDetailsViewModel>(
             create: (_) => RestaurantDetailsViewModel()),
         ChangeNotifierProvider<StaffSelectProductViewModel>(
@@ -148,6 +149,8 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => TableViewModel()),
         ChangeNotifierProvider<SelectTableViewModel>(
             create: (_) => SelectTableViewModel()),
+        ChangeNotifierProvider<KitchenStaffHomeViewModel>(
+            create: (_) => KitchenStaffHomeViewModel()),
       ],
       child: Consumer<AppModel>(
         builder: (context, appModel, child) => MaterialApp(

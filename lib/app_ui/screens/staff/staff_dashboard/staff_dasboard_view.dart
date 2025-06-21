@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:indisk_app/utils/common_colors.dart';
+import '../../../common_screen/profile/profile_view.dart';
 import '../staff_home/select_table_view.dart';
 import '../staff_manage_food/staff_manage_food_view.dart';
 import '../staff_profile/staff_profile_view.dart';
@@ -54,7 +55,7 @@ class _StaffDashboardViewState extends State<StaffDashboardView> {
               children: [
                 SelectTableView(),
                 StaffManageFoodView(),
-                StaffProfileView(),
+                ProfileView(),
               ],
             ),
           ),

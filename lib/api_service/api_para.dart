@@ -26,6 +26,7 @@ class ApiParams {
   static const String tagLine = "tagLine";
   static const String isActive = "isActive";
   static const String status = "status";
+  static const String order_id = "order_id";
   static const String websiteLink = "websiteLink";
   static const String food_category = "food_category";
   static const String unit = "unit";
