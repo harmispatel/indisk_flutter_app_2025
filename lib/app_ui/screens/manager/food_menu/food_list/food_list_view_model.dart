@@ -40,12 +40,83 @@ class FoodListViewModel extends ChangeNotifier {
     CommonMaster? staffListMaster = await services.api!.deleteFood(
         params: {ApiParams.id: id, ApiParams.user_id: gLoginDetails!.sId!});
     hideProgressDialog();
-
     if (staffListMaster != null) {
-      if (staffListMaster.success != null && staffListMaster.success!) {
+      if (staffListMaster.success) {
         getFoodList();
       } else {
-        showRedToastMessage(staffListMaster.message!);
+        showRedToastMessage(staffListMaster.message);
+      }
+    } else {
+      oopsMSG();
+    }
+    notifyListeners();
+  }
+
+  Future<void> addFoodModifier({
+    required String productId,
+    required List<Map<String, dynamic>> discount,
+    required List<Map<String, dynamic>> varient,
+    required List<Map<String, dynamic>> modifier,
+    required List<Map<String, dynamic>> topup,
+  }) async {
+    showProgressDialog();
+
+    // Prepare the parameters with proper structure
+    final params = {
+      'id': productId,
+      'discount': discount.map((d) {
+        // Only include _id if it's a valid MongoDB ID (24 character hex string)
+        final map = {
+          'isEnable': d['isEnable'],
+          'percentage': d['percentage'],
+          'description': d['description'],
+        };
+        if (d['_id'] != null && d['_id'].toString().length == 24) {
+          map['_id'] = d['_id'];
+        }
+        return map;
+      }).toList(),
+      'varient': varient.map((v) {
+        final map = {
+          'variantName': v['variantName'] ?? 'Variant ${v['price']}', // Add variantName
+          'price': v['price'],
+        };
+        if (v['_id'] != null && v['_id'].toString().length == 24) {
+          map['_id'] = v['_id'];
+        }
+        return map;
+      }).toList(),
+      'modifier': modifier.map((m) {
+        final map = {
+          'modifierName': m['modifierName'],
+          'price': m['price'],
+        };
+        if (m['_id'] != null && m['_id'].toString().length == 24) {
+          map['_id'] = m['_id'];
+        }
+        return map;
+      }).toList(),
+      'topup': topup.map((t) {
+        final map = {
+          'topupName': t['topupName'],
+          'price': t['price'],
+        };
+        if (t['_id'] != null && t['_id'].toString().length == 24) {
+          map['_id'] = t['_id'];
+        }
+        return map;
+      }).toList(),
+    };
+
+    CommonMaster? master = await services.api!.addFoodModifier(params: params);
+    hideProgressDialog();
+
+    if (master != null) {
+      if (master.success) {
+        // Success case
+        showGreenToastMessage('Modifiers updated successfully');
+      } else {
+        showRedToastMessage(master.message ?? 'Failed to update modifiers');
       }
     } else {
       oopsMSG();

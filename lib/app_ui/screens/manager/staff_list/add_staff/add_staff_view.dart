@@ -222,90 +222,90 @@ class _AddStaffViewState extends State<AddStaffView> {
                   ],
                 ),
               ),
-              Text("Gender", style: TextStyle(fontSize: 18),),
-              Center(
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          _gender = 'male';
-                        });
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Radio<String>(
-                            value: 'male',
-                            groupValue: _gender,
-                            onChanged: (String? value) {
-                              setState(() {
-                                _gender = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            'Male',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          _gender = 'female';
-                        });
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Radio<String>(
-                            value: 'female',
-                            groupValue: _gender,
-                            onChanged: (String? value) {
-                              setState(() {
-                                _gender = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            'Female',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          _gender = 'other';
-                        });
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Radio<String>(
-                            value: 'other',
-                            groupValue: _gender,
-                            onChanged: (String? value) {
-                              setState(() {
-                                _gender = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            'Other',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Text("Gender", style: TextStyle(fontSize: 18),),
+              // Center(
+              //   child: Row(
+              //     children: [
+              //       InkWell(
+              //         onTap: () {
+              //           setState(() {
+              //             _gender = 'male';
+              //           });
+              //         },
+              //         child: Row(
+              //           mainAxisSize: MainAxisSize.min,
+              //           children: [
+              //             Radio<String>(
+              //               value: 'male',
+              //               groupValue: _gender,
+              //               onChanged: (String? value) {
+              //                 setState(() {
+              //                   _gender = value!;
+              //                 });
+              //               },
+              //             ),
+              //             Text(
+              //               'Male',
+              //               style: TextStyle(fontSize: 18),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //       SizedBox(width: 20),
+              //       InkWell(
+              //         onTap: () {
+              //           setState(() {
+              //             _gender = 'female';
+              //           });
+              //         },
+              //         child: Row(
+              //           mainAxisSize: MainAxisSize.min,
+              //           children: [
+              //             Radio<String>(
+              //               value: 'female',
+              //               groupValue: _gender,
+              //               onChanged: (String? value) {
+              //                 setState(() {
+              //                   _gender = value!;
+              //                 });
+              //               },
+              //             ),
+              //             Text(
+              //               'Female',
+              //               style: TextStyle(fontSize: 18),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //       SizedBox(width: 20),
+              //       InkWell(
+              //         onTap: () {
+              //           setState(() {
+              //             _gender = 'other';
+              //           });
+              //         },
+              //         child: Row(
+              //           mainAxisSize: MainAxisSize.min,
+              //           children: [
+              //             Radio<String>(
+              //               value: 'other',
+              //               groupValue: _gender,
+              //               onChanged: (String? value) {
+              //                 setState(() {
+              //                   _gender = value!;
+              //                 });
+              //               },
+              //             ),
+              //             Text(
+              //               'Other',
+              //               style: TextStyle(fontSize: 18),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               Text("Status", style: TextStyle(fontSize: 18),),
               Center(
                 child: Row(

@@ -101,7 +101,7 @@ class AppBaseClient {
 
         if (postParams != null && postParams.isNotEmpty) {
           postParams.forEach((key, value) {
-            request.fields[key] = value;
+            request.fields[key] = value.toString();
           });
         }
         Map<String, String> headers = _getHeaders(isMultiPart: true);

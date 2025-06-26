@@ -59,7 +59,7 @@ class _EditFoodViewState extends State<EditFoodView> {
     _foodUnitController.text = foodItem.unit ?? '';
     _availableQtyController.text = foodItem.availableQty?.toString() ?? '';
     _totalQtyController.text = foodItem.totalQty?.toString() ?? '';
-    isActive = bool.parse(foodItem.isAvailable ?? 'true');
+    isActive = foodItem.isAvailable!;
 
     mViewModel.quantities.clear();
 
@@ -162,7 +162,7 @@ class _EditFoodViewState extends State<EditFoodView> {
             FormFieldLabel(label: "Select Food Category"),
             kSizedBoxV10,
             mViewModel.foodCategoryList.isEmpty
-                ? Container(
+                ? SizedBox(
               height: 40.0,
               width: kDeviceWidth,
               child: Center(
@@ -220,9 +220,7 @@ class _EditFoodViewState extends State<EditFoodView> {
                 FormFieldLabel(label: "Quantity Price"),
                 ElevatedButton(
                     onPressed: () {
-                      mViewModel.quantities.add(QuantityPrice(
-                          quantity: 0,
-                          price: ""));
+                      mViewModel.quantities.add(QuantityPrice(quantity: 0, price: ""));
                       setState(() {});
                     },
                     child: Text("ADD+"))
@@ -378,7 +376,7 @@ class _EditFoodViewState extends State<EditFoodView> {
       showRedToastMessage("Please enter food base price");
       return false;
     } else if (!isValidQuantityPrice!) {
-      showRedToastMessage("Please check your price with qauntity");
+      showRedToastMessage("Please check your price with quantity");
       return false;
     } else if (_foodUnitController.text.isEmpty) {
       showRedToastMessage("Please enter food unit");
@@ -387,7 +385,7 @@ class _EditFoodViewState extends State<EditFoodView> {
       showRedToastMessage("Please enter total quantity");
       return false;
     } else if (_availableQtyController.text.isEmpty) {
-      showRedToastMessage("Please enter available qauntity");
+      showRedToastMessage("Please enter available quantity");
       return false;
     } else {
       return true;

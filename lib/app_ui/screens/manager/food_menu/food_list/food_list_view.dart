@@ -9,167 +9,6 @@ import '../../../../../utils/common_utills.dart';
 import '../edit_food/edit_food_view.dart';
 import 'food_list_view_model.dart';
 
-//
-// class FoodListView extends StatefulWidget {
-//   @override
-//   _FoodListViewState createState() => _FoodListViewState();
-// }
-//
-// class _FoodListViewState extends State<FoodListView> {
-//   late FoodListViewModel mViewModel;
-//
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     Future.delayed(Duration.zero, () {
-//       mViewModel.getFoodList();
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     mViewModel = Provider.of<FoodListViewModel>(context);
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Food List', style: TextStyle(fontWeight: FontWeight.bold)),
-//         centerTitle: true,
-//         actions: [
-//           IconButton(
-//             icon: Icon(Icons.add, size: 28),
-//             onPressed: () {
-//               pushToScreen(CreateFoodView());
-//             },
-//           ),
-//         ],
-//       ),
-//       body: mViewModel.isApiLoading
-//           ? Center(
-//               child: CircularProgressIndicator(),
-//             )
-//           : mViewModel.foodList.isEmpty
-//               ? Center(
-//                   child: Text("No food found"),
-//                 )
-//               : Padding(
-//                   padding: const EdgeInsets.all(16),
-//                   child: ListView.builder(
-//                     itemCount: mViewModel.foodList.length,
-//                     itemBuilder: (context, index) {
-//                       return Padding(
-//                         padding: const EdgeInsets.only(bottom: 16),
-//                         child: buildFoodCard(mViewModel.foodList[index], index),
-//                       );
-//                     },
-//                   ),
-//                 ),
-//     );
-//   }
-//
-//   Widget buildFoodCard(FoodListData item, int index) {
-//     return Container(
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(12),
-//         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
-//       ),
-//       padding: EdgeInsets.all(12),
-//       child: Row(
-//         children: [
-//           Container(
-//             clipBehavior: Clip.antiAlias,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.circular(10),
-//             ),
-//             child: Image.network(
-//               item.image?.first ??
-//                   'https://cdn-icons-png.flaticon.com/512/4067/4067447.png',
-//               width: 70,
-//               height: 70,
-//               fit: BoxFit.cover,
-//               errorBuilder: (context, error, stackTrace) {
-//                 return Image.network(
-//                   'https://cdn-icons-png.flaticon.com/512/4067/4067447.png',
-//                   width: 70,
-//                   height: 70,
-//                   fit: BoxFit.cover,
-//                 );
-//               },
-//             ),
-//           ),
-//           SizedBox(width: 16),
-//           Text(item.name ?? '',
-//               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-//           SizedBox(width: 16),
-//           Text("Price: ${item.basePrice?.toStringAsFixed(2)} Kr",
-//               style: TextStyle(fontSize: 16)),
-//           SizedBox(width: 16),
-//           Text(item.isAvailable == "true" ? "In Stock" : "Out Of Stock",
-//               style: TextStyle(
-//                   fontSize: 16,
-//                   color: item.isAvailable == "true" ? Colors.green : Colors.red,
-//                   fontWeight: FontWeight.w500)),
-//           SizedBox(width: 16),
-//           Text("Quantity: ${item.availableQty}",
-//               style: TextStyle(fontSize: 16)),
-//           Spacer(),
-//           GestureDetector(
-//             onTap: () {
-//               Navigator.push(
-//                 context,
-//                 MaterialPageRoute(
-//                   builder: (context) =>
-//                       EditFoodView(foodItem: mViewModel.foodList[index]),
-//                 ),
-//               ).then((_) {
-//                 mViewModel.getFoodList();
-//               });
-//             },
-//             child: Row(
-//               children: [
-//                 Icon(
-//                   Icons.edit,
-//                   color: Colors.green,
-//                 ),
-//                 Text(
-//                   "Edit",
-//                   style: TextStyle(
-//                       color: Colors.green,
-//                       fontSize: 18,
-//                       fontWeight: FontWeight.w500),
-//                 )
-//               ],
-//             ),
-//           ),
-//           SizedBox(width: 15),
-//           GestureDetector(
-//             onTap: () {
-//               mViewModel.deleteFood(id: mViewModel.foodList[index].sId);
-//             },
-//             child: Row(
-//               children: [
-//                 Icon(
-//                   Icons.delete_forever,
-//                   color: Colors.red,
-//                 ),
-//                 Text(
-//                   "Delete",
-//                   style: TextStyle(
-//                       color: Colors.red,
-//                       fontSize: 18,
-//                       fontWeight: FontWeight.w500),
-//                 )
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-///
-
 class FoodListView extends StatefulWidget {
   @override
   _FoodListViewState createState() => _FoodListViewState();
@@ -207,132 +46,140 @@ class _FoodListViewState extends State<FoodListView> {
               : Padding(
                   padding: const EdgeInsets.all(16),
                   child: ListView.builder(
-                    itemCount: mViewModel.foodList.length,
-                    itemBuilder: (context, index) {
-                      // Add static data for demo purposes
-                      final item = mViewModel.foodList[index];
-                      // Add demo variants
-                      final demoVariants = [
-                        Variant(name: 'Small', price: item.basePrice! * 0.8),
-                        Variant(name: 'Medium', price: item.basePrice!),
-                        Variant(name: 'Large', price: item.basePrice! * 1.2),
-                      ];
-                      // Add demo modifiers
-                      final demoModifiers = [
-                        Modifier(name: 'Extra Cheese', isOptional: true),
-                        Modifier(name: 'No Onions', isOptional: false),
-                        Modifier(name: 'Spicy', isOptional: true),
-                      ];
-                      // Add demo top-ups
-                      final demoTopUps = [
-                        TopUp(name: 'Extra Dip', price: 10),
-                        TopUp(name: 'Side Salad', price: 15),
-                      ];
-                      // Add demo discount
-                      final hasDiscount = index % 2 == 0; // Just for demo
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: FoodItemCard(
-                          item: item,
-                          variants: demoVariants,
-                          modifiers: demoModifiers,
-                          topUps: demoTopUps,
-                          hasDiscount: hasDiscount,
-                          discountPrice:
-                              hasDiscount ? item.basePrice! * 0.9 : null,
-                          onEdit: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EditFoodView(foodItem: item),
-                              ),
-                            ).then((_) => mViewModel.getFoodList());
-                          },
-                          onDelete: () => mViewModel.deleteFood(id: item.sId),
-                          onManageOptions: () => showFoodOptionsDialog(
-                              context,
-                              item,
-                              demoVariants,
-                              demoModifiers,
-                              demoTopUps,
-                              hasDiscount),
-                        ),
-                      );
-                    },
-                  ),
+                      itemCount: mViewModel.foodList.length,
+                      itemBuilder: (context, index) {
+                        final item = mViewModel.foodList[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: FoodItemCard(
+                            item: item,
+                            onEdit: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      EditFoodView(foodItem: item),
+                                ),
+                              ).then((_) => mViewModel.getFoodList());
+                            },
+                            onDelete: () => mViewModel.deleteFood(id: item.sId),
+                            onManageOptions: () =>
+                                showFoodOptionsDialog(context, item),
+                          ),
+                        );
+                      }),
                 ),
     );
   }
 
-  void showFoodOptionsDialog(
-    BuildContext context,
-    FoodListData foodItem,
-    List<Variant> variants,
-    List<Modifier> modifiers,
-    List<TopUp> topUps,
-    bool hasDiscount,
-  ) {
+  void showFoodOptionsDialog(BuildContext context, FoodListData foodItem) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
         return FoodOptionsDialog(
           foodItem: foodItem,
-          variants: variants,
-          modifiers: modifiers,
-          topUps: topUps,
-          hasDiscount: hasDiscount,
+          onSave: (updatedFoodItem) {
+            // Prepare discount list
+            final discountList = updatedFoodItem.discount
+                    ?.map((d) => {
+                          'isEnable': d.isEnable,
+                          'percentage': d.percentage,
+                          'description': d.description,
+                          '_id': (d.sId != null && d.sId!.length == 24)
+                              ? d.sId
+                              : null,
+                        })
+                    .where((item) =>
+                        item['_id'] != null ||
+                        (item['isEnable'] != null &&
+                            item['percentage'] != null))
+                    .toList() ??
+                [];
+
+            // Prepare variant list
+            final varientList = updatedFoodItem.varient
+                    ?.map((v) => {
+                          'variantName': 'Variant ${v.price}',
+                          'price': v.price,
+                          '_id': (v.sId != null && v.sId!.length == 24)
+                              ? v.sId
+                              : null,
+                        })
+                    .where((item) => item['price'] != null)
+                    .toList() ??
+                [];
+
+            // Prepare modifier list
+            final modifierList = updatedFoodItem.modifier
+                    ?.map((m) => {
+                          'modifierName': m.modifierName,
+                          'price': m.price,
+                          '_id': (m.sId != null && m.sId!.length == 24)
+                              ? m.sId
+                              : null,
+                        })
+                    .where((item) =>
+                        item['modifierName'] != null && item['price'] != null)
+                    .toList() ??
+                [];
+
+            // Prepare topup list
+            final topupList = updatedFoodItem.topup
+                    ?.map((t) => {
+                          'topupName': t.topupName,
+                          'price': t.price,
+                          '_id': (t.sId != null && t.sId!.length == 24)
+                              ? t.sId
+                              : null,
+                        })
+                    .where((item) =>
+                        item['topupName'] != null && item['price'] != null)
+                    .toList() ??
+                [];
+
+            // Call the API
+            mViewModel
+                .addFoodModifier(
+              productId: updatedFoodItem.sId!,
+              discount: discountList,
+              varient: varientList,
+              modifier: modifierList,
+              topup: topupList,
+            )
+                .then((_) {
+              mViewModel.getFoodList(); // Refresh the list
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Modifiers updated successfully'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            }).catchError((error) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Failed to update modifiers: $error'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            });
+          },
         );
       },
     );
   }
 }
 
-class Variant {
-  final String name;
-  final dynamic price;
-
-  Variant({required this.name, required this.price});
-}
-
-class Modifier {
-  final String name;
-  final bool isOptional;
-
-  Modifier({required this.name, required this.isOptional});
-}
-
-class TopUp {
-  final String name;
-  final double price;
-
-  TopUp({required this.name, required this.price});
-}
-
-// Food Item Card Widget
 class FoodItemCard extends StatelessWidget {
   final FoodListData item;
-  final List<Variant> variants;
-  final List<Modifier> modifiers;
-  final List<TopUp> topUps;
-  final bool hasDiscount;
-  final double? discountPrice;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onManageOptions;
 
   const FoodItemCard({
     required this.item,
-    required this.variants,
-    required this.modifiers,
-    required this.topUps,
-    required this.hasDiscount,
-    this.discountPrice,
     required this.onEdit,
     required this.onDelete,
     required this.onManageOptions,
@@ -340,6 +187,17 @@ class FoodItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if any discount is enabled
+    final hasDiscount = item.discount?.any((d) => d.isEnable == true) ?? false;
+    // Get the first enabled discount for display
+    final activeDiscount = hasDiscount
+        ? item.discount?.firstWhere((d) => d.isEnable == true)
+        : null;
+    // Calculate discounted price
+    final discountPrice = activeDiscount != null
+        ? item.basePrice! * (1 - activeDiscount.percentage! / 100)
+        : null;
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -388,19 +246,20 @@ class FoodItemCard extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: item.isAvailable == "true"
+                              color: item.isAvailable == true
                                   ? Colors.green.withOpacity(0.2)
                                   : Colors.red.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
                               child: Text(
-                                item.isAvailable == "true"
+                                item.isAvailable == true
                                     ? 'Available'
                                     : 'Out of Stock',
                                 style: TextStyle(
-                                  color: item.isAvailable == "true"
+                                  color: item.isAvailable == true
                                       ? Colors.green
                                       : Colors.red,
                                   fontSize: 12,
@@ -427,7 +286,7 @@ class FoodItemCard extends StatelessWidget {
                           if (hasDiscount && discountPrice != null) ...[
                             SizedBox(width: 8),
                             Text(
-                              '${discountPrice?.toStringAsFixed(2)} Kr',
+                              '${discountPrice.toStringAsFixed(2)} Kr',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -436,7 +295,7 @@ class FoodItemCard extends StatelessWidget {
                             ),
                             SizedBox(width: 8),
                             Text(
-                              '${((item.basePrice! - discountPrice!) / item.basePrice! * 100).toStringAsFixed(0)}% OFF',
+                              '${activeDiscount?.percentage}% OFF',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.green,
@@ -459,144 +318,145 @@ class FoodItemCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 12),
-              Row(
-                children: [
-                  if (variants.isNotEmpty || modifiers.isNotEmpty || topUps.isNotEmpty)
+            Row(
+              children: [
+                if (item.varient?.isNotEmpty == true ||
+                    item.modifier?.isNotEmpty == true ||
+                    item.topup?.isNotEmpty == true ||
+                    hasDiscount)
                   Wrap(
                     spacing: 8,
                     runSpacing: 4,
                     children: [
-                      if (variants.isNotEmpty)
+                      if (item.varient?.isNotEmpty == true)
+                        _buildFeatureTag(Icons.linear_scale,
+                            '${item.varient?.length} Variants'),
+                      if (item.modifier?.isNotEmpty == true)
                         _buildFeatureTag(
-                            Icons.linear_scale, '${variants.length} Variants'),
-                      if (modifiers.isNotEmpty)
-                        _buildFeatureTag(
-                            Icons.tune, '${modifiers.length} Modifiers'),
-                      if (topUps.isNotEmpty)
-                        _buildFeatureTag(
-                            Icons.add_circle_outline, '${topUps.length} Top-ups'),
-                      if (hasDiscount) _buildFeatureTag(Icons.discount, 'Discount'),
+                            Icons.tune, '${item.modifier?.length} Modifiers'),
+                      if (item.topup?.isNotEmpty == true)
+                        _buildFeatureTag(Icons.add_circle_outline,
+                            '${item.topup?.length} Top-ups'),
+                      if (hasDiscount)
+                        _buildFeatureTag(Icons.discount, 'Discount'),
                     ],
                   ),
-                  Spacer(),
-                  GestureDetector(
-                    onTap: onManageOptions,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(7),
-                          border: Border.all(color: CommonColors.primaryColor),
-                          boxShadow: [
-                            BoxShadow(
-                                color: CommonColors.primaryColor.withOpacity(0.4),
-                                spreadRadius: 0.5,
-                                blurRadius: 2,
-                                offset: const Offset(2, 1)
-                            )
-                          ]
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.settings,
-                              size: 18,
-                              color: CommonColors.primaryColor,
-                            ),
-                            Text(
-                              " Options",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: CommonColors.primaryColor,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
+                Spacer(),
+                GestureDetector(
+                  onTap: onManageOptions,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(7),
+                        border: Border.all(color: Colors.blue),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.blue.withOpacity(0.4),
+                              spreadRadius: 0.5,
+                              blurRadius: 2,
+                              offset: const Offset(2, 1))
+                        ]),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.settings,
+                            size: 18,
+                            color: Colors.blue,
+                          ),
+                          Text(
+                            " Options",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: onEdit,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(7),
-                          border: Border.all(color: Colors.green),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.green.withOpacity(0.4),
-                                spreadRadius: 0.5,
-                                blurRadius: 2,
-                                offset: const Offset(2, 1)
-                            )
-                          ]
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 35),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.edit,
-                              size: 18,
-                              color: Colors.green,
-                            ),
-                            Text(
-                              " Edit",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: onDelete,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(7),
-                          border: Border.all(color: Colors.red),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.red.withOpacity(0.4),
-                                spreadRadius: 0.5,
-                                blurRadius: 2,
-                                offset: const Offset(2, 1)
-                            )
-                          ]
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.delete,
-                              size: 18,
-                              color: Colors.red,
-                            ),
-                            Text(
-                              " Delete",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
+                ),
+                SizedBox(width: 8),
+                GestureDetector(
+                  onTap: onEdit,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(7),
+                        border: Border.all(color: Colors.green),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.green.withOpacity(0.4),
+                              spreadRadius: 0.5,
+                              blurRadius: 2,
+                              offset: const Offset(2, 1))
+                        ]),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 35),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            size: 18,
+                            color: Colors.green,
+                          ),
+                          Text(
+                            " Edit",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.green,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(width: 8),
+                GestureDetector(
+                  onTap: onDelete,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(7),
+                        border: Border.all(color: Colors.red),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.red.withOpacity(0.4),
+                              spreadRadius: 0.5,
+                              blurRadius: 2,
+                              offset: const Offset(2, 1))
+                        ]),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.delete,
+                            size: 18,
+                            color: Colors.red,
+                          ),
+                          Text(
+                            " Delete",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -607,19 +467,19 @@ class FoodItemCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-          color: CommonColors.primaryColor.withOpacity(0.1),
+          color: Colors.blue.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: CommonColors.primaryColor.withOpacity(0.3))),
+          border: Border.all(color: Colors.blue.withOpacity(0.3))),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: CommonColors.primaryColor),
+          Icon(icon, size: 14, color: Colors.blue),
           SizedBox(width: 4),
           Text(
             label,
             style: TextStyle(
               fontSize: 12,
-              color: CommonColors.primaryColor,
+              color: Colors.blue,
             ),
           ),
         ],
@@ -631,17 +491,11 @@ class FoodItemCard extends StatelessWidget {
 // Food Options Dialog
 class FoodOptionsDialog extends StatefulWidget {
   final FoodListData foodItem;
-  final List<Variant> variants;
-  final List<Modifier> modifiers;
-  final List<TopUp> topUps;
-  final bool hasDiscount;
+  final Function(FoodListData) onSave;
 
   const FoodOptionsDialog({
     required this.foodItem,
-    required this.variants,
-    required this.modifiers,
-    required this.topUps,
-    required this.hasDiscount,
+    required this.onSave,
   });
 
   @override
@@ -649,17 +503,19 @@ class FoodOptionsDialog extends StatefulWidget {
 }
 
 class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
-  late bool hasDiscount;
-  late double discountPrice;
-  late TextEditingController discountController;
+  late FoodListData editedFoodItem;
 
   @override
   void initState() {
     super.initState();
-    hasDiscount = widget.hasDiscount;
-    discountPrice = widget.foodItem.basePrice! * 0.9; // Default 10% off
-    discountController =
-        TextEditingController(text: discountPrice.toStringAsFixed(2));
+    // Create a copy of the food item for editing
+    editedFoodItem = FoodListData.fromJson(widget.foodItem.toJson());
+
+    // Initialize empty lists if null
+    editedFoodItem.discount ??= [];
+    editedFoodItem.varient ??= [];
+    editedFoodItem.modifier ??= [];
+    editedFoodItem.topup ??= [];
   }
 
   @override
@@ -731,7 +587,7 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.pop(context);
                   },
                   child: Container(
@@ -744,17 +600,16 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
                               color: Colors.red.withOpacity(0.4),
                               spreadRadius: 0.5,
                               blurRadius: 2,
-                              offset: const Offset(2, 1)
-                          )
-                        ]
-                    ),
+                              offset: const Offset(2, 1))
+                        ]),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 35),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 35),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.edit,
+                            Icons.close,
                             size: 18,
                             color: Colors.red,
                           ),
@@ -774,7 +629,8 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
               SizedBox(width: 12),
               Expanded(
                 child: GestureDetector(
-                  onTap: (){
+                  onTap: () {
+                    widget.onSave(editedFoodItem);
                     Navigator.pop(context);
                   },
                   child: Container(
@@ -787,27 +643,20 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
                               color: Colors.green.withOpacity(0.4),
                               spreadRadius: 0.5,
                               blurRadius: 2,
-                              offset: const Offset(2, 1)
-                          )
-                        ]
-                    ),
+                              offset: const Offset(2, 1))
+                        ]),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 35),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 35),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.save,
-                            size: 18,
-                            color: Colors.green,
-                          ),
-                          Text(
-                            " Save",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.green,
-                                fontWeight: FontWeight.w500),
-                          ),
+                          Icon(Icons.save, size: 18, color: Colors.green),
+                          Text(" Save",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
@@ -826,51 +675,86 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
       padding: EdgeInsets.only(top: 16),
       child: Column(
         children: [
-          SwitchListTile(
-            title: Text('Enable Discount'),
-            value: hasDiscount,
-            onChanged: (value) {
-              setState(() {
-                hasDiscount = value;
-              });
-            },
+          // Button to add new discount
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              icon: Icon(Icons.add, size: 18),
+              label: Text('Add Discount'),
+              onPressed: _showAddDiscountDialog,
+            ),
           ),
-          if (hasDiscount) ...[
-            SizedBox(height: 16),
-            TextFormField(
-              controller: discountController,
-              decoration: InputDecoration(
-                labelText: 'Discount Price',
-                suffixText: 'Kr',
-                border: OutlineInputBorder(),
+
+          // List of discounts
+          if (editedFoodItem.discount?.isEmpty ?? true)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 32),
+              child: Center(
+                child: Text('No discounts added yet',
+                    style: TextStyle(color: Colors.grey)),
               ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  discountPrice = double.tryParse(value) ?? discountPrice;
-                });
-              },
-            ),
-            SizedBox(height: 16),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Discount Description (Optional)',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Original Price: ${widget.foodItem.basePrice?.toStringAsFixed(2)} Kr',
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Discount: ${((widget.foodItem.basePrice! - discountPrice) / widget.foodItem.basePrice! * 100).toStringAsFixed(0)}% OFF',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.green,
-              ),
-            ),
-          ],
+            )
+          else
+            ...editedFoodItem.discount!.map((discount) {
+              return Card(
+                margin: EdgeInsets.only(bottom: 12),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${discount.percentage}% OFF',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: discount.isEnable == true
+                                    ? Colors.green
+                                    : Colors.grey,
+                              ),
+                            ),
+                          ),
+                          Switch(
+                            value: discount.isEnable ?? false,
+                            onChanged: (value) {
+                              setState(() {
+                                discount.isEnable = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          if (discount.description?.isNotEmpty == true)
+                            Padding(
+                              padding: EdgeInsets.only(top: 4),
+                              child: Text(discount.description!),
+                            ),
+                          Spacer(),
+                          TextButton(
+                            child: Text('Edit'),
+                            onPressed: () => _showEditDiscountDialog(discount),
+                          ),
+                          SizedBox(width: 8),
+                          TextButton(
+                            child: Text('Delete',
+                                style: TextStyle(color: Colors.red)),
+                            onPressed: () {
+                              setState(() {
+                                editedFoodItem.discount?.remove(discount);
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
         ],
       ),
     );
@@ -879,45 +763,53 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
   Widget _buildVariantsTab() {
     return Column(
       children: [
-        ListTile(
-          title: Text('Variants Options'),
-          trailing: IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              // Add new variant
-              _showAddVariantDialog();
-            },
+        // Button to add new variant
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            icon: Icon(Icons.add, size: 18),
+            label: Text('Add Variant'),
+            onPressed: _showAddVariantDialog,
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: widget.variants.length,
-            itemBuilder: (context, index) {
-              final variant = widget.variants[index];
-              return ListTile(
-                title: Text(variant.name),
-                subtitle: Text('+${variant.price.toStringAsFixed(2)} Kr'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit, size: 20),
-                      onPressed: () => _showEditVariantDialog(variant, index),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, size: 20, color: Colors.red),
-                      onPressed: () {
-                        setState(() {
-                          widget.variants.removeAt(index);
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
+
+        // List of variants
+        if (editedFoodItem.varient?.isEmpty ?? true)
+          Expanded(
+              child: Center(
+            child: Text('No variants added yet',
+                style: TextStyle(color: Colors.grey)),
+          ))
+        else
+          Expanded(
+            child: ListView.builder(
+              itemCount: editedFoodItem.varient?.length ?? 0,
+              itemBuilder: (context, index) {
+                final variant = editedFoodItem.varient![index];
+                return ListTile(
+                  title: Text('Variant ${index + 1}'),
+                  subtitle: Text('Price: ${variant.price} Kr'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit, size: 20),
+                        onPressed: () => _showEditVariantDialog(variant, index),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete, size: 20, color: Colors.red),
+                        onPressed: () {
+                          setState(() {
+                            editedFoodItem.varient?.removeAt(index);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }
@@ -925,45 +817,54 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
   Widget _buildModifiersTab() {
     return Column(
       children: [
-        ListTile(
-          title: Text('Modifiers Options'),
-          trailing: IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              // Add new modifier
-              _showAddModifierDialog();
-            },
+        // Button to add new modifier
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            icon: Icon(Icons.add, size: 18),
+            label: Text('Add Modifier'),
+            onPressed: _showAddModifierDialog,
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: widget.modifiers.length,
-            itemBuilder: (context, index) {
-              final modifier = widget.modifiers[index];
-              return ListTile(
-                title: Text(modifier.name),
-                subtitle: Text(modifier.isOptional ? 'Optional' : 'Required'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit, size: 20),
-                      onPressed: () => _showEditModifierDialog(modifier, index),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, size: 20, color: Colors.red),
-                      onPressed: () {
-                        setState(() {
-                          widget.modifiers.removeAt(index);
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
+
+        // List of modifiers
+        if (editedFoodItem.modifier?.isEmpty ?? true)
+          Expanded(
+              child: Center(
+            child: Text('No modifiers added yet',
+                style: TextStyle(color: Colors.grey)),
+          ))
+        else
+          Expanded(
+            child: ListView.builder(
+              itemCount: editedFoodItem.modifier?.length ?? 0,
+              itemBuilder: (context, index) {
+                final modifier = editedFoodItem.modifier![index];
+                return ListTile(
+                  title: Text(modifier.modifierName ?? 'Unnamed Modifier'),
+                  subtitle: Text('Price: ${modifier.price} Kr'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit, size: 20),
+                        onPressed: () =>
+                            _showEditModifierDialog(modifier, index),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete, size: 20, color: Colors.red),
+                        onPressed: () {
+                          setState(() {
+                            editedFoodItem.modifier?.removeAt(index);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }
@@ -971,51 +872,58 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
   Widget _buildTopUpsTab() {
     return Column(
       children: [
-        ListTile(
-          title: Text('Top-up Options'),
-          trailing: IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              // Add new top-up
-              _showAddTopUpDialog();
-            },
+        // Button to add new top-up
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            icon: Icon(Icons.add, size: 18),
+            label: Text('Add Top-up'),
+            onPressed: _showAddTopUpDialog,
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: widget.topUps.length,
-            itemBuilder: (context, index) {
-              final topUp = widget.topUps[index];
-              return ListTile(
-                title: Text(topUp.name),
-                subtitle: Text('+${topUp.price.toStringAsFixed(2)} Kr'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit, size: 20),
-                      onPressed: () => _showEditTopUpDialog(topUp, index),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, size: 20, color: Colors.red),
-                      onPressed: () {
-                        setState(() {
-                          widget.topUps.removeAt(index);
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
+
+        // List of top-ups
+        if (editedFoodItem.topup?.isEmpty ?? true)
+          Expanded(
+              child: Center(
+            child: Text('No top-ups added yet',
+                style: TextStyle(color: Colors.grey)),
+          ))
+        else
+          Expanded(
+            child: ListView.builder(
+              itemCount: editedFoodItem.topup?.length ?? 0,
+              itemBuilder: (context, index) {
+                final topup = editedFoodItem.topup![index];
+                return ListTile(
+                  title: Text(topup.topupName ?? 'Unnamed Top-up'),
+                  subtitle: Text('Price: ${topup.price} Kr'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit, size: 20),
+                        onPressed: () => _showEditTopUpDialog(topup, index),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete, size: 20, color: Colors.red),
+                        onPressed: () {
+                          setState(() {
+                            editedFoodItem.topup?.removeAt(index);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }
 
   void _showAddVariantDialog() {
-    TextEditingController nameController = TextEditingController();
     TextEditingController priceController = TextEditingController();
 
     showDialog(
@@ -1027,12 +935,10 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(labelText: 'Variant Name'),
-              ),
-              TextFormField(
                 controller: priceController,
-                decoration: InputDecoration(labelText: 'Price (Kr)'),
+                decoration: InputDecoration(
+                  labelText: 'Price (Kr)',
+                ),
                 keyboardType: TextInputType.number,
               ),
             ],
@@ -1044,15 +950,13 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             ),
             ElevatedButton(
               onPressed: () {
-                final price = double.tryParse(priceController.text) ?? 0;
-                if (nameController.text.isNotEmpty && price > 0) {
+                final price = int.tryParse(priceController.text);
+                if (price != null && price > 0) {
                   setState(() {
-                    widget.variants.add(
-                      Variant(
-                        name: nameController.text,
-                        price: price,
-                      ),
-                    );
+                    editedFoodItem.varient?.add(Varient(
+                      price: price,
+                      sId: DateTime.now().millisecondsSinceEpoch.toString(),
+                    ));
                   });
                   Navigator.pop(context);
                 }
@@ -1065,60 +969,10 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
     );
   }
 
-  void _showEditVariantDialog(Variant variant, int index) {
-    TextEditingController nameController =
-        TextEditingController(text: variant.name);
-    TextEditingController priceController =
-        TextEditingController(text: variant.price.toStringAsFixed(2));
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Edit Variant'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(labelText: 'Variant Name'),
-              ),
-              TextFormField(
-                controller: priceController,
-                decoration: InputDecoration(labelText: 'Price (Kr)'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final price = double.tryParse(priceController.text) ?? 0;
-                if (nameController.text.isNotEmpty && price > 0) {
-                  setState(() {
-                    widget.variants[index] = Variant(
-                      name: nameController.text,
-                      price: price,
-                    );
-                  });
-                  Navigator.pop(context);
-                }
-              },
-              child: Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showAddModifierDialog() {
-    TextEditingController nameController = TextEditingController();
-    bool isOptional = true;
+  void _showAddDiscountDialog() {
+    TextEditingController percentageController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+    bool isEnable = true;
 
     showDialog(
       context: context,
@@ -1126,21 +980,30 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Add Modifier'),
+              title: Text('Add Discount'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(labelText: 'Modifier Name'),
+                    controller: percentageController,
+                    decoration: InputDecoration(
+                      labelText: 'Discount Percentage',
+                      suffixText: '%',
+                    ),
+                    keyboardType: TextInputType.number,
                   ),
-                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      labelText: 'Description (Optional)',
+                    ),
+                  ),
                   SwitchListTile(
-                    title: Text('Optional'),
-                    value: isOptional,
+                    title: Text('Enable Discount'),
+                    value: isEnable,
                     onChanged: (value) {
                       setState(() {
-                        isOptional = value;
+                        isEnable = value;
                       });
                     },
                   ),
@@ -1153,14 +1016,19 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if (nameController.text.isNotEmpty) {
+                    final percentage = int.tryParse(percentageController.text);
+                    if (percentage != null &&
+                        percentage > 0 &&
+                        percentage <= 100) {
                       setState(() {
-                        widget.modifiers.add(
-                          Modifier(
-                            name: nameController.text,
-                            isOptional: isOptional,
-                          ),
-                        );
+                        editedFoodItem.discount?.add(Discount(
+                          isEnable: isEnable,
+                          percentage: percentage,
+                          description: descriptionController.text.isNotEmpty
+                              ? descriptionController.text
+                              : null,
+                          sId: DateTime.now().millisecondsSinceEpoch.toString(),
+                        ));
                       });
                       Navigator.pop(context);
                     }
@@ -1175,10 +1043,12 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
     );
   }
 
-  void _showEditModifierDialog(Modifier modifier, int index) {
-    TextEditingController nameController =
-        TextEditingController(text: modifier.name);
-    bool isOptional = modifier.isOptional;
+  void _showEditDiscountDialog(Discount discount) {
+    TextEditingController percentageController =
+        TextEditingController(text: discount.percentage?.toString());
+    TextEditingController descriptionController =
+        TextEditingController(text: discount.description);
+    bool isEnable = discount.isEnable ?? true;
 
     showDialog(
       context: context,
@@ -1186,21 +1056,30 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Edit Modifier'),
+              title: Text('Edit Discount'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(labelText: 'Modifier Name'),
+                    controller: percentageController,
+                    decoration: InputDecoration(
+                      labelText: 'Discount Percentage',
+                      suffixText: '%',
+                    ),
+                    keyboardType: TextInputType.number,
                   ),
-                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      labelText: 'Description (Optional)',
+                    ),
+                  ),
                   SwitchListTile(
-                    title: Text('Optional'),
-                    value: isOptional,
+                    title: Text('Enable Discount'),
+                    value: isEnable,
                     onChanged: (value) {
                       setState(() {
-                        isOptional = value;
+                        isEnable = value;
                       });
                     },
                   ),
@@ -1213,12 +1092,17 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if (nameController.text.isNotEmpty) {
+                    final percentage = int.tryParse(percentageController.text);
+                    if (percentage != null &&
+                        percentage > 0 &&
+                        percentage <= 100) {
                       setState(() {
-                        widget.modifiers[index] = Modifier(
-                          name: nameController.text,
-                          isOptional: isOptional,
-                        );
+                        discount.isEnable = isEnable;
+                        discount.percentage = percentage;
+                        discount.description =
+                            descriptionController.text.isNotEmpty
+                                ? descriptionController.text
+                                : null;
                       });
                       Navigator.pop(context);
                     }
@@ -1228,6 +1112,158 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
               ],
             );
           },
+        );
+      },
+    );
+  }
+
+  void _showEditVariantDialog(Varient variant, int index) {
+    TextEditingController priceController =
+        TextEditingController(text: variant.price?.toString());
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit Variant'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: priceController,
+                decoration: InputDecoration(
+                  labelText: 'Price (Kr)',
+                ),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final price = int.tryParse(priceController.text);
+                if (price != null && price > 0) {
+                  setState(() {
+                    editedFoodItem.varient?[index].price = price;
+                  });
+                  Navigator.pop(context);
+                }
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showAddModifierDialog() {
+    TextEditingController nameController = TextEditingController();
+    TextEditingController priceController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add Modifier'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Modifier Name',
+                ),
+              ),
+              TextFormField(
+                controller: priceController,
+                decoration: InputDecoration(
+                  labelText: 'Price (Kr)',
+                ),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final price = int.tryParse(priceController.text);
+                if (nameController.text.isNotEmpty && price != null) {
+                  setState(() {
+                    editedFoodItem.modifier?.add(Modifier(
+                      modifierName: nameController.text,
+                      price: price,
+                      sId: DateTime.now().millisecondsSinceEpoch.toString(),
+                    ));
+                  });
+                  Navigator.pop(context);
+                }
+              },
+              child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditModifierDialog(Modifier modifier, int index) {
+    TextEditingController nameController =
+        TextEditingController(text: modifier.modifierName);
+    TextEditingController priceController =
+        TextEditingController(text: modifier.price?.toString());
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit Modifier'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Modifier Name',
+                ),
+              ),
+              TextFormField(
+                controller: priceController,
+                decoration: InputDecoration(
+                  labelText: 'Price (Kr)',
+                ),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final price = int.tryParse(priceController.text);
+                if (nameController.text.isNotEmpty && price != null) {
+                  setState(() {
+                    editedFoodItem.modifier?[index].modifierName =
+                        nameController.text;
+                    editedFoodItem.modifier?[index].price = price;
+                  });
+                  Navigator.pop(context);
+                }
+              },
+              child: Text('Save'),
+            ),
+          ],
         );
       },
     );
@@ -1247,11 +1283,15 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             children: [
               TextFormField(
                 controller: nameController,
-                decoration: InputDecoration(labelText: 'Top-up Name'),
+                decoration: InputDecoration(
+                  labelText: 'Top-up Name',
+                ),
               ),
               TextFormField(
                 controller: priceController,
-                decoration: InputDecoration(labelText: 'Price (Kr)'),
+                decoration: InputDecoration(
+                  labelText: 'Price (Kr)',
+                ),
                 keyboardType: TextInputType.number,
               ),
             ],
@@ -1263,15 +1303,14 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             ),
             ElevatedButton(
               onPressed: () {
-                final price = double.tryParse(priceController.text) ?? 0;
-                if (nameController.text.isNotEmpty && price > 0) {
+                final price = int.tryParse(priceController.text);
+                if (nameController.text.isNotEmpty && price != null) {
                   setState(() {
-                    widget.topUps.add(
-                      TopUp(
-                        name: nameController.text,
-                        price: price,
-                      ),
-                    );
+                    editedFoodItem.topup?.add(Topup(
+                      topupName: nameController.text,
+                      price: price,
+                      sId: DateTime.now().millisecondsSinceEpoch.toString(),
+                    ));
                   });
                   Navigator.pop(context);
                 }
@@ -1284,11 +1323,11 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
     );
   }
 
-  void _showEditTopUpDialog(TopUp topUp, int index) {
+  void _showEditTopUpDialog(Topup topup, int index) {
     TextEditingController nameController =
-        TextEditingController(text: topUp.name);
+        TextEditingController(text: topup.topupName);
     TextEditingController priceController =
-        TextEditingController(text: topUp.price.toStringAsFixed(2));
+        TextEditingController(text: topup.price?.toString());
 
     showDialog(
       context: context,
@@ -1300,11 +1339,15 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             children: [
               TextFormField(
                 controller: nameController,
-                decoration: InputDecoration(labelText: 'Top-up Name'),
+                decoration: InputDecoration(
+                  labelText: 'Top-up Name',
+                ),
               ),
               TextFormField(
                 controller: priceController,
-                decoration: InputDecoration(labelText: 'Price (Kr)'),
+                decoration: InputDecoration(
+                  labelText: 'Price (Kr)',
+                ),
                 keyboardType: TextInputType.number,
               ),
             ],
@@ -1316,13 +1359,12 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             ),
             ElevatedButton(
               onPressed: () {
-                final price = double.tryParse(priceController.text) ?? 0;
-                if (nameController.text.isNotEmpty && price > 0) {
+                final price = int.tryParse(priceController.text);
+                if (nameController.text.isNotEmpty && price != null) {
                   setState(() {
-                    widget.topUps[index] = TopUp(
-                      name: nameController.text,
-                      price: price,
-                    );
+                    editedFoodItem.topup?[index].topupName =
+                        nameController.text;
+                    editedFoodItem.topup?[index].price = price;
                   });
                   Navigator.pop(context);
                 }

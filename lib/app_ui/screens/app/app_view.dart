@@ -17,16 +17,18 @@ import '../manager/food_category/create_food_category/create_food_category_view_
 import '../manager/food_category/food_category_list/food_category_list_view_model.dart';
 import '../manager/food_menu/edit_food/edit_food_view_model.dart';
 import '../manager/food_menu/food_list/food_list_view_model.dart';
+import '../manager/manager_vat/manager_vat_view_model.dart';
 import '../manager/staff_list/add_staff/add_staff_view_model.dart';
 import '../manager/staff_list/staff_list_view_model.dart';
 import '../manager/tables/table_view_model.dart';
 import '../owner/owner_home/owner_home_view_model.dart';
 import '../owner/restaurant/add_restaurant/add_restaurant_view_model.dart';
 import '../owner/restaurant/edit_restaurant/edit_restaurant_view_model.dart';
+import '../owner/restaurant/restaurant_details/restaurant_details_view_model.dart';
 import '../owner/restaurant/restaurant_list_view_model.dart';
-import '../owner/restaurant_details/restaurant_details_view_model.dart';
 import '../splash/splash_view.dart';
 import '../splash/splash_view_model.dart';
+import '../staff/order_history/order_history_view_model.dart';
 import '../staff/staff_home/select_product/staff_select_product_view_model.dart';
 import '../staff/staff_home/select_table_view_model.dart';
 import 'app_model.dart';
@@ -151,6 +153,10 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => SelectTableViewModel()),
         ChangeNotifierProvider<KitchenStaffHomeViewModel>(
             create: (_) => KitchenStaffHomeViewModel()),
+        ChangeNotifierProvider<OrderHistoryViewModel>(
+            create: (_) => OrderHistoryViewModel()),
+        ChangeNotifierProvider<ManagerVatViewModel>(
+            create: (_) => ManagerVatViewModel()),
       ],
       child: Consumer<AppModel>(
         builder: (context, appModel, child) => MaterialApp(

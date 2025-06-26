@@ -11,5 +11,6 @@ class LocalImages {
   static final String img_verified = "assets/images/img_verified.png";
   static final String img_table = "assets/images/img_table.png";
   static final String img_waiter = "assets/images/img_waiter.png";
+  static final String img_people_dining = "assets/images/img_people_dining.png";
   static final String food_preparing_view = "assets/images/food_preparing_view.gif";
 }

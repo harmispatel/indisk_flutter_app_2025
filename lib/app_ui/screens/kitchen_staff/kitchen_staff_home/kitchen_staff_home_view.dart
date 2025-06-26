@@ -266,7 +266,9 @@ class TableCard extends StatelessWidget {
 
               // Table number
               Text(
-                'Table $tableNo',
+                tableNo == "0"
+                    ? "Take Away"
+                    : 'Table $tableNo',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

@@ -34,7 +34,7 @@ class StaffHomeData {
   String? description;
   int? price;
   int? cartCount;
-  String? isAvailable;
+  bool? isAvailable;
   Category? category;
 
   StaffHomeData(

@@ -3,13 +3,9 @@ import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
 import 'package:indisk_app/app_ui/screens/staff/staff_home/select_product/staff_select_product_view_model.dart';
 import 'package:indisk_app/utils/common_colors.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../../api_service/models/staff_cart_master.dart';
-import '../../../../../database/app_preferences.dart';
 import '../../../../../utils/app_dimens.dart';
-import '../../../../../utils/common_utills.dart';
 import '../../../../common_widget/common_textfield.dart';
-import '../../../login/login_view.dart';
 
 class StaffSelectProductView extends StatefulWidget {
   final String tableNo;
@@ -28,16 +24,12 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
   @override
   void initState() {
     super.initState();
-    print("DashboardPage initState");
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("Initializing dashboard data");
-      mViewModel =
-          Provider.of<StaffSelectProductViewModel>(context, listen: false);
+      mViewModel = Provider.of<StaffSelectProductViewModel>(context, listen: false);
       mViewModel?.getFoodCategoryList().then((_) {
-        mViewModel?.getStaffFoodList().catchError((e) {
-          print("Dashboard init error: $e");
+        mViewModel?.getStaffFoodList(isManageable: false).catchError((e) {
         }).then((_) {
-          mViewModel?.getStaffCartList();
+          mViewModel?.getStaffCartList(tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
           if (mounted) {
             setState(() {});
           }
@@ -78,7 +70,6 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                               Navigator.pop(context);
                             },
                             icon: Icon(Icons.arrow_back)),
-                        kSizedBoxH10,
                         Expanded(
                           child: CommonTextField(
                             keyboardType: TextInputType.emailAddress,
@@ -86,7 +77,6 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                             suffixIcon: Icon(Icons.search),
                           ),
                         ),
-                        kSizedBoxH20,
                       ],
                     ),
                     kSizedBoxV20,
@@ -191,7 +181,7 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                                           foodItem.cartCount = currentCount + 1;
                                         });
                                         viewModel.addToCart(
-                                            productId: foodItem.id ?? '--');
+                                            productId: foodItem.id ?? '--', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
                                       },
                                       cartCount: foodItem.cartCount ?? 0,
                                       onIncreaseTap: () {
@@ -202,7 +192,7 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                                         });
                                         viewModel.updateQuantity(
                                             productId: foodItem.id ?? '--',
-                                            type: 'increase');
+                                            type: 'increase', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
                                       },
                                       onDecreaseTap: () {
                                         setState(() {
@@ -212,7 +202,7 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                                         });
                                         viewModel.updateQuantity(
                                             productId: foodItem.id ?? '--',
-                                            type: 'decrease');
+                                            type: 'decrease', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
                                       },
                                     );
                                   },
@@ -236,7 +226,7 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                   child: Row(
                     children: [
                       Text(
-                        'Order Details',
+                        'Cart Details',
                         style: TextStyle(
                             fontSize: 22, fontWeight: FontWeight.w500),
                       ),
@@ -245,7 +235,7 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                           viewModel.isCartApiLoading == false)
                         GestureDetector(
                           onTap: () {
-                            viewModel.clearCart();
+                            viewModel.clearCart(tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -274,14 +264,41 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                       )
                     : Expanded(
                         child: viewModel.staffCartFoodList.isEmpty
-                            ? Center(
-                                child: Text(
+                            ? Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Spacer(),
+
+                                Text(
                                   "+\nAdd Product\nFrom Special Menu",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 22),
                                 ),
-                              )
+                                Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: CommonColors.primaryColor,
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.print,color: Colors.white, size: 18,),
+                                          Text(
+                                            " Get Bill",
+                                            style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                             : ListView.builder(
                                 itemCount: viewModel.staffCartFoodList.length,
                                 itemBuilder: (context, index) {
@@ -293,23 +310,20 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                                                   .staffCartFoodList[index]
                                                   .foodItemId ??
                                               '--',
-                                          type: 'increase');
+                                          type: 'increase', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
                                     },
                                     onDecrement: () {
                                       viewModel.updateQuantity(
-                                          productId: viewModel
-                                                  .staffCartFoodList[index]
-                                                  .foodItemId ??
-                                              '--',
-                                          type: 'decrease');
+                                          productId: viewModel.staffCartFoodList[index].foodItemId ?? '--',
+                                          type: 'decrease', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
                                     },
                                     onDelete: () {
                                       viewModel.removeItemFromCart(
                                           productId: viewModel
                                                   .staffCartFoodList[index]
                                                   .foodItemId ??
-                                              '--');
-                                    },
+                                              '--', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
+                                    }
                                   );
                                 },
                               ),
@@ -371,21 +385,31 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                           ],
                         ),
                         SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          child: PrimaryButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return PaymentMethodDialog(
-                                    tableNo: widget.tableNo,
-                                  );
+                        Row(
+                          children: [
+                            Expanded(
+                              child: PrimaryButton(
+                                padding: EdgeInsets.zero,
+                                height: 40,
+                                onPressed: () {
+                                  viewModel.placeOrderApi(
+                                      tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
                                 },
-                              );
-                            },
-                            text: 'Save',
-                          ),
+                                text: 'Save',
+                              ),
+                            ),
+                            kSizedBoxH10,
+                            Expanded(
+                              child: PrimaryButton(
+                                padding: EdgeInsets.zero,
+                                height: 40,
+                                onPressed: () {
+
+                                },
+                                text: 'Get Bill',
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 16),
                       ],
@@ -515,8 +539,8 @@ class _PaymentMethodDialogState extends State<PaymentMethodDialog> {
               height: 45,
               padding: EdgeInsets.zero,
               onPressed: () {
-                viewModel.placeOrderApi(
-                    tableNo: widget.tableNo, paymentType: selectedPayment);
+                // viewModel.placeOrderApi(
+                //     tableNo: widget.tableNo, paymentType: selectedPayment);
               },
               text: 'Submit',
             )

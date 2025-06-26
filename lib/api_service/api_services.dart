@@ -13,11 +13,13 @@ import 'models/common_master.dart';
 import 'models/food_list_master.dart';
 import 'models/get_profile_master.dart';
 import 'models/kitchen_staff_order_master.dart';
+import 'models/order_history_master.dart';
 import 'models/owner_home_master.dart';
 import 'models/restaurant_details_master.dart';
 import 'models/restaurant_master.dart';
 import 'models/staff_home_master.dart';
 import 'models/table_master.dart';
+import 'models/vat_master.dart';
 
 class ApiServices extends BaseServices {
   AppBaseClient appBaseClient = AppBaseClient();
@@ -673,6 +675,98 @@ class ApiServices extends BaseServices {
         requestMethod: "PUT",
         files: files,
         onProgress: onProgress);
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> updateFoodAvailability(
+      {required Map<String, dynamic> params,
+        required List<FileModel> files,
+        required Function(int p1, int p2)? onProgress}) async {
+    // TODO: implement updateManager
+    dynamic response = await appBaseClient.formDataApi(
+        url: ApiUrl.UPDATE_AVALIBALITY_STATUS,
+        postParams: params,
+        requestMethod: "PUT",
+        files: files,
+        onProgress: onProgress);
+    if (response != null) {
+      try {
+        return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<OrderHistoryMaster?> getOrderHistory(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.ORDER_HISTORY, postParams: params ?? {});
+    if (response != null) {
+      try {
+        return OrderHistoryMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<VatMaster?> getVat(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.GET_VAT, postParams: params ?? {});
+    if (response != null) {
+      try {
+        return VatMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<VatMaster?> saveVat(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.SAVE_VAT, postParams: params ?? {});
+    if (response != null) {
+      try {
+        return VatMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<CommonMaster?> addFoodModifier(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.ADD_FOOD_MODIFIER, postParams: params ?? {});
     if (response != null) {
       try {
         return CommonMaster.fromJson(response);

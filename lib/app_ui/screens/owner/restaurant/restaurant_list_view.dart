@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:indisk_app/app_ui/common_widget/common_image.dart';
-import 'package:indisk_app/utils/common_colors.dart';
+import 'package:indisk_app/app_ui/screens/owner/restaurant/restaurant_details/restaurant_details_view.dart';
 import 'package:indisk_app/utils/common_styles.dart';
 import 'package:indisk_app/utils/common_utills.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../api_service/models/restaurant_master.dart';
-import '../../../../utils/app_dimens.dart';
 import 'add_restaurant/add_restaurant_view.dart';
 import 'edit_restaurant/edit_restaurant_view.dart';
 import 'restaurant_list_view_model.dart';
-import '../restaurant_details/restaurant_details_view.dart';
 
 class RestaurantListView extends StatefulWidget {
   const RestaurantListView({super.key});
@@ -161,11 +157,11 @@ class _RestaurantListViewState extends State<RestaurantListView> {
             SizedBox(height: 8),
             GestureDetector(
               onTap: () {
-                // pushToScreen(
-                //   RestaurantDetailsView(
-                //     restaurantId: restaurant.sId ?? '--',
-                //   ),
-                // );
+                pushToScreen(
+                  RestaurantDetailsView(
+                    restaurantId: restaurant.sId ?? '--', restaurantName: restaurant.name ?? '--',
+                  ),
+                );
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 6),
@@ -221,9 +217,7 @@ class _RestaurantListViewState extends State<RestaurantListView> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: mViewModel.isApiLoading
-            ? Center(child: CircularProgressIndicator())
-            : mViewModel.restaurantList.isEmpty
+        child: mViewModel.restaurantList.isEmpty
             ? Center(
           child: Padding(
             padding: const EdgeInsets.all(32.0),

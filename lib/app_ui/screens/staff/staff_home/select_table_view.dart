@@ -118,14 +118,24 @@ class _SelectTableViewState extends State<SelectTableView> {
                                       fit: BoxFit.fill,
                                       LocalImages.img_waiter),
                                 )
-                              : Center(
-                                  child: Image.asset(
-                                    LocalImages.img_table,
-                                    height: 100,
-                                    width: 150,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
+                              : mViewModel.tablesList[index].orderStatus ==
+                                      "Delivered"
+                                  ? Center(
+                                      child: Image.asset(
+                                        LocalImages.img_people_dining,
+                                        height: 100,
+                                        width: 150,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    )
+                                  : Center(
+                                      child: Image.asset(
+                                        LocalImages.img_table,
+                                        height: 100,
+                                        width: 150,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
                       if (mViewModel.tablesList[index].orderedItemsCount !=
                           0) ...[
                         kSizedBoxV5,

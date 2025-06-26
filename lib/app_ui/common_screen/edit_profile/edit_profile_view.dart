@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../api_service/models/get_profile_master.dart';
 import '../../../main.dart';
 import '../../../utils/common_colors.dart';

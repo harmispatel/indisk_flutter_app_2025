@@ -34,7 +34,7 @@ class FoodListData {
   int? basePrice;
   List<PricesByQuantity>? pricesByQuantity;
   Category? category;
-  String? isAvailable;
+  bool? isAvailable;
   CreatedBy? createdBy;
   String? unit;
   int? totalQty;
@@ -43,6 +43,10 @@ class FoodListData {
   String? createdAt;
   String? updatedAt;
   int? iV;
+  List<Discount>? discount;
+  List<Modifier>? modifier;
+  List<Topup>? topup;
+  List<Varient>? varient;
 
   FoodListData(
       {this.sId,
@@ -59,7 +63,11 @@ class FoodListData {
         this.image,
         this.createdAt,
         this.updatedAt,
-        this.iV});
+        this.iV,
+        this.discount,
+        this.modifier,
+        this.topup,
+        this.varient});
 
   FoodListData.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -86,6 +94,30 @@ class FoodListData {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
+    if (json['discount'] != null) {
+      discount = <Discount>[];
+      json['discount'].forEach((v) {
+        discount!.add(new Discount.fromJson(v));
+      });
+    }
+    if (json['modifier'] != null) {
+      modifier = <Modifier>[];
+      json['modifier'].forEach((v) {
+        modifier!.add(new Modifier.fromJson(v));
+      });
+    }
+    if (json['topup'] != null) {
+      topup = <Topup>[];
+      json['topup'].forEach((v) {
+        topup!.add(new Topup.fromJson(v));
+      });
+    }
+    if (json['varient'] != null) {
+      varient = <Varient>[];
+      json['varient'].forEach((v) {
+        varient!.add(new Varient.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -112,6 +144,18 @@ class FoodListData {
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
+    if (this.discount != null) {
+      data['discount'] = this.discount!.map((v) => v.toJson()).toList();
+    }
+    if (this.modifier != null) {
+      data['modifier'] = this.modifier!.map((v) => v.toJson()).toList();
+    }
+    if (this.topup != null) {
+      data['topup'] = this.topup!.map((v) => v.toJson()).toList();
+    }
+    if (this.varient != null) {
+      data['varient'] = this.varient!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -168,6 +212,94 @@ class CreatedBy {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    return data;
+  }
+}
+
+class Discount {
+  bool? isEnable;
+  int? percentage;
+  String? description;
+  String? sId;
+
+  Discount({this.isEnable, this.percentage, this.description, this.sId});
+
+  Discount.fromJson(Map<String, dynamic> json) {
+    isEnable = json['isEnable'];
+    percentage = json['percentage'];
+    description = json['description'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['isEnable'] = this.isEnable;
+    data['percentage'] = this.percentage;
+    data['description'] = this.description;
+    data['_id'] = this.sId;
+    return data;
+  }
+}
+
+class Modifier {
+  String? modifierName;
+  int? price;
+  String? sId;
+
+  Modifier({this.modifierName, this.price, this.sId});
+
+  Modifier.fromJson(Map<String, dynamic> json) {
+    modifierName = json['modifierName'];
+    price = json['price'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['modifierName'] = this.modifierName;
+    data['price'] = this.price;
+    data['_id'] = this.sId;
+    return data;
+  }
+}
+
+class Topup {
+  String? topupName;
+  int? price;
+  String? sId;
+
+  Topup({this.topupName, this.price, this.sId});
+
+  Topup.fromJson(Map<String, dynamic> json) {
+    topupName = json['topupName'];
+    price = json['price'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['topupName'] = this.topupName;
+    data['price'] = this.price;
+    data['_id'] = this.sId;
+    return data;
+  }
+}
+
+class Varient {
+  int? price;
+  String? sId;
+
+  Varient({this.price, this.sId});
+
+  Varient.fromJson(Map<String, dynamic> json) {
+    price = json['price'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['price'] = this.price;
     data['_id'] = this.sId;
     return data;
   }

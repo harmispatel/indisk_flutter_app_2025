@@ -53,6 +53,3 @@ List<LanguageDataModel> languageList() {
         flag: 'assets/flag/ic_de.png'),
   ];
 }
-
-
-/// 11:00 AM Commit

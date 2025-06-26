@@ -25,20 +25,17 @@ class StaffSelectProductViewModel with ChangeNotifier {
   List<FoodCategoryDetails> foodCategoryList = [];
 
   Future<void> placeOrderApi(
-      {required String tableNo, required String paymentType}) async {
+      {required String tableNo}) async {
     isApiLoading = true;
     showProgressDialog();
     CommonMaster? master = await services.api!.placeOrder(params: {
       ApiParams.user_id: gLoginDetails!.sId!,
       ApiParams.table_no: tableNo,
-      ApiParams.payment_type: paymentType,
     });
     hideProgressDialog();
     isApiLoading = false;
     if (master != null) {
       if (master.success) {
-        staffCartFoodList.clear();
-        Navigator.pop(mainNavKey.currentContext!, true);
         Navigator.pop(mainNavKey.currentContext!, true);
       } else {
         showRedToastMessage(master.message);
@@ -80,19 +77,20 @@ class StaffSelectProductViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getStaffFoodList() async {
+  Future<void> getStaffFoodList({required bool isManageable}) async {
     isApiLoading = true;
 
     notifyListeners();
     staffFoodList.clear();
     StaffHomeMaster? staffListMaster = await services.api!
-        .getStaffFoodList(params: {ApiParams.staff_id: gLoginDetails!.sId!});
+        .getStaffFoodList(params: {ApiParams.staff_id: gLoginDetails!.sId!, ApiParams.is_manageable: isManageable});
     isApiLoading = false;
     notifyListeners();
 
     if (staffListMaster != null) {
       if (staffListMaster.success != null && staffListMaster.success!) {
-        staffFoodList.addAll(staffListMaster.data!);
+        staffFoodList = staffListMaster.data!;
+
       } else {
         showRedToastMessage(staffListMaster.message!);
       }
@@ -102,20 +100,21 @@ class StaffSelectProductViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addToCart({required String productId}) async {
+  Future<void> addToCart({required String productId, required String tableNo}) async {
     showProgressDialog();
     isCartApiLoading = true;
 
     CommonMaster? master = await services.api!.addToCart(params: {
       ApiParams.user_id: gLoginDetails!.sId!,
       ApiParams.product_id: productId,
+      ApiParams.table_no: tableNo,
       ApiParams.quantity: 1
     });
     hideProgressDialog();
 
     if (master != null) {
       if (master.success) {
-        getStaffCartList();
+        getStaffCartList(tableNo: tableNo);
       } else {
         showRedToastMessage(master.message);
       }
@@ -125,19 +124,19 @@ class StaffSelectProductViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getStaffCartList() async {
+  Future<void> getStaffCartList({required String tableNo}) async {
     isCartApiLoading = true;
     notifyListeners();
     staffCartFoodList.clear();
     StaffCartMaster? master = await services.api!
-        .getStaffCartList(params: {ApiParams.user_id: gLoginDetails!.sId!});
+        .getStaffCartList(params: {ApiParams.user_id: gLoginDetails!.sId!, ApiParams.table_no: tableNo});
     isCartApiLoading = false;
 
     notifyListeners();
 
     if (master != null) {
       if (master.success != null && master.success!) {
-        staffCartFoodList.addAll(master.cart ?? []);
+        staffCartFoodList = master.cart ?? [];
         subTotal = master.subtotal.toString();
         cartQty = master.totalQuantity.toString();
         gst = master.gst5Percent.toString();
@@ -152,17 +151,18 @@ class StaffSelectProductViewModel with ChangeNotifier {
   }
 
   Future<void> updateQuantity(
-      {required String productId, required String type}) async {
+      {required String productId, required String type, required String tableNo}) async {
     showProgressDialog();
     CommonMaster? master = await services.api!.updateQuantityStaffCart(params: {
       ApiParams.user_id: gLoginDetails!.sId!,
       ApiParams.product_id: productId,
+      ApiParams.table_no: tableNo,
       ApiParams.type: type
     });
     hideProgressDialog();
 
     if (master != null) {
-      if (master.success != null && master.success!) {
+      if (master.success) {
         for (var cartItem in staffCartFoodList) {
           if (cartItem.foodItemId == productId) {
             if (type == 'increase') {
@@ -184,7 +184,7 @@ class StaffSelectProductViewModel with ChangeNotifier {
             break;
           }
         }
-        getStaffCartList();
+        getStaffCartList(tableNo: tableNo);
       } else {
         showRedToastMessage(master.message);
       }
@@ -194,17 +194,18 @@ class StaffSelectProductViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> clearCart() async {
+  Future<void> clearCart({required String tableNo}) async {
     showProgressDialog();
     CommonMaster? master = await services.api!.clearStaffCart(params: {
       ApiParams.user_id: gLoginDetails!.sId!,
+      ApiParams.table_no: tableNo,
     });
     hideProgressDialog();
 
     if (master != null) {
       if (master.success) {
-        getStaffFoodList();
-        getStaffCartList();
+        getStaffFoodList(isManageable: false);
+        getStaffCartList(tableNo: tableNo);
       } else {
         showRedToastMessage(master.message);
       }
@@ -214,17 +215,18 @@ class StaffSelectProductViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> removeItemFromCart({required String productId}) async {
+  Future<void> removeItemFromCart({required String productId, required String tableNo}) async {
     showProgressDialog();
     CommonMaster? master = await services.api!.removeItemStaffCart(params: {
       ApiParams.user_id: gLoginDetails!.sId!,
       ApiParams.product_id: productId,
+      ApiParams.table_no: tableNo,
     });
     hideProgressDialog();
 
     if (master != null) {
       if (master.success) {
-        getStaffCartList();
+        getStaffCartList(tableNo: tableNo);
         for (var product in staffFoodList) {
           if (product.id == productId) {
             product.cartCount = staffCartFoodList
@@ -242,5 +244,24 @@ class StaffSelectProductViewModel with ChangeNotifier {
       oopsMSG();
     }
     notifyListeners();
+  }
+
+  Future<void> updateFoodAvailability(
+      {required String productId, required bool status}) async {
+    showProgressDialog();
+    CommonMaster? commonMaster = await services.api!.updateFoodAvailability(params: {
+      ApiParams.id: productId,
+      ApiParams.is_available: status,
+    }, files: [], onProgress: (bytes, totalBytes) {});
+    hideProgressDialog();
+    if (commonMaster != null) {
+      if (commonMaster.success) {
+        // showGreenToastMessage(commonMaster.message);
+      } else {
+        showRedToastMessage(commonMaster.message);
+      }
+    } else {
+      oopsMSG();
+    }
   }
 }

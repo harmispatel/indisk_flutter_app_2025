@@ -1,5 +1,5 @@
-// String BASE_URL = "https://indisk-app.harmistechnology.com/api/";
-String BASE_URL = "https://2cad-2401-4900-1f3f-cd72-d959-fb48-bd22-7dd.ngrok-free.app/api/";
+String BASE_URL = "https://indisk-app.harmistechnology.com/api/";
+// String BASE_URL = "https://db1d-43-252-116-162.ngrok-free.app/api/";
 
 class ApiUrl {
   static String LOGIN = "${BASE_URL}login";
@@ -14,7 +14,6 @@ class ApiUrl {
   static String CREATE_TABLE = "${BASE_URL}create-table";
   static String GET_TABLES = "${BASE_URL}get-tables";
   static String PLACE_ORDER = "${BASE_URL}place-order";
-
   static String CREATE_FOOD = "${BASE_URL}create-food";
   static String UPDATE_FOOD = "${BASE_URL}update-food";
   static String DELETE_FOOD = "${BASE_URL}delete-food";
@@ -27,7 +26,7 @@ class ApiUrl {
   static String CHANGE_PASSWORD = "${BASE_URL}change-password";
   static String GET_PROFILE = "${BASE_URL}get-profile";
   static String EDIT_PROFILE = "${BASE_URL}edit-profile";
-  static String GET_RESTAURANT_DETAILS = "${BASE_URL}get-restaurant-details";
+  static String GET_RESTAURANT_DETAILS = "${BASE_URL}restaurant/details-with-managers";
   static String ADD_TO_CART = "${BASE_URL}add-to-cart";
   static String GET_CART = "${BASE_URL}get-cart";
   static String UPDATE_QUANTITY = "${BASE_URL}update-quantity";
@@ -35,4 +34,10 @@ class ApiUrl {
   static String REMOVE_TO_CART = "${BASE_URL}remove-to-cart";
   static String GET_KITCHEN_STAFF_ORDERS = "${BASE_URL}orders/kitchen";
   static String UPDATE_ORDER_STATUS = "${BASE_URL}orders/status";
+  static String UPDATE_AVALIBALITY_STATUS = "${BASE_URL}update-availability-status";
+  static String ORDER_HISTORY = "${BASE_URL}order-list";
+  static String GET_VAT = "${BASE_URL}manager/get-vat";
+  static String SAVE_VAT = "${BASE_URL}manager/save-vat";
+  static String ADD_FOOD_MODIFIER = "${BASE_URL}food-modifier";
+
 }

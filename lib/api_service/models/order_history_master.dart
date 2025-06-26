@@ -1,17 +1,17 @@
-class KitchenStaffOrderMaster {
+class OrderHistoryMaster {
   bool? success;
   String? message;
-  List<KitchenStaffOrders>? orders;
+  List<Orders>? orders;
 
-  KitchenStaffOrderMaster({this.success, this.message, this.orders});
+  OrderHistoryMaster({this.success, this.message, this.orders});
 
-  KitchenStaffOrderMaster.fromJson(Map<String, dynamic> json) {
+  OrderHistoryMaster.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
     if (json['orders'] != null) {
-      orders = <KitchenStaffOrders>[];
+      orders = <Orders>[];
       json['orders'].forEach((v) {
-        orders!.add(new KitchenStaffOrders.fromJson(v));
+        orders!.add(new Orders.fromJson(v));
       });
     }
   }
@@ -27,100 +27,77 @@ class KitchenStaffOrderMaster {
   }
 }
 
-class KitchenStaffOrders {
+class Orders {
   String? sId;
-  User? user;
+  String? user;
   int? tableNo;
-  List<Items>? items;
-  String? paymentType;
+  List<OrdersItems>? items;
   String? paymentStatus;
   String? status;
   String? orderDate;
   int? totalAmount;
   int? iV;
+  String? orderDateFromNow;
 
-  KitchenStaffOrders(
+  Orders(
       {this.sId,
         this.user,
         this.tableNo,
         this.items,
-        this.paymentType,
         this.paymentStatus,
         this.status,
         this.orderDate,
         this.totalAmount,
-        this.iV});
+        this.iV,
+        this.orderDateFromNow,
+      });
 
-  KitchenStaffOrders.fromJson(Map<String, dynamic> json) {
+  Orders.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'];
     tableNo = json['table_no'];
     if (json['items'] != null) {
-      items = <Items>[];
+      items = <OrdersItems>[];
       json['items'].forEach((v) {
-        items!.add(new Items.fromJson(v));
+        items!.add(new OrdersItems.fromJson(v));
       });
     }
-    paymentType = json['payment_type'];
     paymentStatus = json['payment_status'];
     status = json['status'];
     orderDate = json['order_date'];
     totalAmount = json['total_amount'];
     iV = json['__v'];
+    orderDateFromNow = json['order_date_from_now'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
-    if (this.user != null) {
-      data['user'] = this.user!.toJson();
-    }
+    data['user'] = this.user;
     data['table_no'] = this.tableNo;
     if (this.items != null) {
       data['items'] = this.items!.map((v) => v.toJson()).toList();
     }
-    data['payment_type'] = this.paymentType;
     data['payment_status'] = this.paymentStatus;
     data['status'] = this.status;
     data['order_date'] = this.orderDate;
     data['total_amount'] = this.totalAmount;
     data['__v'] = this.iV;
+    data['order_date_from_now'] = this.orderDateFromNow;
     return data;
   }
 }
 
-class User {
-  String? sId;
-  String? email;
-  String? role;
-
-  User({this.sId, this.email, this.role});
-
-  User.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    email = json['email'];
-    role = json['role'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['email'] = this.email;
-    data['role'] = this.role;
-    return data;
-  }
-}
-
-class Items {
-  FoodItem? foodItem;
+class OrdersItems {
+  OrdersFoodItem? foodItem;
   int? quantity;
   String? sId;
 
-  Items({this.foodItem, this.quantity, this.sId});
+  OrdersItems({this.foodItem, this.quantity, this.sId});
 
-  Items.fromJson(Map<String, dynamic> json) {
+  OrdersItems.fromJson(Map<String, dynamic> json) {
     foodItem = json['food_item'] != null
-        ? new FoodItem.fromJson(json['food_item'])
+        ? new OrdersFoodItem.fromJson(json['food_item'])
         : null;
     quantity = json['quantity'];
     sId = json['_id'];
@@ -137,13 +114,11 @@ class Items {
   }
 }
 
-class FoodItem {
+class OrdersFoodItem {
   String? sId;
   String? name;
   String? description;
   int? basePrice;
-  List<PricesByQuantity>? pricesByQuantity;
-  String? category;
   bool? isAvailable;
   String? createdBy;
   String? unit;
@@ -154,13 +129,11 @@ class FoodItem {
   String? updatedAt;
   int? iV;
 
-  FoodItem(
+  OrdersFoodItem(
       {this.sId,
         this.name,
         this.description,
         this.basePrice,
-        this.pricesByQuantity,
-        this.category,
         this.isAvailable,
         this.createdBy,
         this.unit,
@@ -171,18 +144,11 @@ class FoodItem {
         this.updatedAt,
         this.iV});
 
-  FoodItem.fromJson(Map<String, dynamic> json) {
+  OrdersFoodItem.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'];
     description = json['description'];
     basePrice = json['base_price'];
-    if (json['prices_by_quantity'] != null) {
-      pricesByQuantity = <PricesByQuantity>[];
-      json['prices_by_quantity'].forEach((v) {
-        pricesByQuantity!.add(new PricesByQuantity.fromJson(v));
-      });
-    }
-    category = json['category'];
     isAvailable = json['is_available'];
     createdBy = json['created_by'];
     unit = json['unit'];
@@ -200,11 +166,6 @@ class FoodItem {
     data['name'] = this.name;
     data['description'] = this.description;
     data['base_price'] = this.basePrice;
-    if (this.pricesByQuantity != null) {
-      data['prices_by_quantity'] =
-          this.pricesByQuantity!.map((v) => v.toJson()).toList();
-    }
-    data['category'] = this.category;
     data['is_available'] = this.isAvailable;
     data['created_by'] = this.createdBy;
     data['unit'] = this.unit;
@@ -214,28 +175,6 @@ class FoodItem {
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
-    return data;
-  }
-}
-
-class PricesByQuantity {
-  String? quantity;
-  int? price;
-  String? sId;
-
-  PricesByQuantity({this.quantity, this.price, this.sId});
-
-  PricesByQuantity.fromJson(Map<String, dynamic> json) {
-    quantity = json['quantity'];
-    price = json['price'];
-    sId = json['_id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['quantity'] = this.quantity;
-    data['price'] = this.price;
-    data['_id'] = this.sId;
     return data;
   }
 }

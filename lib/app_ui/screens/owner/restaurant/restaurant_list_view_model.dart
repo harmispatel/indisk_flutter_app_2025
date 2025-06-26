@@ -11,20 +11,18 @@ class RestaurantListViewModel with ChangeNotifier {
   Services services = Services();
   List<RestaurantData> restaurantList = [];
 
-  bool isApiLoading = false;
 
   Future<void> getRestaurantList({int? role}) async {
-    isApiLoading = true;
-    notifyListeners();
-    restaurantList.clear();
+    showProgressDialog();
+
     RestaurantMaster? staffListMaster = await services.api!
         .getRestaurantList(params: {ApiParams.owner_id: gLoginDetails!.sId!});
-    isApiLoading = false;
-    notifyListeners();
+    hideProgressDialog();
+
 
     if (staffListMaster != null) {
       if (staffListMaster.success != null && staffListMaster.success!) {
-        restaurantList.addAll(staffListMaster.data!);
+        restaurantList = staffListMaster.data!;
       } else {
         showRedToastMessage(staffListMaster.message!);
       }
@@ -41,10 +39,10 @@ class RestaurantListViewModel with ChangeNotifier {
     hideProgressDialog();
 
     if (staffListMaster != null) {
-      if (staffListMaster.success != null && staffListMaster.success!) {
+      if (staffListMaster.success) {
         getRestaurantList();
       } else {
-        showRedToastMessage(staffListMaster.message!);
+        showRedToastMessage(staffListMaster.message);
       }
     } else {
       oopsMSG();

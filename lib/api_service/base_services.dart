@@ -6,6 +6,7 @@ import 'models/common_master.dart';
 import 'models/food_list_master.dart';
 import 'models/get_profile_master.dart';
 import 'models/kitchen_staff_order_master.dart';
+import 'models/order_history_master.dart';
 import 'models/owner_home_master.dart';
 import 'models/restaurant_details_master.dart';
 import 'models/restaurant_master.dart';
@@ -13,6 +14,7 @@ import 'models/staff_cart_master.dart';
 import 'models/staff_home_master.dart';
 import 'models/staff_list_master.dart';
 import 'models/table_master.dart';
+import 'models/vat_master.dart';
 
 abstract class BaseServices {
   Future<LoginMaster?> login({required Map<String, dynamic> params});
@@ -132,4 +134,21 @@ abstract class BaseServices {
       {required Map<String, String> params,
         required List<FileModel> files,
         required Function(int p1, int p2)? onProgress});
+
+  Future<CommonMaster?> updateFoodAvailability(
+      {required Map<String, dynamic> params,
+        required List<FileModel> files,
+        required Function(int p1, int p2)? onProgress});
+
+  Future<OrderHistoryMaster?> getOrderHistory(
+      {required Map<String, dynamic> params});
+
+  Future<VatMaster?> getVat(
+      {required Map<String, dynamic> params});
+
+  Future<VatMaster?> saveVat(
+      {required Map<String, dynamic> params});
+
+  Future<CommonMaster?> addFoodModifier(
+      {required Map<String, dynamic> params});
 }

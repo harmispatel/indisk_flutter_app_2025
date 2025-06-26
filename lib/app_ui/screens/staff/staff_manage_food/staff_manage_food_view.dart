@@ -22,18 +22,10 @@ class _StaffManageFoodViewState extends State<StaffManageFoodView> {
   @override
   void initState() {
     super.initState();
-    print("DashboardPage initState");
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("Initializing dashboard data");
       mViewModel = Provider.of<StaffSelectProductViewModel>(context, listen: false);
       mViewModel?.getFoodCategoryList().then((_) {
-        mViewModel?.getStaffFoodList().catchError((e) {
-          print("Dashboard init error: $e");
-        }).then((_) {
-          mViewModel?.getStaffCartList();
-          if (mounted) {
-            setState(() {});
-          }
+        mViewModel?.getStaffFoodList(isManageable: true).catchError((e) {
         });
       });
     });
@@ -157,11 +149,12 @@ class _StaffManageFoodViewState extends State<StaffManageFoodView> {
                                                 _selectedCategoryId)
                                             .toList()[index];
 
-                                    final isAvailable = bool.tryParse(
-                                            foodItem.isAvailable ?? 'true') ??
+                                    final isAvailable =
+                                            foodItem.isAvailable  ??
                                         true;
 
                                     return ProductCard(
+                                      productId: foodItem.id ?? '--',
                                       image: foodItem.image?.first ?? '--',
                                       name: foodItem.name ?? '--',
                                       price: foodItem.price.toString() ?? '--',
@@ -185,6 +178,7 @@ class _StaffManageFoodViewState extends State<StaffManageFoodView> {
 }
 
 class ProductCard extends StatefulWidget {
+  final String productId;
   final String image;
   final String name;
   final String price;
@@ -193,6 +187,7 @@ class ProductCard extends StatefulWidget {
 
   const ProductCard({
     Key? key,
+    required this.productId,
     required this.image,
     required this.name,
     required this.price,
@@ -207,14 +202,23 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   late bool _isAvailable;
 
+  StaffSelectProductViewModel? mViewModel;
+
+
   @override
   void initState() {
     super.initState();
     _isAvailable = widget.isAvailable;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      mViewModel = Provider.of<StaffSelectProductViewModel>(context, listen: false);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = mViewModel ?? Provider.of<StaffSelectProductViewModel>(context);
+
     return Card(
       elevation: 4,
       color: !_isAvailable ? Colors.grey.shade300 : null,
@@ -279,6 +283,7 @@ class _ProductCardState extends State<ProductCard> {
                     setState(() {
                       _isAvailable = value;
                     });
+                    viewModel.updateFoodAvailability(productId: widget.productId, status: _isAvailable);
                   },
                 ),
               ],
