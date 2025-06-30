@@ -36,6 +36,7 @@ class StaffListDetails {
   String? gender;
   String? profilePicture;
   String? address;
+  String? role;
   String? managerId;
   String? status;
   String? createdAt;
@@ -51,6 +52,7 @@ class StaffListDetails {
         this.gender,
         this.profilePicture,
         this.address,
+        this.role,
         this.managerId,
         this.status,
         this.createdAt,
@@ -66,6 +68,7 @@ class StaffListDetails {
     gender = json['gender'];
     profilePicture = json['profile_picture'];
     address = json['address'];
+    role = json['role'];
     managerId = json['manager_id'];
     status = json['status'];
     createdAt = json['created_at'];
@@ -83,6 +86,7 @@ class StaffListDetails {
     data['gender'] = this.gender;
     data['profile_picture'] = this.profilePicture;
     data['address'] = this.address;
+    data['role'] = this.role;
     data['manager_id'] = this.managerId;
     data['status'] = this.status;
     data['created_at'] = this.createdAt;

@@ -144,7 +144,6 @@ class _EditProfileViewState extends State<EditProfileView> {
                     ),
                   ),
                   SizedBox(width: 20),
-
                   // Inactive option
                   InkWell(
                     onTap: () {

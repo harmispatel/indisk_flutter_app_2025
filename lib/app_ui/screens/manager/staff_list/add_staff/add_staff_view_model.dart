@@ -74,9 +74,8 @@ class AddStaffViewModel extends ChangeNotifier {
       required String phone,
       required String status,
       required String address,
-      required String gender,
-      required String role
-      }) async {
+      // required String gender,
+      required String role}) async {
     showProgressDialog();
     CommonMaster? commonMaster = await services.api!.createStaff(params: {
       ApiParams.name: name,
@@ -85,7 +84,7 @@ class AddStaffViewModel extends ChangeNotifier {
       ApiParams.phone: phone,
       ApiParams.status: status,
       ApiParams.address: address,
-      ApiParams.gender: gender,
+      // ApiParams.gender: gender,
       ApiParams.role: role,
       ApiParams.manager_id: gLoginDetails!.sId!
     }, files: [
@@ -106,21 +105,29 @@ class AddStaffViewModel extends ChangeNotifier {
   }
 
   Future<void> updateManager(
-      {id, name, username, phone, email, password, role}) async {
+      {required String id,
+      required String name,
+      required String email,
+      required String password,
+      required String phone,
+      required String status,
+      required String address,
+// required String gender,
+      required String role}) async {
     showProgressDialog();
     CommonMaster? commonMaster = await services.api!.updateManager(params: {
       ApiParams.id: id,
       ApiParams.name: name,
-      ApiParams.username: username,
-      ApiParams.phone: phone,
       ApiParams.email: email,
       ApiParams.password: password,
-      ApiParams.is_blocked: "false",
-      ApiParams.restaurant_id: gRestaurantDetails!.sId!,
-      ApiParams.created_by: gLoginDetails!.sId!,
-      ApiParams.role: role.toString(),
+      ApiParams.phone: phone,
+      ApiParams.status: status,
+      ApiParams.address: address,
+      // ApiParams.gender: gender,
+      ApiParams.role: role,
+      ApiParams.manager_id: gLoginDetails!.sId!,
     }, files: [
-      if (profileImage != null) FileModel(profileImage!.path, "image")
+      if (profileImage != null) FileModel(profileImage!.path, "profile_picture")
     ], onProgress: (bytes, totalBytes) {});
     hideProgressDialog();
     if (commonMaster != null) {

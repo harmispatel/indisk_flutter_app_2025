@@ -4,7 +4,9 @@ import 'package:indisk_app/app_ui/screens/staff/staff_home/select_product/staff_
 import 'package:indisk_app/utils/common_colors.dart';
 import 'package:provider/provider.dart';
 import '../../../../../api_service/models/staff_cart_master.dart';
+import '../../../../../api_service/models/staff_home_master.dart';
 import '../../../../../utils/app_dimens.dart';
+import '../../../../../utils/common_utills.dart';
 import '../../../../common_widget/common_textfield.dart';
 
 class StaffSelectProductView extends StatefulWidget {
@@ -174,14 +176,68 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                                       name: foodItem.name ?? '--',
                                       price: foodItem.price.toString() ?? '--',
                                       description: foodItem.description ?? '--',
-                                      onAddToCartTap: () {
-                                        setState(() {
-                                          final currentCount =
-                                              foodItem.cartCount ?? 0;
-                                          foodItem.cartCount = currentCount + 1;
-                                        });
-                                        viewModel.addToCart(
-                                            productId: foodItem.id ?? '--', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
+                                      onAddToCartTap: () async {
+                                        final hasOptions = foodItem.discount?.isNotEmpty == true ||
+                                            foodItem.modifier?.isNotEmpty == true ||
+                                            foodItem.topup?.isNotEmpty == true ||
+                                            foodItem.varient?.isNotEmpty == true;
+
+                                        if (hasOptions) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => ProductOptionsDialog(
+                                              product: foodItem,
+                                              onOptionsSelected: (options) async {
+                                                // Debug print
+                                                print('Options received in ProductCard:');
+                                                print(options);
+
+                                                try {
+                                                  await viewModel.addToCart(
+                                                    productId: foodItem.id!,
+                                                    tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo,
+                                                    variantIds: options['variantIds']?.cast<String>() ?? [], // Ensure proper type casting
+                                                    discountId: options['discountId'],
+                                                    modifierIds: options['modifierIds']?.cast<String>() ?? [],
+                                                    topupIds: options['topupIds']?.cast<String>() ?? [],
+                                                    specialInstruction: options['specialInstructions'] ?? '',
+                                                  );
+
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      final currentCount = foodItem.cartCount ?? 0;
+                                                      foodItem.cartCount = currentCount + 1;
+                                                    });
+                                                  }
+                                                } catch (e) {
+                                                  showRedToastMessage(e.toString());
+                                                }
+                                              },
+                                            ),
+                                          );
+                                        } else {
+                                          // No options, directly call addToCart with empty IDs
+                                          try {
+                                            await viewModel.addToCart(
+                                              productId: foodItem.id!,
+                                              tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo,
+                                              variantIds: [],
+                                              discountId: null,
+                                              modifierIds: [],
+                                              topupIds: [],
+                                              specialInstruction: '',
+                                            );
+
+                                            if (mounted) {
+                                              setState(() {
+                                                final currentCount = foodItem.cartCount ?? 0;
+                                                foodItem.cartCount = currentCount + 1;
+                                              });
+                                            }
+                                          } catch (e) {
+                                            showRedToastMessage(e.toString());
+                                          }
+                                        }
                                       },
                                       cartCount: foodItem.cartCount ?? 0,
                                       onIncreaseTap: () {
@@ -268,7 +324,6 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Spacer(),
-
                                 Text(
                                   "+\nAdd Product\nFrom Special Menu",
                                   textAlign: TextAlign.center,
@@ -403,9 +458,7 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                               child: PrimaryButton(
                                 padding: EdgeInsets.zero,
                                 height: 40,
-                                onPressed: () {
-
-                                },
+                                onPressed: () {},
                                 text: 'Get Bill',
                               ),
                             ),
@@ -419,132 +472,6 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
               ],
             ),
           )
-        ],
-      ),
-    );
-  }
-}
-
-class PaymentMethodDialog extends StatefulWidget {
-  final String tableNo;
-
-  const PaymentMethodDialog({super.key, required this.tableNo});
-
-  @override
-  _PaymentMethodDialogState createState() => _PaymentMethodDialogState();
-}
-
-class _PaymentMethodDialogState extends State<PaymentMethodDialog> {
-  String selectedPayment = '';
-  StaffSelectProductViewModel? mViewModel;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      mViewModel =
-          Provider.of<StaffSelectProductViewModel>(context, listen: false);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final viewModel =
-        mViewModel ?? Provider.of<StaffSelectProductViewModel>(context);
-    return AlertDialog(
-      title: const Text(
-        'Select Payment Method',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    selectedPayment = 'viva';
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: selectedPayment == 'viva'
-                            ? CommonColors.primaryColor
-                            : Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: [
-                      Image.network(
-                        'https://ibsintelligence.com/wp-content/uploads/2020/07/vivawallet1.jpg',
-                        width: 100,
-                        height: 80,
-                        fit: BoxFit.fill,
-                      ),
-                      const SizedBox(height: 8),
-                      Text('Viva',
-                          style: TextStyle(
-                              color: selectedPayment == 'viva'
-                                  ? CommonColors.primaryColor
-                                  : Colors.grey)),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    selectedPayment = 'cash';
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: selectedPayment == 'cash'
-                            ? CommonColors.primaryColor
-                            : Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: [
-                      Image.network(
-                        'https://www.shutterstock.com/image-vector/doller-money-icon-vector-png-600nw-2086977352.jpg',
-                        width: 100,
-                        height: 80,
-                        fit: BoxFit.fill,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Cash',
-                        style: TextStyle(
-                            color: selectedPayment == 'cash'
-                                ? CommonColors.primaryColor
-                                : Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          if (selectedPayment != '') ...[
-            const SizedBox(height: 20),
-            PrimaryButton(
-              height: 45,
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                // viewModel.placeOrderApi(
-                //     tableNo: widget.tableNo, paymentType: selectedPayment);
-              },
-              text: 'Submit',
-            )
-          ]
         ],
       ),
     );
@@ -700,6 +627,236 @@ class ProductCard extends StatelessWidget {
   }
 }
 
+class ProductOptionsDialog extends StatefulWidget {
+  final StaffHomeData product;
+  final Function(Map<String, dynamic>) onOptionsSelected;
+
+  const ProductOptionsDialog({
+    Key? key,
+    required this.product,
+    required this.onOptionsSelected,
+  }) : super(key: key);
+
+  @override
+  _ProductOptionsDialogState createState() => _ProductOptionsDialogState();
+}
+
+class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
+  List<Varient> _selectedVariants = [];
+  Discount? _selectedDiscount;
+  List<Modifier> _selectedModifiers = [];
+  List<Topup> _selectedTopups = [];
+  String? _specialInstructions;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 500),
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Header with product name
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.product.name ?? 'Product Options',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            Divider(height: 24, thickness: 1),
+
+            // Content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Variants Section
+                    if (widget.product.varient?.isNotEmpty ?? false) ...[
+                      _buildSectionHeader('Variants (Multiple Selection)'),
+                      Wrap(
+                        spacing: 8,
+                        children: widget.product.varient!.map((variant) =>
+                            FilterChip(
+                              label: Text('${variant.varientName} (+${variant.price} Rs)'),
+                              selected: _selectedVariants.contains(variant),
+                              checkmarkColor: Colors.white,
+                              onSelected: (selected) {
+                                setState(() {
+                                  if (selected) {
+                                    _selectedVariants.add(variant);
+                                  } else {
+                                    _selectedVariants.remove(variant);
+                                  }
+                                });
+                              },
+                              selectedColor: CommonColors.primaryColor,
+                              labelStyle: TextStyle(
+                                color: _selectedVariants.contains(variant)
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
+                        ).toList(),
+                      ),
+                      SizedBox(height: 20),
+                    ],
+
+                    // Discounts Section
+                    if (widget.product.discount?.isNotEmpty ?? false) ...[
+                      _buildSectionHeader('Discounts (Single Selection)'),
+                      ...widget.product.discount!
+                          .where((d) => d.isEnable ?? false)
+                          .map((discount) => RadioListTile<Discount>(
+                        value: discount,
+                        groupValue: _selectedDiscount,
+                        title: Text(discount.description ?? ''),
+                        subtitle: Text('${discount.percentage}% off'),
+                        onChanged: (value) => setState(() => _selectedDiscount = value),
+                        contentPadding: EdgeInsets.zero,
+                      )),
+                      SizedBox(height: 20),
+                    ],
+
+                    // Modifiers Section
+                    if (widget.product.modifier?.isNotEmpty ?? false) ...[
+                      _buildSectionHeader('Modifiers (Multiple Selection)'),
+                      ...widget.product.modifier!.map((modifier) => CheckboxListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text('${modifier.modifierName} (+${modifier.price} Rs)'),
+                        value: _selectedModifiers.contains(modifier),
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (value == true) {
+                              _selectedModifiers.add(modifier);
+                            } else {
+                              _selectedModifiers.remove(modifier);
+                            }
+                          });
+                        },
+                      )),
+                      SizedBox(height: 20),
+                    ],
+
+                    // Topups Section
+                    if (widget.product.topup?.isNotEmpty ?? false) ...[
+                      _buildSectionHeader('Topups (Multiple Selection)'),
+                      ...widget.product.topup!.map((topup) => CheckboxListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text('${topup.topupName} (+${topup.price} Rs)'),
+                        value: _selectedTopups.contains(topup),
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (value == true) {
+                              _selectedTopups.add(topup);
+                            } else {
+                              _selectedTopups.remove(topup);
+                            }
+                          });
+                        },
+                      )),
+                      SizedBox(height: 20),
+                    ],
+
+                    // Special Instructions
+                    _buildSectionHeader('Special Instructions'),
+                    TextField(
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        hintText: 'Any special requests?',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(12),
+                      ),
+                      onChanged: (value) => _specialInstructions = value,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(height: 20),
+
+            // Footer buttons
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      side: BorderSide(color: CommonColors.primaryColor),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('Cancel', style: TextStyle(
+                      color: CommonColors.primaryColor,
+                    )),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: CommonColors.primaryColor,
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    onPressed: () {
+                      final options = {
+                        'variantIds': _selectedVariants.map((v) => v.sId).toList(),
+                        'discountId': _selectedDiscount?.sId,
+                        'modifierIds': _selectedModifiers.map((m) => m.sId).toList(),
+                        'topupIds': _selectedTopups.map((t) => t.sId).toList(),
+                        'specialInstructions': _specialInstructions,
+                      };
+                  
+                      // Print for debugging
+                      print('Selected options before passing:');
+                      print(options);
+                      Navigator.pop(context);
+
+                      widget.onOptionsSelected(options);
+                    },
+                    child: Text('Add to Cart', style: TextStyle(color: Colors.white),),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[700],
+        ),
+      ),
+    );
+  }
+}
+
 class CartItemWidget extends StatelessWidget {
   final StaffCartData item;
   final VoidCallback? onIncrement;
@@ -794,3 +951,131 @@ class CartItemWidget extends StatelessWidget {
     );
   }
 }
+
+///
+//
+// class PaymentMethodDialog extends StatefulWidget {
+//   final String tableNo;
+//
+//   const PaymentMethodDialog({super.key, required this.tableNo});
+//
+//   @override
+//   _PaymentMethodDialogState createState() => _PaymentMethodDialogState();
+// }
+//
+// class _PaymentMethodDialogState extends State<PaymentMethodDialog> {
+//   String selectedPayment = '';
+//   StaffSelectProductViewModel? mViewModel;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       mViewModel =
+//           Provider.of<StaffSelectProductViewModel>(context, listen: false);
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final viewModel =
+//         mViewModel ?? Provider.of<StaffSelectProductViewModel>(context);
+//     return AlertDialog(
+//       title: const Text(
+//         'Select Payment Method',
+//         style: TextStyle(fontSize: 18),
+//       ),
+//       content: Column(
+//         mainAxisSize: MainAxisSize.min,
+//         children: [
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//             children: [
+//               InkWell(
+//                 onTap: () {
+//                   setState(() {
+//                     selectedPayment = 'viva';
+//                   });
+//                 },
+//                 child: Container(
+//                   padding: const EdgeInsets.all(16),
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                         color: selectedPayment == 'viva'
+//                             ? CommonColors.primaryColor
+//                             : Colors.grey),
+//                     borderRadius: BorderRadius.circular(8),
+//                   ),
+//                   child: Column(
+//                     children: [
+//                       Image.network(
+//                         'https://ibsintelligence.com/wp-content/uploads/2020/07/vivawallet1.jpg',
+//                         width: 100,
+//                         height: 80,
+//                         fit: BoxFit.fill,
+//                       ),
+//                       const SizedBox(height: 8),
+//                       Text('Viva',
+//                           style: TextStyle(
+//                               color: selectedPayment == 'viva'
+//                                   ? CommonColors.primaryColor
+//                                   : Colors.grey)),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//               const SizedBox(width: 10),
+//               InkWell(
+//                 onTap: () {
+//                   setState(() {
+//                     selectedPayment = 'cash';
+//                   });
+//                 },
+//                 child: Container(
+//                   padding: const EdgeInsets.all(16),
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                         color: selectedPayment == 'cash'
+//                             ? CommonColors.primaryColor
+//                             : Colors.grey),
+//                     borderRadius: BorderRadius.circular(8),
+//                   ),
+//                   child: Column(
+//                     children: [
+//                       Image.network(
+//                         'https://www.shutterstock.com/image-vector/doller-money-icon-vector-png-600nw-2086977352.jpg',
+//                         width: 100,
+//                         height: 80,
+//                         fit: BoxFit.fill,
+//                       ),
+//                       const SizedBox(height: 8),
+//                       Text(
+//                         'Cash',
+//                         style: TextStyle(
+//                             color: selectedPayment == 'cash'
+//                                 ? CommonColors.primaryColor
+//                                 : Colors.grey),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           if (selectedPayment != '') ...[
+//             const SizedBox(height: 20),
+//             PrimaryButton(
+//               height: 45,
+//               padding: EdgeInsets.zero,
+//               onPressed: () {
+//                 // viewModel.placeOrderApi(
+//                 //     tableNo: widget.tableNo, paymentType: selectedPayment);
+//               },
+//               text: 'Submit',
+//             )
+//           ]
+//         ],
+//       ),
+//     );
+//   }
+// }

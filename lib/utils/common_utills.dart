@@ -178,7 +178,7 @@ void oopsMSG() {
       SnackBar(
         elevation: 0,
         content: Text(
-          "Opps something went wrong!!",
+          "Opps something went wrong...!",
           textAlign: TextAlign.center,
           style: getNormalTextStyle(
             fontSize: 16,

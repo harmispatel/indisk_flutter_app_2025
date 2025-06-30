@@ -102,7 +102,7 @@ class _FoodListViewState extends State<FoodListView> {
             // Prepare variant list
             final varientList = updatedFoodItem.varient
                     ?.map((v) => {
-                          'variantName': 'Variant ${v.price}',
+                          'varientName': v.varientName,
                           'price': v.price,
                           '_id': (v.sId != null && v.sId!.length == 24)
                               ? v.sId
@@ -187,12 +187,11 @@ class FoodItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check if any discount is enabled
-    final hasDiscount = item.discount?.any((d) => d.isEnable == true) ?? false;
+    // Get all enabled discounts
+    final enabledDiscounts = item.discount?.where((d) => d.isEnable == true).toList() ?? [];
+    final hasDiscount = enabledDiscounts.isNotEmpty;
     // Get the first enabled discount for display
-    final activeDiscount = hasDiscount
-        ? item.discount?.firstWhere((d) => d.isEnable == true)
-        : null;
+    final activeDiscount = hasDiscount ? enabledDiscounts.first : null;
     // Calculate discounted price
     final discountPrice = activeDiscount != null
         ? item.basePrice! * (1 - activeDiscount.percentage! / 100)
@@ -338,7 +337,7 @@ class FoodItemCard extends StatelessWidget {
                         _buildFeatureTag(Icons.add_circle_outline,
                             '${item.topup?.length} Top-ups'),
                       if (hasDiscount)
-                        _buildFeatureTag(Icons.discount, 'Discount'),
+                        _buildFeatureTag(Icons.discount, '${enabledDiscounts.length} Discounts'),
                     ],
                   ),
                 Spacer(),
@@ -656,7 +655,8 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
                               style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.green,
-                                  fontWeight: FontWeight.w500)),
+                                  fontWeight: FontWeight.w500),
+                          ),
                         ],
                       ),
                     ),
@@ -782,12 +782,13 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
           ))
         else
           Expanded(
-            child: ListView.builder(
+            child:
+            ListView.builder(
               itemCount: editedFoodItem.varient?.length ?? 0,
               itemBuilder: (context, index) {
                 final variant = editedFoodItem.varient![index];
                 return ListTile(
-                  title: Text('Variant ${index + 1}'),
+                  title: Text(variant.varientName ?? 'Unnamed Variant'), // Show the custom name
                   subtitle: Text('Price: ${variant.price} Kr'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -924,6 +925,7 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
   }
 
   void _showAddVariantDialog() {
+    TextEditingController nameController = TextEditingController();
     TextEditingController priceController = TextEditingController();
 
     showDialog(
@@ -934,6 +936,12 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Variant Name',
+                ),
+              ),
               TextFormField(
                 controller: priceController,
                 decoration: InputDecoration(
@@ -951,9 +959,10 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             ElevatedButton(
               onPressed: () {
                 final price = int.tryParse(priceController.text);
-                if (price != null && price > 0) {
+                if (nameController.text.isNotEmpty && price != null && price > 0) {
                   setState(() {
                     editedFoodItem.varient?.add(Varient(
+                      varientName: nameController.text,
                       price: price,
                       sId: DateTime.now().millisecondsSinceEpoch.toString(),
                     ));
@@ -1118,8 +1127,8 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
   }
 
   void _showEditVariantDialog(Varient variant, int index) {
-    TextEditingController priceController =
-        TextEditingController(text: variant.price?.toString());
+    TextEditingController nameController = TextEditingController(text: variant.varientName);
+    TextEditingController priceController = TextEditingController(text: variant.price?.toString());
 
     showDialog(
       context: context,
@@ -1129,6 +1138,12 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Variant Name',
+                ),
+              ),
               TextFormField(
                 controller: priceController,
                 decoration: InputDecoration(
@@ -1146,8 +1161,9 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             ElevatedButton(
               onPressed: () {
                 final price = int.tryParse(priceController.text);
-                if (price != null && price > 0) {
+                if (nameController.text.isNotEmpty && price != null && price > 0) {
                   setState(() {
+                    editedFoodItem.varient?[index].varientName = nameController.text;
                     editedFoodItem.varient?[index].price = price;
                   });
                   Navigator.pop(context);

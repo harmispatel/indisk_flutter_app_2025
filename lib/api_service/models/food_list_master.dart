@@ -287,18 +287,21 @@ class Topup {
 }
 
 class Varient {
+  String? varientName;
   int? price;
   String? sId;
 
-  Varient({this.price, this.sId});
+  Varient({this.varientName, this.price, this.sId});
 
   Varient.fromJson(Map<String, dynamic> json) {
+    varientName = json['varientName'];
     price = json['price'];
     sId = json['_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['varientName'] = this.varientName;
     data['price'] = this.price;
     data['_id'] = this.sId;
     return data;

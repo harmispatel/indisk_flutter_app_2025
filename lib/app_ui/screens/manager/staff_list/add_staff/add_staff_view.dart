@@ -6,7 +6,9 @@ import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
 import 'package:indisk_app/main.dart';
 import 'package:indisk_app/utils/common_utills.dart';
 import 'package:provider/provider.dart';
+import '../../../../../utils/app_constants.dart';
 import '../../../../../utils/common_colors.dart';
+import '../../../../../utils/global_variables.dart';
 import 'add_staff_view_model.dart';
 
 class AddStaffView extends StatefulWidget {
@@ -35,28 +37,25 @@ class _AddStaffViewState extends State<AddStaffView> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       if (widget.staffListDetails != null) {
-        // mViewModel.updateManager(
-        //     id: widget.staffListDetails!.sId,
-        //     phone: _phoneController.text.trim(),
-        //     name: _nameController.text,
-        //     email: _emailController.text.trim(),
-        //     password: _passwordController.text,
-        //     username: _usernameController.text.trim(),
-        //     role: gLoginDetails!.role != AppConstants.ROLE_OWNER
-        //         ? 2
-        //         : selectedRole == "Manager"
-        //             ? 1
-        //             : 2);
+        mViewModel.updateManager(
+            id: widget.staffListDetails!.sId ?? '--',
+            phone: _phoneController.text.trim(),
+            name: _nameController.text,
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+            status: _status,
+            address: _addressController.text.trim(),
+            role: _role);
       } else {
         if(isValid()){
           mViewModel.createStaff(
             phone: _phoneController.text.trim(),
-            name: _nameController.text,
+            name: _nameController.text.trim(),
             email: _emailController.text.trim(),
             password: _passwordController.text.trim(),
             status: _status,
             address: _addressController.text.trim(),
-            gender: _gender,
+            // gender: _gender,
             role: _role
           );
         }
@@ -77,6 +76,7 @@ class _AddStaffViewState extends State<AddStaffView> {
         _passwordController.text = widget.staffListDetails!.password!;
         _status = widget.staffListDetails!.status!;
         _gender = widget.staffListDetails!.gender!;
+        _role = widget.staffListDetails!.role!;
       }
       mViewModel.resetAll();
       setState(() {});
@@ -151,17 +151,17 @@ class _AddStaffViewState extends State<AddStaffView> {
               ),
               SizedBox(height: 20),
               _buildTextField(
-                  _nameController, "${language.name}", Icons.person, false),
+                  _nameController, "${language.name}", Icons.person, false, false),
               _buildTextField(
-                  _emailController, "${language.email}", Icons.email, false,
+                  _emailController, "${language.email}", Icons.email, false, widget.staffListDetails != null,
                   keyboardType: TextInputType.emailAddress),
               _buildTextField(
-                  _phoneController, "${language.phone}", Icons.phone, false,
+                  _phoneController, "${language.phone}", Icons.phone, false, false,
                   keyboardType: TextInputType.phone),
               _buildTextField(_passwordController, "${language.password}",
-                  Icons.lock, true),
+                  Icons.lock, true, widget.staffListDetails != null),
               _buildTextField(
-                  _addressController, "Address", Icons.home, false,
+                  _addressController, "Address", Icons.home, false, false,
                   keyboardType: TextInputType.phone),
               Text("Role", style: TextStyle(fontSize: 18),),
               Center(
@@ -377,7 +377,10 @@ class _AddStaffViewState extends State<AddStaffView> {
     TextEditingController controller,
     String label,
     IconData icon,
-    bool isObscure, {
+    bool isObscure,
+  bool isReadOnly,
+
+      {
     TextInputType keyboardType = TextInputType.text,
     bool isEnable = true,
   }) {
@@ -390,6 +393,7 @@ class _AddStaffViewState extends State<AddStaffView> {
         obscureText: isObscure,
         keyboardType: keyboardType,
         enabled: isEnable,
+        readOnly: isReadOnly,
       ),
     );
   }

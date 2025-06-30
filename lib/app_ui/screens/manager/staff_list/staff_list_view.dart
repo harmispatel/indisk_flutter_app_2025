@@ -98,7 +98,6 @@ class _StaffListViewState extends State<StaffListView> {
               ),
             ),
             SizedBox(height: 10),
-
             GestureDetector(
               onTap: () {
                 showDeleteStaffDialog(context, staff.name!, () {

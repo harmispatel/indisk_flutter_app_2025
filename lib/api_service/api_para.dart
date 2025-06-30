@@ -27,6 +27,7 @@ class ApiParams {
   static const String discount = "discount";
   static const String modifier = "modifier";
   static const String topup = "topup";
+  static const String special_instruction = "special_instruction";
   static const String is_active = "is_active";
   static const String description = "description";
   static const String tagLine = "tagLine";

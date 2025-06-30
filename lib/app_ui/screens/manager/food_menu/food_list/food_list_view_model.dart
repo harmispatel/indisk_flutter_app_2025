@@ -78,7 +78,7 @@ class FoodListViewModel extends ChangeNotifier {
       }).toList(),
       'varient': varient.map((v) {
         final map = {
-          'variantName': v['variantName'] ?? 'Variant ${v['price']}', // Add variantName
+          'varientName': v['varientName'] ?? 'Varient ${v['price']}', // Add variantName
           'price': v['price'],
         };
         if (v['_id'] != null && v['_id'].toString().length == 24) {

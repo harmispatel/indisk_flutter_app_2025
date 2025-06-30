@@ -25,7 +25,7 @@ class FoodCategoryListViewModel extends ChangeNotifier {
 
     if (staffListMaster != null) {
       if (staffListMaster.success != null && staffListMaster.success!) {
-        foodCategoryList.addAll(staffListMaster.data!);
+        foodCategoryList = staffListMaster.data!;
       } else {
         // showRedToastMessage(staffListMaster.message!);
       }

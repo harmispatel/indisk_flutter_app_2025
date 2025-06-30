@@ -39,5 +39,6 @@ class ApiUrl {
   static String GET_VAT = "${BASE_URL}manager/get-vat";
   static String SAVE_VAT = "${BASE_URL}manager/save-vat";
   static String ADD_FOOD_MODIFIER = "${BASE_URL}food-modifier";
-
 }
+
+

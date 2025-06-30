@@ -29,7 +29,7 @@ class TableMaster {
 
 class TableData {
   String? sId;
-  int? tableNo;
+  dynamic tableNo;
   String? managerId;
   String? createdAt;
   String? updatedAt;

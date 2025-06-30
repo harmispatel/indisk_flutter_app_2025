@@ -49,7 +49,6 @@ class StaffSelectProductViewModel with ChangeNotifier {
   Future<void> getFoodCategoryList() async {
     isFoodCategoryLoading = true;
     isCartApiLoading = true;
-
     notifyListeners();
     foodCategoryList.clear();
     try {
@@ -79,7 +78,6 @@ class StaffSelectProductViewModel with ChangeNotifier {
 
   Future<void> getStaffFoodList({required bool isManageable}) async {
     isApiLoading = true;
-
     notifyListeners();
     staffFoodList.clear();
     StaffHomeMaster? staffListMaster = await services.api!
@@ -100,40 +98,59 @@ class StaffSelectProductViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addToCart({required String productId, required String tableNo}) async {
+  Future<void> addToCart({
+    required String productId,
+    required String tableNo,
+    required List<String> variantIds,
+    required String? discountId,
+    required List<String> modifierIds,
+    required List<String> topupIds,
+    required String specialInstruction,
+  }) async {
     showProgressDialog();
     isCartApiLoading = true;
+    notifyListeners();
 
-    CommonMaster? master = await services.api!.addToCart(params: {
-      ApiParams.user_id: gLoginDetails!.sId!,
-      ApiParams.product_id: productId,
-      ApiParams.table_no: tableNo,
-      ApiParams.quantity: 1
-    });
-    hideProgressDialog();
+    try {
+      final params = {
+        'user_id': gLoginDetails!.sId!,
+        'product_id': productId,
+        'table_no': tableNo,
+        'varient': variantIds,
+        'discount': discountId,
+        'modifier': modifierIds,
+        'topup': topupIds,
+        'special_instruction': specialInstruction,
+        'quantity': 1
+      };
 
-    if (master != null) {
-      if (master.success) {
+      // Print params before API call
+      print('API Params:');
+      print(params);
+
+      CommonMaster? master = await services.api!.addToCart(params: params);
+
+      if (master != null && master.success) {
         getStaffCartList(tableNo: tableNo);
       } else {
-        showRedToastMessage(master.message);
+        showRedToastMessage(master?.message ?? 'Failed to add to cart');
       }
-    } else {
-      oopsMSG();
+    } catch (e) {
+      showRedToastMessage('Error: ${e.toString()}');
+    } finally {
+      hideProgressDialog();
+      isCartApiLoading = false;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   Future<void> getStaffCartList({required String tableNo}) async {
     isCartApiLoading = true;
     notifyListeners();
     staffCartFoodList.clear();
-    StaffCartMaster? master = await services.api!
-        .getStaffCartList(params: {ApiParams.user_id: gLoginDetails!.sId!, ApiParams.table_no: tableNo});
+    StaffCartMaster? master = await services.api!.getStaffCartList(params: {ApiParams.user_id: gLoginDetails!.sId!, ApiParams.table_no: tableNo});
     isCartApiLoading = false;
-
     notifyListeners();
-
     if (master != null) {
       if (master.success != null && master.success!) {
         staffCartFoodList = master.cart ?? [];
@@ -256,7 +273,7 @@ class StaffSelectProductViewModel with ChangeNotifier {
     hideProgressDialog();
     if (commonMaster != null) {
       if (commonMaster.success) {
-        // showGreenToastMessage(commonMaster.message);
+        showGreenToastMessage(commonMaster.message);
       } else {
         showRedToastMessage(commonMaster.message);
       }

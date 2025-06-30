@@ -58,11 +58,9 @@ class _KitchenStaffHomeViewState extends State<KitchenStaffHomeView> {
 
   @override
   Widget build(BuildContext context) {
-
     mViewModel = Provider.of<KitchenStaffHomeViewModel>(context);
     final tableItems = _groupItemsByTable();
     final tableNumbers = tableItems.keys.toList()..sort();
-
     return Scaffold(
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +190,6 @@ class _KitchenStaffHomeViewState extends State<KitchenStaffHomeView> {
                                 .map((item) => item['orderId'] as String)
                                 .toSet()
                                 .toList();
-
                             // Update status for all orders (you might want to handle this differently)
                             for (final orderId in orderIds) {
                               mViewModel.updateFoodStatus(

@@ -39,6 +39,7 @@ class ManagerVatViewModel with ChangeNotifier {
     if (master != null) {
       if (master.success!) {
         currentVat = master.data!.vat.toString();
+        showGreenToastMessage('vat updated successfully');
       } else {
         showRedToastMessage(master.message ?? '--');
       }

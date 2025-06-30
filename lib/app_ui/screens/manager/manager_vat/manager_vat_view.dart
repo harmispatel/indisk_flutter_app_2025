@@ -45,6 +45,10 @@ class _ManagerVatViewState extends State<ManagerVatView> {
             onPressed: () {
               if (vatController.text.trim().isEmpty) {
                 showRedToastMessage("Please enter vat");
+              } else if (!RegExp(r'^[0-9]+$')
+                  .hasMatch(vatController.text.trim())) {
+                showRedToastMessage("Please enter only numbers");
+
               } else {
                 mViewModel
                     .saveVat(vat: vatController.text.trim())
