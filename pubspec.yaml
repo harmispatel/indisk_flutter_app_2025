@@ -46,11 +46,11 @@ dependencies:
   fluttertoast: ^8.2.12
   flutter_spinkit: ^5.2.1
   image_picker: any
-  cached_network_image: ^3.4.1
+  cached_network_image: ^3.3.1
   fl_chart: 0.63.0
-
   syncfusion_flutter_charts: ^20.4.48
-
+  razorpay_flutter: ^1.4.0
+  qr_flutter: ^4.1.0
 
 dependency_overrides:
   intl: ^0.19.0

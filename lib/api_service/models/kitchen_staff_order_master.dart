@@ -30,14 +30,14 @@ class KitchenStaffOrderMaster {
 class KitchenStaffOrders {
   String? sId;
   User? user;
-  int? tableNo;
+  num? tableNo;
   List<Items>? items;
   String? paymentType;
   String? paymentStatus;
   String? status;
   String? orderDate;
-  int? totalAmount;
-  int? iV;
+  dynamic? totalAmount;
+  dynamic? iV;
 
   KitchenStaffOrders(
       {this.sId,
@@ -113,7 +113,7 @@ class User {
 
 class Items {
   FoodItem? foodItem;
-  int? quantity;
+  dynamic? quantity;
   String? sId;
 
   Items({this.foodItem, this.quantity, this.sId});
@@ -141,18 +141,18 @@ class FoodItem {
   String? sId;
   String? name;
   String? description;
-  int? basePrice;
+  dynamic? basePrice;
   List<PricesByQuantity>? pricesByQuantity;
   String? category;
   bool? isAvailable;
   String? createdBy;
   String? unit;
-  int? totalQty;
-  int? availableQty;
+  dynamic? totalQty;
+  dynamic? availableQty;
   List<String>? image;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  dynamic? iV;
 
   FoodItem(
       {this.sId,
@@ -220,7 +220,7 @@ class FoodItem {
 
 class PricesByQuantity {
   String? quantity;
-  int? price;
+  dynamic? price;
   String? sId;
 
   PricesByQuantity({this.quantity, this.price, this.sId});

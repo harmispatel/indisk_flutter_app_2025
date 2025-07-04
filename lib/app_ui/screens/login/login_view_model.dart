@@ -20,6 +20,7 @@ class LoginViewModel extends ChangeNotifier {
       required String password,
       required String role}) async {
     try {
+      print("Sign in");
       showProgressDialog();
 
       final loginMaster = await services.api?.login(params: {

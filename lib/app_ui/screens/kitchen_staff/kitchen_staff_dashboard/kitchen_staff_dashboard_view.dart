@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:indisk_app/app_ui/screens/new_kitchen_staff_home/new_kitchen_staff_home_view.dart';
 
 import '../../../../utils/common_colors.dart';
 import '../../../common_screen/profile/profile_view.dart';
@@ -39,9 +40,9 @@ class _KitchenStaffDashboardViewState extends State<KitchenStaffDashboardView> {
               children: [
                 const SizedBox(height: 20),
                 _buildNavItem(Icons.home, 0),
-                _buildNavItem(Icons.category, 1),
-                _buildNavItem(Icons.fastfood, 2),
-                _buildNavItem(Icons.settings, 4),
+                // _buildNavItem(Icons.category, 1),
+                // _buildNavItem(Icons.fastfood, 2),
+                _buildNavItem(Icons.settings, 1),
               ],
             ),
           ),
@@ -56,9 +57,10 @@ class _KitchenStaffDashboardViewState extends State<KitchenStaffDashboardView> {
                 setState(() {});
               },
               children: [
-                KitchenStaffHomeView(),
-                Container(),
-                Container(),
+                // KitchenStaffHomeView(),
+                NewKitchenStaffHomeView(),
+                // Container(),
+                // Container(),
                 ProfileView(),
               ],
             ),

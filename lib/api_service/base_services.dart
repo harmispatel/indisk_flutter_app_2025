@@ -1,11 +1,14 @@
 import 'package:indisk_app/api_service/models/file_model.dart';
 import 'package:indisk_app/api_service/models/food_category_master.dart';
 import 'package:indisk_app/api_service/models/login_master.dart';
+import 'package:indisk_app/api_service/models/salep_graph_master.dart';
+import 'package:indisk_app/api_service/models/sales_count_master.dart';
 
 import 'models/common_master.dart';
 import 'models/food_list_master.dart';
 import 'models/get_profile_master.dart';
 import 'models/kitchen_staff_order_master.dart';
+import 'models/order_bill_master.dart';
 import 'models/order_history_master.dart';
 import 'models/owner_home_master.dart';
 import 'models/restaurant_details_master.dart';
@@ -30,8 +33,7 @@ abstract class BaseServices {
     required Function(int, int)? onProgress,
   });
 
-  Future<StaffListMaster?> getStaffList(
-      {required Map<String, dynamic> params});
+  Future<StaffListMaster?> getStaffList({required Map<String, dynamic> params});
 
   Future<CommonMaster?> deleteStaff({required Map<String, dynamic> params});
 
@@ -87,16 +89,14 @@ abstract class BaseServices {
       required List<FileModel> files,
       required Function(int p1, int p2)? onProgress});
 
-  Future<CommonMaster?> changePassword(
-      {required Map<String, dynamic> params});
+  Future<CommonMaster?> changePassword({required Map<String, dynamic> params});
 
-  Future<GetProfileMaster?> getProfile(
-      {required Map<String, dynamic> params});
+  Future<GetProfileMaster?> getProfile({required Map<String, dynamic> params});
 
   Future<CommonMaster?> updateOwnerProfile(
       {required Map<String, String> params,
-        required List<FileModel> files,
-        required Function(int p1, int p2)? onProgress});
+      required List<FileModel> files,
+      required Function(int p1, int p2)? onProgress});
 
   Future<RestaurantDetailsMaster?> getRestaurantDetails(
       {required Map<String, dynamic> params});
@@ -104,8 +104,7 @@ abstract class BaseServices {
   Future<StaffHomeMaster?> getStaffFoodList(
       {required Map<String, dynamic> params});
 
-  Future<CommonMaster?> addToCart(
-      {required Map<String, dynamic> params});
+  Future<CommonMaster?> addToCart({required Map<String, dynamic> params});
 
   Future<StaffCartMaster?> getStaffCartList(
       {required Map<String, dynamic> params});
@@ -113,42 +112,43 @@ abstract class BaseServices {
   Future<CommonMaster?> updateQuantityStaffCart(
       {required Map<String, dynamic> params});
 
-  Future<CommonMaster?> clearStaffCart(
-      {required Map<String, dynamic> params});
+  Future<CommonMaster?> clearStaffCart({required Map<String, dynamic> params});
 
   Future<CommonMaster?> removeItemStaffCart(
       {required Map<String, dynamic> params});
 
-  Future<CommonMaster?> addTable(
-      {required Map<String, dynamic> params});
+  Future<CommonMaster?> addTable({required Map<String, dynamic> params});
 
-  Future<TableMaster?> getTable(
-      {required Map<String, dynamic> params});
+  Future<TableMaster?> getTable({required Map<String, dynamic> params});
 
-  Future<CommonMaster?> placeOrder(
-      {required Map<String, dynamic> params});
+  Future<CommonMaster?> placeOrder({required Map<String, dynamic> params});
 
   Future<KitchenStaffOrderMaster?> getKitchenStaffOrder();
 
   Future<CommonMaster?> updateFoodStatus(
       {required Map<String, String> params,
-        required List<FileModel> files,
-        required Function(int p1, int p2)? onProgress});
+      required List<FileModel> files,
+      required Function(int p1, int p2)? onProgress});
 
   Future<CommonMaster?> updateFoodAvailability(
       {required Map<String, dynamic> params,
-        required List<FileModel> files,
-        required Function(int p1, int p2)? onProgress});
+      required List<FileModel> files,
+      required Function(int p1, int p2)? onProgress});
 
   Future<OrderHistoryMaster?> getOrderHistory(
       {required Map<String, dynamic> params});
 
-  Future<VatMaster?> getVat(
+  Future<VatMaster?> getVat({required Map<String, dynamic> params});
+
+  Future<VatMaster?> saveVat({required Map<String, dynamic> params});
+
+  Future<CommonMaster?> addFoodModifier({required Map<String, dynamic> params});
+
+  Future<OrderBillMaster?> getOrderBill({required Map<String, dynamic> params});
+
+  Future<SalesGraphMaster?> salesGraphApi(
       {required Map<String, dynamic> params});
 
-  Future<VatMaster?> saveVat(
-      {required Map<String, dynamic> params});
-
-  Future<CommonMaster?> addFoodModifier(
+  Future<SalesCountMaster?> salesCountApi(
       {required Map<String, dynamic> params});
 }

@@ -34,7 +34,7 @@ class _FoodListViewState extends State<FoodListView> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.add, size: 28),
+            icon: CircleAvatar(child: Icon(Icons.add, size: 28)),
             onPressed: () => pushToScreen(CreateFoodView()),
           ),
         ],
@@ -188,7 +188,8 @@ class FoodItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get all enabled discounts
-    final enabledDiscounts = item.discount?.where((d) => d.isEnable == true).toList() ?? [];
+    final enabledDiscounts =
+        item.discount?.where((d) => d.isEnable == true).toList() ?? [];
     final hasDiscount = enabledDiscounts.isNotEmpty;
     // Get the first enabled discount for display
     final activeDiscount = hasDiscount ? enabledDiscounts.first : null;
@@ -317,47 +318,50 @@ class FoodItemCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 12),
+            if (item.varient?.isNotEmpty == true ||
+                item.modifier?.isNotEmpty == true ||
+                item.topup?.isNotEmpty == true ||
+                hasDiscount)
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  if (item.varient?.isNotEmpty == true)
+                    _buildFeatureTag(
+                        Icons.linear_scale, '${item.varient?.length} Variants'),
+                  if (item.modifier?.isNotEmpty == true)
+                    _buildFeatureTag(
+                        Icons.tune, '${item.modifier?.length} Modifiers'),
+                  if (item.topup?.isNotEmpty == true)
+                    _buildFeatureTag(Icons.add_circle_outline,
+                        '${item.topup?.length} Top-ups'),
+                  if (hasDiscount)
+                    _buildFeatureTag(
+                        Icons.discount, '${enabledDiscounts.length} Discounts'),
+                ],
+              ),
+            SizedBox(height: 12),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (item.varient?.isNotEmpty == true ||
-                    item.modifier?.isNotEmpty == true ||
-                    item.topup?.isNotEmpty == true ||
-                    hasDiscount)
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: [
-                      if (item.varient?.isNotEmpty == true)
-                        _buildFeatureTag(Icons.linear_scale,
-                            '${item.varient?.length} Variants'),
-                      if (item.modifier?.isNotEmpty == true)
-                        _buildFeatureTag(
-                            Icons.tune, '${item.modifier?.length} Modifiers'),
-                      if (item.topup?.isNotEmpty == true)
-                        _buildFeatureTag(Icons.add_circle_outline,
-                            '${item.topup?.length} Top-ups'),
-                      if (hasDiscount)
-                        _buildFeatureTag(Icons.discount, '${enabledDiscounts.length} Discounts'),
-                    ],
-                  ),
-                Spacer(),
-                GestureDetector(
-                  onTap: onManageOptions,
-                  child: Container(
-                    decoration: BoxDecoration(
+                Expanded(
+                  child: GestureDetector(
+                    onTap: onManageOptions,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(7),
                         border: Border.all(color: Colors.blue),
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.blue.withOpacity(0.4),
-                              spreadRadius: 0.5,
-                              blurRadius: 2,
-                              offset: const Offset(2, 1))
-                        ]),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 20),
+                            color: Colors.blue.withOpacity(0.4),
+                            spreadRadius: 0.5,
+                            blurRadius: 2,
+                            offset: const Offset(2, 1),
+                          ),
+                        ],
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -366,12 +370,14 @@ class FoodItemCard extends StatelessWidget {
                             size: 18,
                             color: Colors.blue,
                           ),
+                          SizedBox(width: 4),
                           Text(
-                            " Options",
+                            "Options",
                             style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500),
+                              fontSize: 14,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -379,23 +385,24 @@ class FoodItemCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8),
-                GestureDetector(
-                  onTap: onEdit,
-                  child: Container(
-                    decoration: BoxDecoration(
+                Expanded(
+                  child: GestureDetector(
+                    onTap: onEdit,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(7),
                         border: Border.all(color: Colors.green),
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.green.withOpacity(0.4),
-                              spreadRadius: 0.5,
-                              blurRadius: 2,
-                              offset: const Offset(2, 1))
-                        ]),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 35),
+                            color: Colors.green.withOpacity(0.4),
+                            spreadRadius: 0.5,
+                            blurRadius: 2,
+                            offset: const Offset(2, 1),
+                          ),
+                        ],
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -404,12 +411,14 @@ class FoodItemCard extends StatelessWidget {
                             size: 18,
                             color: Colors.green,
                           ),
+                          SizedBox(width: 4),
                           Text(
-                            " Edit",
+                            "Edit",
                             style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.green,
-                                fontWeight: FontWeight.w500),
+                              fontSize: 14,
+                              color: Colors.green,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -417,23 +426,24 @@ class FoodItemCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8),
-                GestureDetector(
-                  onTap: onDelete,
-                  child: Container(
-                    decoration: BoxDecoration(
+                Expanded(
+                  child: GestureDetector(
+                    onTap: onDelete,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(7),
                         border: Border.all(color: Colors.red),
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.red.withOpacity(0.4),
-                              spreadRadius: 0.5,
-                              blurRadius: 2,
-                              offset: const Offset(2, 1))
-                        ]),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 30),
+                            color: Colors.red.withOpacity(0.4),
+                            spreadRadius: 0.5,
+                            blurRadius: 2,
+                            offset: const Offset(2, 1),
+                          ),
+                        ],
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -442,12 +452,14 @@ class FoodItemCard extends StatelessWidget {
                             size: 18,
                             color: Colors.red,
                           ),
+                          SizedBox(width: 4),
                           Text(
-                            " Delete",
+                            "Delete",
                             style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.red,
-                                fontWeight: FontWeight.w500),
+                              fontSize: 14,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -487,12 +499,328 @@ class FoodItemCard extends StatelessWidget {
   }
 }
 
+// class FoodItemCard extends StatelessWidget {
+//   final FoodListData item;
+//   final VoidCallback onEdit;
+//   final VoidCallback onDelete;
+//   final VoidCallback onManageOptions;
+//
+//   const FoodItemCard({
+//     required this.item,
+//     required this.onEdit,
+//     required this.onDelete,
+//     required this.onManageOptions,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     // Get all enabled discounts
+//     final enabledDiscounts = item.discount?.where((d) => d.isEnable == true).toList() ?? [];
+//     final hasDiscount = enabledDiscounts.isNotEmpty;
+//     // Get the first enabled discount for display
+//     final activeDiscount = hasDiscount ? enabledDiscounts.first : null;
+//     // Calculate discounted price
+//     final discountPrice = activeDiscount != null
+//         ? item.basePrice! * (1 - activeDiscount.percentage! / 100)
+//         : null;
+//
+//     return Card(
+//       elevation: 2,
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+//       child: Padding(
+//         padding: EdgeInsets.all(12),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Row(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Container(
+//                   width: 80,
+//                   height: 80,
+//                   decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(8),
+//                   ),
+//                   child: ClipRRect(
+//                     borderRadius: BorderRadius.circular(8),
+//                     child: Image.network(
+//                       item.image?.first ??
+//                           'https://cdn-icons-png.flaticon.com/512/4067/4067447.png',
+//                       fit: BoxFit.cover,
+//                       errorBuilder: (context, error, stackTrace) =>
+//                           Icon(Icons.fastfood, size: 40),
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(width: 12),
+//                 Expanded(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Row(
+//                         children: [
+//                           Expanded(
+//                             child: Text(
+//                               item.name ?? 'Unnamed Item',
+//                               style: TextStyle(
+//                                 fontSize: 18,
+//                                 fontWeight: FontWeight.bold,
+//                               ),
+//                             ),
+//                           ),
+//                           Container(
+//                             padding: EdgeInsets.symmetric(
+//                                 horizontal: 8, vertical: 4),
+//                             decoration: BoxDecoration(
+//                               color: item.isAvailable == true
+//                                   ? Colors.green.withOpacity(0.2)
+//                                   : Colors.red.withOpacity(0.2),
+//                               borderRadius: BorderRadius.circular(12),
+//                             ),
+//                             child: Padding(
+//                               padding:
+//                                   const EdgeInsets.symmetric(horizontal: 5),
+//                               child: Text(
+//                                 item.isAvailable == true
+//                                     ? 'Available'
+//                                     : 'Out of Stock',
+//                                 style: TextStyle(
+//                                   color: item.isAvailable == true
+//                                       ? Colors.green
+//                                       : Colors.red,
+//                                   fontSize: 12,
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                       SizedBox(height: 4),
+//                       Row(
+//                         children: [
+//                           Text(
+//                             '${item.basePrice?.toStringAsFixed(2)} Kr',
+//                             style: TextStyle(
+//                               fontSize: 16,
+//                               fontWeight: FontWeight.w600,
+//                               decoration: hasDiscount
+//                                   ? TextDecoration.lineThrough
+//                                   : null,
+//                               color: hasDiscount ? Colors.grey : null,
+//                             ),
+//                           ),
+//                           if (hasDiscount && discountPrice != null) ...[
+//                             SizedBox(width: 8),
+//                             Text(
+//                               '${discountPrice.toStringAsFixed(2)} Kr',
+//                               style: TextStyle(
+//                                 fontSize: 16,
+//                                 fontWeight: FontWeight.w600,
+//                                 color: Colors.green,
+//                               ),
+//                             ),
+//                             SizedBox(width: 8),
+//                             Text(
+//                               '${activeDiscount?.percentage}% OFF',
+//                               style: TextStyle(
+//                                 fontSize: 12,
+//                                 color: Colors.green,
+//                               ),
+//                             ),
+//                           ],
+//                         ],
+//                       ),
+//                       SizedBox(height: 4),
+//                       Text(
+//                         'Stock: ${item.availableQty ?? 0} ${item.unit ?? ''}',
+//                         style: TextStyle(
+//                           fontSize: 14,
+//                           color: Colors.grey[600],
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             SizedBox(height: 12),
+//             Row(
+//               children: [
+//                 if (item.varient?.isNotEmpty == true ||
+//                     item.modifier?.isNotEmpty == true ||
+//                     item.topup?.isNotEmpty == true ||
+//                     hasDiscount)
+//                   Wrap(
+//                     spacing: 8,
+//                     runSpacing: 4,
+//                     children: [
+//                       if (item.varient?.isNotEmpty == true)
+//                         _buildFeatureTag(Icons.linear_scale,
+//                             '${item.varient?.length} Variants'),
+//                       if (item.modifier?.isNotEmpty == true)
+//                         _buildFeatureTag(
+//                             Icons.tune, '${item.modifier?.length} Modifiers'),
+//                       if (item.topup?.isNotEmpty == true)
+//                         _buildFeatureTag(Icons.add_circle_outline,
+//                             '${item.topup?.length} Top-ups'),
+//                       if (hasDiscount)
+//                         _buildFeatureTag(Icons.discount, '${enabledDiscounts.length} Discounts'),
+//                     ],
+//                   ),
+//                 Spacer(),
+//                 GestureDetector(
+//                   onTap: onManageOptions,
+//                   child: Container(
+//                     decoration: BoxDecoration(
+//                         color: Colors.white,
+//                         borderRadius: BorderRadius.circular(7),
+//                         border: Border.all(color: Colors.blue),
+//                         boxShadow: [
+//                           BoxShadow(
+//                               color: Colors.blue.withOpacity(0.4),
+//                               spreadRadius: 0.5,
+//                               blurRadius: 2,
+//                               offset: const Offset(2, 1))
+//                         ]),
+//                     child: Padding(
+//                       padding: const EdgeInsets.symmetric(
+//                           vertical: 2, horizontal: 20),
+//                       child: Row(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         children: [
+//                           Icon(
+//                             Icons.settings,
+//                             size: 18,
+//                             color: Colors.blue,
+//                           ),
+//                           Text(
+//                             " Options",
+//                             style: TextStyle(
+//                                 fontSize: 16,
+//                                 color: Colors.blue,
+//                                 fontWeight: FontWeight.w500),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(width: 8),
+//                 GestureDetector(
+//                   onTap: onEdit,
+//                   child: Container(
+//                     decoration: BoxDecoration(
+//                         color: Colors.white,
+//                         borderRadius: BorderRadius.circular(7),
+//                         border: Border.all(color: Colors.green),
+//                         boxShadow: [
+//                           BoxShadow(
+//                               color: Colors.green.withOpacity(0.4),
+//                               spreadRadius: 0.5,
+//                               blurRadius: 2,
+//                               offset: const Offset(2, 1))
+//                         ]),
+//                     child: Padding(
+//                       padding: const EdgeInsets.symmetric(
+//                           vertical: 2, horizontal: 35),
+//                       child: Row(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         children: [
+//                           Icon(
+//                             Icons.edit,
+//                             size: 18,
+//                             color: Colors.green,
+//                           ),
+//                           Text(
+//                             " Edit",
+//                             style: TextStyle(
+//                                 fontSize: 16,
+//                                 color: Colors.green,
+//                                 fontWeight: FontWeight.w500),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(width: 8),
+//                 GestureDetector(
+//                   onTap: onDelete,
+//                   child: Container(
+//                     decoration: BoxDecoration(
+//                         color: Colors.white,
+//                         borderRadius: BorderRadius.circular(7),
+//                         border: Border.all(color: Colors.red),
+//                         boxShadow: [
+//                           BoxShadow(
+//                               color: Colors.red.withOpacity(0.4),
+//                               spreadRadius: 0.5,
+//                               blurRadius: 2,
+//                               offset: const Offset(2, 1))
+//                         ]),
+//                     child: Padding(
+//                       padding: const EdgeInsets.symmetric(
+//                           vertical: 2, horizontal: 30),
+//                       child: Row(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         children: [
+//                           Icon(
+//                             Icons.delete,
+//                             size: 18,
+//                             color: Colors.red,
+//                           ),
+//                           Text(
+//                             " Delete",
+//                             style: TextStyle(
+//                                 fontSize: 16,
+//                                 color: Colors.red,
+//                                 fontWeight: FontWeight.w500),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildFeatureTag(IconData icon, String label) {
+//     return Container(
+//       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+//       decoration: BoxDecoration(
+//           color: Colors.blue.withOpacity(0.1),
+//           borderRadius: BorderRadius.circular(12),
+//           border: Border.all(color: Colors.blue.withOpacity(0.3))),
+//       child: Row(
+//         mainAxisSize: MainAxisSize.min,
+//         children: [
+//           Icon(icon, size: 14, color: Colors.blue),
+//           SizedBox(width: 4),
+//           Text(
+//             label,
+//             style: TextStyle(
+//               fontSize: 12,
+//               color: Colors.blue,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 // Food Options Dialog
 class FoodOptionsDialog extends StatefulWidget {
   final FoodListData foodItem;
   final Function(FoodListData) onSave;
 
   const FoodOptionsDialog({
+    super.key,
     required this.foodItem,
     required this.onSave,
   });
@@ -651,11 +979,12 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.save, size: 18, color: Colors.green),
-                          Text(" Save",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w500),
+                          Text(
+                            " Save",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.green,
+                                fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
@@ -782,13 +1111,13 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
           ))
         else
           Expanded(
-            child:
-            ListView.builder(
+            child: ListView.builder(
               itemCount: editedFoodItem.varient?.length ?? 0,
               itemBuilder: (context, index) {
                 final variant = editedFoodItem.varient![index];
                 return ListTile(
-                  title: Text(variant.varientName ?? 'Unnamed Variant'), // Show the custom name
+                  title: Text(variant.varientName ??
+                      'Unnamed Variant'), // Show the custom name
                   subtitle: Text('Price: ${variant.price} Kr'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -959,7 +1288,9 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             ElevatedButton(
               onPressed: () {
                 final price = int.tryParse(priceController.text);
-                if (nameController.text.isNotEmpty && price != null && price > 0) {
+                if (nameController.text.isNotEmpty &&
+                    price != null &&
+                    price > 0) {
                   setState(() {
                     editedFoodItem.varient?.add(Varient(
                       varientName: nameController.text,
@@ -1127,8 +1458,10 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
   }
 
   void _showEditVariantDialog(Varient variant, int index) {
-    TextEditingController nameController = TextEditingController(text: variant.varientName);
-    TextEditingController priceController = TextEditingController(text: variant.price?.toString());
+    TextEditingController nameController =
+        TextEditingController(text: variant.varientName);
+    TextEditingController priceController =
+        TextEditingController(text: variant.price?.toString());
 
     showDialog(
       context: context,
@@ -1161,9 +1494,12 @@ class _FoodOptionsDialogState extends State<FoodOptionsDialog> {
             ElevatedButton(
               onPressed: () {
                 final price = int.tryParse(priceController.text);
-                if (nameController.text.isNotEmpty && price != null && price > 0) {
+                if (nameController.text.isNotEmpty &&
+                    price != null &&
+                    price > 0) {
                   setState(() {
-                    editedFoodItem.varient?[index].varientName = nameController.text;
+                    editedFoodItem.varient?[index].varientName =
+                        nameController.text;
                     editedFoodItem.varient?[index].price = price;
                   });
                   Navigator.pop(context);

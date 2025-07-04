@@ -10,43 +10,112 @@ import '../../../../utils/global_variables.dart';
 class RestaurantListViewModel with ChangeNotifier {
   Services services = Services();
   List<RestaurantData> restaurantList = [];
-
+  bool isLoading = false;
+  String? errorMessage;
 
   Future<void> getRestaurantList({int? role}) async {
-    showProgressDialog();
+    try {
+      isLoading = true;
+      errorMessage = null;
+      notifyListeners();
 
-    RestaurantMaster? staffListMaster = await services.api!
-        .getRestaurantList(params: {ApiParams.owner_id: gLoginDetails!.sId!});
-    hideProgressDialog();
+      final response = await services.api!
+          .getRestaurantList(params: {ApiParams.owner_id: gLoginDetails!.sId!});
 
-
-    if (staffListMaster != null) {
-      if (staffListMaster.success != null && staffListMaster.success!) {
-        restaurantList = staffListMaster.data!;
+      if (response != null) {
+        if (response.success != null && response.success!) {
+          restaurantList = response.data ?? [];
+        } else {
+          errorMessage = response.message ?? 'Failed to load restaurants';
+          showRedToastMessage(errorMessage!);
+        }
       } else {
-        showRedToastMessage(staffListMaster.message!);
+        errorMessage = 'Unexpected error occurred';
+        oopsMSG();
       }
-    } else {
-      oopsMSG();
+    } catch (e) {
+      errorMessage = 'Failed to load restaurants: ${e.toString()}';
+      showRedToastMessage(errorMessage!);
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
-  Future<void> deleteRestaurant({String? id}) async {
-    showProgressDialog();
-    CommonMaster? staffListMaster = await services.api!.deleteRestaurant(
-        params: {ApiParams.id: id, ApiParams.owner_id: gLoginDetails!.sId!});
-    hideProgressDialog();
+  Future<bool> deleteRestaurant({String? id}) async {
+    try {
+      isLoading = true;
+      notifyListeners();
 
-    if (staffListMaster != null) {
-      if (staffListMaster.success) {
-        getRestaurantList();
+      final response = await services.api!.deleteRestaurant(
+          params: {ApiParams.id: id, ApiParams.owner_id: gLoginDetails!.sId!});
+
+      if (response != null) {
+        if (response.success) {
+          await getRestaurantList(); // Refresh the list after deletion
+          showGreenToastMessage(response.message ?? 'Restaurant deleted successfully');
+          return true;
+        } else {
+          errorMessage = response.message ?? 'Failed to delete restaurant';
+          showRedToastMessage(errorMessage!);
+          return false;
+        }
       } else {
-        showRedToastMessage(staffListMaster.message);
+        errorMessage = 'Unexpected error occurred';
+        oopsMSG();
+        return false;
       }
-    } else {
-      oopsMSG();
+    } catch (e) {
+      errorMessage = 'Failed to delete restaurant: ${e.toString()}';
+      showRedToastMessage(errorMessage!);
+      return false;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-    notifyListeners();
   }
 }
+
+// class RestaurantListViewModel with ChangeNotifier {
+//   Services services = Services();
+//   List<RestaurantData> restaurantList = [];
+//
+//
+//   Future<void> getRestaurantList({int? role}) async {
+//     showProgressDialog();
+//
+//     RestaurantMaster? staffListMaster = await services.api!
+//         .getRestaurantList(params: {ApiParams.owner_id: gLoginDetails!.sId!});
+//     hideProgressDialog();
+//
+//
+//     if (staffListMaster != null) {
+//       if (staffListMaster.success != null && staffListMaster.success!) {
+//         restaurantList = staffListMaster.data!;
+//       } else {
+//         showRedToastMessage(staffListMaster.message!);
+//       }
+//     } else {
+//       oopsMSG();
+//     }
+//     notifyListeners();
+//   }
+//
+//   Future<void> deleteRestaurant({String? id}) async {
+//     showProgressDialog();
+//     CommonMaster? staffListMaster = await services.api!.deleteRestaurant(
+//         params: {ApiParams.id: id, ApiParams.owner_id: gLoginDetails!.sId!});
+//     hideProgressDialog();
+//
+//     if (staffListMaster != null) {
+//       if (staffListMaster.success) {
+//         getRestaurantList();
+//       } else {
+//         showRedToastMessage(staffListMaster.message);
+//       }
+//     } else {
+//       oopsMSG();
+//     }
+//     notifyListeners();
+//   }
+// }

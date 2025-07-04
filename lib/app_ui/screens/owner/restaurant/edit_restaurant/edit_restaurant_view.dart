@@ -267,3 +267,5 @@ class _EditRestaurantViewState extends State<EditRestaurantView> {
     }
   }
 }
+
+

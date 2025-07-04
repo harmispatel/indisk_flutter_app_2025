@@ -31,11 +31,13 @@ class Orders {
   String? sId;
   String? user;
   int? tableNo;
-  List<OrdersItems>? items;
+  List<Items>? items;
   String? paymentStatus;
   String? status;
   String? orderDate;
-  int? totalAmount;
+  dynamic totalAmount;
+  dynamic vat;
+  dynamic subTotal;
   int? iV;
   String? orderDateFromNow;
 
@@ -48,24 +50,27 @@ class Orders {
         this.status,
         this.orderDate,
         this.totalAmount,
+        this.vat,
+        this.subTotal,
         this.iV,
-        this.orderDateFromNow,
-      });
+        this.orderDateFromNow});
 
   Orders.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     user = json['user'];
     tableNo = json['table_no'];
     if (json['items'] != null) {
-      items = <OrdersItems>[];
+      items = <Items>[];
       json['items'].forEach((v) {
-        items!.add(new OrdersItems.fromJson(v));
+        items!.add(new Items.fromJson(v));
       });
     }
     paymentStatus = json['payment_status'];
     status = json['status'];
     orderDate = json['order_date'];
     totalAmount = json['total_amount'];
+    vat = json['vat'];
+    subTotal = json['sub_total'];
     iV = json['__v'];
     orderDateFromNow = json['order_date_from_now'];
   }
@@ -82,25 +87,59 @@ class Orders {
     data['status'] = this.status;
     data['order_date'] = this.orderDate;
     data['total_amount'] = this.totalAmount;
+    data['vat'] = this.vat;
+    data['sub_total'] = this.subTotal;
     data['__v'] = this.iV;
     data['order_date_from_now'] = this.orderDateFromNow;
     return data;
   }
 }
 
-class OrdersItems {
-  OrdersFoodItem? foodItem;
+class Items {
+  FoodItem? foodItem;
   int? quantity;
-  String? sId;
+  String? specialInstruction;
+  Discount? discount;
+  List<Varient>? varient;
+  List<Modifier>? modifier;
+  List<Topup>? topup;
 
-  OrdersItems({this.foodItem, this.quantity, this.sId});
+  Items(
+      {this.foodItem,
+        this.quantity,
+        this.specialInstruction,
+        this.discount,
+        this.varient,
+        this.modifier,
+        this.topup});
 
-  OrdersItems.fromJson(Map<String, dynamic> json) {
+  Items.fromJson(Map<String, dynamic> json) {
     foodItem = json['food_item'] != null
-        ? new OrdersFoodItem.fromJson(json['food_item'])
+        ? new FoodItem.fromJson(json['food_item'])
         : null;
     quantity = json['quantity'];
-    sId = json['_id'];
+    specialInstruction = json['special_instruction'];
+    discount = json['discount'] != null
+        ? new Discount.fromJson(json['discount'])
+        : null;
+    if (json['varient'] != null) {
+      varient = <Varient>[];
+      json['varient'].forEach((v) {
+        varient!.add(new Varient.fromJson(v));
+      });
+    }
+    if (json['modifier'] != null) {
+      modifier = <Modifier>[];
+      json['modifier'].forEach((v) {
+        modifier!.add(new Modifier.fromJson(v));
+      });
+    }
+    if (json['topup'] != null) {
+      topup = <Topup>[];
+      json['topup'].forEach((v) {
+        topup!.add(new Topup.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -109,12 +148,24 @@ class OrdersItems {
       data['food_item'] = this.foodItem!.toJson();
     }
     data['quantity'] = this.quantity;
-    data['_id'] = this.sId;
+    data['special_instruction'] = this.specialInstruction;
+    if (this.discount != null) {
+      data['discount'] = this.discount!.toJson();
+    }
+    if (this.varient != null) {
+      data['varient'] = this.varient!.map((v) => v.toJson()).toList();
+    }
+    if (this.modifier != null) {
+      data['modifier'] = this.modifier!.map((v) => v.toJson()).toList();
+    }
+    if (this.topup != null) {
+      data['topup'] = this.topup!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
 
-class OrdersFoodItem {
+class FoodItem {
   String? sId;
   String? name;
   String? description;
@@ -129,7 +180,7 @@ class OrdersFoodItem {
   String? updatedAt;
   int? iV;
 
-  OrdersFoodItem(
+  FoodItem(
       {this.sId,
         this.name,
         this.description,
@@ -144,7 +195,7 @@ class OrdersFoodItem {
         this.updatedAt,
         this.iV});
 
-  OrdersFoodItem.fromJson(Map<String, dynamic> json) {
+  FoodItem.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'];
     description = json['description'];
@@ -175,6 +226,82 @@ class OrdersFoodItem {
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
+    return data;
+  }
+}
+
+class Discount {
+  int? percentage;
+  String? description;
+
+  Discount({this.percentage, this.description});
+
+  Discount.fromJson(Map<String, dynamic> json) {
+    percentage = json['percentage'];
+    description = json['description'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['percentage'] = this.percentage;
+    data['description'] = this.description;
+    return data;
+  }
+}
+
+class Varient {
+  String? varientName;
+  int? price;
+
+  Varient({this.varientName, this.price});
+
+  Varient.fromJson(Map<String, dynamic> json) {
+    varientName = json['varientName'];
+    price = json['price'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['varientName'] = this.varientName;
+    data['price'] = this.price;
+    return data;
+  }
+}
+
+class Modifier {
+  String? modifierName;
+  int? price;
+
+  Modifier({this.modifierName, this.price});
+
+  Modifier.fromJson(Map<String, dynamic> json) {
+    modifierName = json['modifierName'];
+    price = json['price'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['modifierName'] = this.modifierName;
+    data['price'] = this.price;
+    return data;
+  }
+}
+
+class Topup {
+  String? topupName;
+  int? price;
+
+  Topup({this.topupName, this.price});
+
+  Topup.fromJson(Map<String, dynamic> json) {
+    topupName = json['topupName'];
+    price = json['price'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['topupName'] = this.topupName;
+    data['price'] = this.price;
     return data;
   }
 }

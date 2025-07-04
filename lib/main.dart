@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:indisk_app/api_service/index.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
-
 import 'app_ui/screens/app/app_view.dart';
 import 'database/app_preferences.dart';
 import 'language/languages.dart';

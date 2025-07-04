@@ -23,10 +23,10 @@ class _StaffManageFoodViewState extends State<StaffManageFoodView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      mViewModel = Provider.of<StaffSelectProductViewModel>(context, listen: false);
+      mViewModel =
+          Provider.of<StaffSelectProductViewModel>(context, listen: false);
       mViewModel?.getFoodCategoryList().then((_) {
-        mViewModel?.getStaffFoodList(isManageable: true).catchError((e) {
-        });
+        mViewModel?.getStaffFoodList(isManageable: true).catchError((e) {});
       });
     });
   }
@@ -123,46 +123,65 @@ class _StaffManageFoodViewState extends State<StaffManageFoodView> {
                                     },
                                   ),
                                 ),
-                                GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 4,
-                                    crossAxisSpacing: 16.0,
-                                    mainAxisSpacing: 16.0,
-                                    childAspectRatio: 0.9,
-                                  ),
-                                  itemCount: _selectedCategoryId == null
-                                      ? viewModel.staffFoodList.length
-                                      : viewModel.staffFoodList
-                                          .where((item) =>
-                                              item.category?.sId ==
-                                              _selectedCategoryId)
-                                          .length,
-                                  itemBuilder: (context, index) {
-                                    final foodItem = _selectedCategoryId == null
-                                        ? viewModel.staffFoodList[index]
+                                LayoutBuilder(builder: (context, constraints) {
+                                  final screenWidth = constraints.maxWidth;
+                                  final int crossAxisCount = 4;
+                                  // final crossAxisCount = screenWidth > 1200
+                                  //     ? 4
+                                  //     : screenWidth > 800
+                                  //         ? 3
+                                  //         : 2;
+                                  final spacing = 16.0;
+                                  final totalSpacing =
+                                      spacing * (crossAxisCount - 1);
+                                  final itemWidth =
+                                      (screenWidth - totalSpacing) /
+                                          crossAxisCount;
+                                  final itemHeight = 280;
+                                  final aspectRatio = itemWidth / itemHeight;
+                                  return GridView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: crossAxisCount,
+                                      crossAxisSpacing: spacing,
+                                      mainAxisSpacing: spacing,
+                                      childAspectRatio: aspectRatio,
+                                    ),
+                                    itemCount: _selectedCategoryId == null
+                                        ? viewModel.staffFoodList.length
                                         : viewModel.staffFoodList
                                             .where((item) =>
                                                 item.category?.sId ==
                                                 _selectedCategoryId)
-                                            .toList()[index];
+                                            .length,
+                                    itemBuilder: (context, index) {
+                                      final foodItem =
+                                          _selectedCategoryId == null
+                                              ? viewModel.staffFoodList[index]
+                                              : viewModel.staffFoodList
+                                                  .where((item) =>
+                                                      item.category?.sId ==
+                                                      _selectedCategoryId)
+                                                  .toList()[index];
 
-                                    final isAvailable =
-                                            foodItem.isAvailable  ??
-                                        true;
+                                      final isAvailable =
+                                          foodItem.isAvailable ?? true;
 
-                                    return ProductCard(
-                                      productId: foodItem.id ?? '--',
-                                      image: foodItem.image?.first ?? '--',
-                                      name: foodItem.name ?? '--',
-                                      price: foodItem.price.toString() ?? '--',
-                                      description: foodItem.description ?? '--',
-                                      isAvailable: isAvailable,
-                                    );
-                                  },
-                                ),
+                                      return ProductCard(
+                                        productId: foodItem.id ?? '--',
+                                        image: foodItem.image?.first ?? '--',
+                                        name: foodItem.name ?? '--',
+                                        price:
+                                            foodItem.price.toString() ?? '--',
+                                        description:
+                                            foodItem.description ?? '--',
+                                        isAvailable: isAvailable,
+                                      );
+                                    },
+                                  );
+                                }),
                               ],
                             ),
                           ),
@@ -204,20 +223,21 @@ class _ProductCardState extends State<ProductCard> {
 
   StaffSelectProductViewModel? mViewModel;
 
-
   @override
   void initState() {
     super.initState();
     _isAvailable = widget.isAvailable;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      mViewModel = Provider.of<StaffSelectProductViewModel>(context, listen: false);
+      mViewModel =
+          Provider.of<StaffSelectProductViewModel>(context, listen: false);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = mViewModel ?? Provider.of<StaffSelectProductViewModel>(context);
+    final viewModel =
+        mViewModel ?? Provider.of<StaffSelectProductViewModel>(context);
 
     return Card(
       elevation: 4,
@@ -283,7 +303,8 @@ class _ProductCardState extends State<ProductCard> {
                     setState(() {
                       _isAvailable = value;
                     });
-                    viewModel.updateFoodAvailability(productId: widget.productId, status: _isAvailable);
+                    viewModel.updateFoodAvailability(
+                        productId: widget.productId, status: _isAvailable);
                   },
                 ),
               ],

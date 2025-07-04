@@ -25,12 +25,44 @@ class _KitchenStaffHomeViewState extends State<KitchenStaffHomeView> {
     });
   }
 
+  // Map<int, List<Map<String, dynamic>>> _groupItemsByTable() {
+  //   final Map<int, List<Map<String, dynamic>>> tableItems = {};
+  //
+  //   for (var order in mViewModel.kitchenOrders) {
+  //     if (order.items != null && order.tableNo != null) {
+  //       final tableNo = order.tableNo!;
+  //
+  //       if (!tableItems.containsKey(tableNo)) {
+  //         tableItems[tableNo] = [];
+  //       }
+  //
+  //       for (var item in order.items!) {
+  //         if (item.foodItem != null) {
+  //           tableItems[tableNo]!.add({
+  //             'id': item.sId,
+  //             'name': item.foodItem!.name,
+  //             'quantity': item.quantity?.toString() ?? '0',
+  //             'description': item.foodItem!.description,
+  //             'image': item.foodItem!.image?.isNotEmpty == true
+  //                 ? item.foodItem!.image!.first
+  //                 : '',
+  //             'tableNo': order.tableNo?.toString() ?? '',
+  //             'orderId': order.sId,
+  //           });
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return tableItems;
+  // }
+
   Map<int, List<Map<String, dynamic>>> _groupItemsByTable() {
     final Map<int, List<Map<String, dynamic>>> tableItems = {};
 
     for (var order in mViewModel.kitchenOrders) {
       if (order.items != null && order.tableNo != null) {
-        final tableNo = order.tableNo!;
+        // Convert tableNo to int by rounding or truncating
+        final tableNo = order.tableNo!.toInt();  // This converts double to int
 
         if (!tableItems.containsKey(tableNo)) {
           tableItems[tableNo] = [];
@@ -102,7 +134,6 @@ class _KitchenStaffHomeViewState extends State<KitchenStaffHomeView> {
                         itemBuilder: (context, index) {
                           final tableNo = tableNumbers[index];
                           final items = tableItems[tableNo]!;
-
                           return TableCard(
                             tableNo: tableNo.toString(),
                             totalItems: items.length,

@@ -1,11 +1,13 @@
+import 'food_list_master.dart';
+
 class StaffCartMaster {
   bool? success;
   String? message;
   List<StaffCartData>? cart;
   int? totalQuantity;
   int? subtotal;
-  dynamic? gst5Percent;
-  dynamic? totalWithGst;
+  double? gst5Percent;
+  double? totalWithGst;
 
   StaffCartMaster(
       {this.success,
@@ -50,25 +52,36 @@ class StaffCartData {
   String? foodItemId;
   List<String>? image;
   String? productName;
-  int? price;
+  int? pricePerUnit;
   int? quantity;
   int? totalPrice;
+  AdditionalPrice? additionalPrice;
+  String? specialInstruction;
+  bool? isOrdered;
 
   StaffCartData(
       {this.foodItemId,
         this.image,
         this.productName,
-        this.price,
+        this.pricePerUnit,
         this.quantity,
-        this.totalPrice});
+        this.totalPrice,
+        this.additionalPrice,
+        this.specialInstruction,
+        this.isOrdered});
 
   StaffCartData.fromJson(Map<String, dynamic> json) {
     foodItemId = json['food_item_id'];
     image = json['image'].cast<String>();
     productName = json['product_name'];
-    price = json['price'];
+    pricePerUnit = json['price_per_unit'];
     quantity = json['quantity'];
     totalPrice = json['total_price'];
+    additionalPrice = json['additional_price'] != null
+        ? new AdditionalPrice.fromJson(json['additional_price'])
+        : null;
+    specialInstruction = json['special_instruction'];
+    isOrdered = json['is_ordered'];
   }
 
   Map<String, dynamic> toJson() {
@@ -76,9 +89,65 @@ class StaffCartData {
     data['food_item_id'] = this.foodItemId;
     data['image'] = this.image;
     data['product_name'] = this.productName;
-    data['price'] = this.price;
+    data['price_per_unit'] = this.pricePerUnit;
     data['quantity'] = this.quantity;
     data['total_price'] = this.totalPrice;
+    if (this.additionalPrice != null) {
+      data['additional_price'] = this.additionalPrice!.toJson();
+    }
+    data['special_instruction'] = this.specialInstruction;
+    data['is_ordered'] = this.isOrdered;
     return data;
   }
 }
+
+class AdditionalPrice {
+  List<Topup>? topup;
+  List<Modifier>? modifier;
+  List<Varient>? varient;
+  Discount? discount;
+
+  AdditionalPrice({this.topup, this.modifier, this.varient, this.discount});
+
+  AdditionalPrice.fromJson(Map<String, dynamic> json) {
+    if (json['topup'] != null) {
+      topup = <Topup>[];
+      json['topup'].forEach((v) {
+        topup!.add(new Topup.fromJson(v));
+      });
+    }
+    if (json['modifier'] != null) {
+      modifier = <Modifier>[];
+      json['modifier'].forEach((v) {
+        modifier!.add(new Modifier.fromJson(v));
+      });
+    }
+    if (json['varient'] != null) {
+      varient = <Varient>[];
+      json['varient'].forEach((v) {
+        varient!.add(new Varient.fromJson(v));
+      });
+    }
+    discount = json['discount'] != null
+        ? new Discount.fromJson(json['discount'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.topup != null) {
+      data['topup'] = this.topup!.map((v) => v.toJson()).toList();
+    }
+    if (this.modifier != null) {
+      data['modifier'] = this.modifier!.map((v) => v.toJson()).toList();
+    }
+    if (this.varient != null) {
+      data['varient'] = this.varient!.map((v) => v.toJson()).toList();
+    }
+    if (this.discount != null) {
+      data['discount'] = this.discount!.toJson();
+    }
+    return data;
+  }
+}
+

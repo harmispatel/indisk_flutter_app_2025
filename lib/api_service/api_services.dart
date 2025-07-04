@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:indisk_app/api_service/models/file_model.dart';
 import 'package:indisk_app/api_service/models/food_category_master.dart';
 import 'package:indisk_app/api_service/models/login_master.dart';
+import 'package:indisk_app/api_service/models/salep_graph_master.dart';
+import 'package:indisk_app/api_service/models/sales_count_master.dart';
 import 'package:indisk_app/api_service/models/staff_cart_master.dart';
 import 'package:indisk_app/api_service/models/staff_list_master.dart';
 
@@ -13,6 +15,7 @@ import 'models/common_master.dart';
 import 'models/food_list_master.dart';
 import 'models/get_profile_master.dart';
 import 'models/kitchen_staff_order_master.dart';
+import 'models/order_bill_master.dart';
 import 'models/order_history_master.dart';
 import 'models/owner_home_master.dart';
 import 'models/restaurant_details_master.dart';
@@ -440,8 +443,8 @@ class ApiServices extends BaseServices {
   @override
   Future<CommonMaster?> updateOwnerProfile(
       {required Map<String, String> params,
-        required List<FileModel> files,
-        required Function(int p1, int p2)? onProgress}) async {
+      required List<FileModel> files,
+      required Function(int p1, int p2)? onProgress}) async {
     dynamic response = await appBaseClient.formDataApi(
         url: ApiUrl.EDIT_PROFILE,
         postParams: params,
@@ -594,8 +597,7 @@ class ApiServices extends BaseServices {
   }
 
   @override
-  Future<CommonMaster?> addTable(
-      {required Map<String, dynamic> params}) async {
+  Future<CommonMaster?> addTable({required Map<String, dynamic> params}) async {
     dynamic response = await appBaseClient.postApiCall(
         url: ApiUrl.CREATE_TABLE, postParams: params ?? {});
     if (response != null) {
@@ -611,8 +613,7 @@ class ApiServices extends BaseServices {
   }
 
   @override
-  Future<TableMaster?> getTable(
-      {required Map<String, dynamic> params}) async {
+  Future<TableMaster?> getTable({required Map<String, dynamic> params}) async {
     dynamic response = await appBaseClient.postApiCall(
         url: ApiUrl.GET_TABLES, postParams: params ?? {});
     if (response != null) {
@@ -666,8 +667,8 @@ class ApiServices extends BaseServices {
   @override
   Future<CommonMaster?> updateFoodStatus(
       {required Map<String, String> params,
-        required List<FileModel> files,
-        required Function(int p1, int p2)? onProgress}) async {
+      required List<FileModel> files,
+      required Function(int p1, int p2)? onProgress}) async {
     // TODO: implement updateManager
     dynamic response = await appBaseClient.formDataApi(
         url: ApiUrl.UPDATE_ORDER_STATUS,
@@ -690,8 +691,8 @@ class ApiServices extends BaseServices {
   @override
   Future<CommonMaster?> updateFoodAvailability(
       {required Map<String, dynamic> params,
-        required List<FileModel> files,
-        required Function(int p1, int p2)? onProgress}) async {
+      required List<FileModel> files,
+      required Function(int p1, int p2)? onProgress}) async {
     // TODO: implement updateManager
     dynamic response = await appBaseClient.formDataApi(
         url: ApiUrl.UPDATE_AVALIBALITY_STATUS,
@@ -729,8 +730,7 @@ class ApiServices extends BaseServices {
   }
 
   @override
-  Future<VatMaster?> getVat(
-      {required Map<String, dynamic> params}) async {
+  Future<VatMaster?> getVat({required Map<String, dynamic> params}) async {
     dynamic response = await appBaseClient.postApiCall(
         url: ApiUrl.GET_VAT, postParams: params ?? {});
     if (response != null) {
@@ -746,8 +746,7 @@ class ApiServices extends BaseServices {
   }
 
   @override
-  Future<VatMaster?> saveVat(
-      {required Map<String, dynamic> params}) async {
+  Future<VatMaster?> saveVat({required Map<String, dynamic> params}) async {
     dynamic response = await appBaseClient.postApiCall(
         url: ApiUrl.SAVE_VAT, postParams: params ?? {});
     if (response != null) {
@@ -770,6 +769,78 @@ class ApiServices extends BaseServices {
     if (response != null) {
       try {
         return CommonMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<OrderBillMaster?> getOrderBill(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.GET_TABLE_BILL, postParams: params ?? {});
+    if (response != null) {
+      try {
+        return OrderBillMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<OrderBillMaster?> getTakeAwayOrders(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.GET_TAKEAWAY_ORDERS, postParams: params ?? {});
+    if (response != null) {
+      try {
+        return OrderBillMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<SalesGraphMaster?> salesGraphApi(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.SALES_GRAPH,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return SalesGraphMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<SalesCountMaster?> salesCountApi(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.SALES_COUNT,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return SalesCountMaster.fromJson(response);
       } on Exception catch (e) {
         log("Exception :: $e");
         return null;

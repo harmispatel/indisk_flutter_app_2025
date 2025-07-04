@@ -8,6 +8,7 @@ import '../../../../../api_service/models/staff_home_master.dart';
 import '../../../../../utils/app_dimens.dart';
 import '../../../../../utils/common_utills.dart';
 import '../../../../common_widget/common_textfield.dart';
+import 'get_bill/get_bill_view.dart';
 
 class StaffSelectProductView extends StatefulWidget {
   final String tableNo;
@@ -27,11 +28,16 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      mViewModel = Provider.of<StaffSelectProductViewModel>(context, listen: false);
+      mViewModel =
+          Provider.of<StaffSelectProductViewModel>(context, listen: false);
       mViewModel?.getFoodCategoryList().then((_) {
-        mViewModel?.getStaffFoodList(isManageable: false).catchError((e) {
-        }).then((_) {
-          mViewModel?.getStaffCartList(tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
+        mViewModel
+            ?.getStaffFoodList(isManageable: false)
+            .catchError((e) {})
+            .then((_) {
+          mViewModel?.getStaffCartList(
+              tableNo:
+                  widget.tableNo == "Take away order" ? "0" : widget.tableNo);
           if (mounted) {
             setState(() {});
           }
@@ -177,50 +183,81 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                                       price: foodItem.price.toString() ?? '--',
                                       description: foodItem.description ?? '--',
                                       onAddToCartTap: () async {
-                                        final hasOptions = foodItem.discount?.isNotEmpty == true ||
-                                            foodItem.modifier?.isNotEmpty == true ||
-                                            foodItem.topup?.isNotEmpty == true ||
-                                            foodItem.varient?.isNotEmpty == true;
+                                        final hasOptions =
+                                            foodItem.discount?.isNotEmpty ==
+                                                    true ||
+                                                foodItem.modifier?.isNotEmpty ==
+                                                    true ||
+                                                foodItem.topup?.isNotEmpty ==
+                                                    true ||
+                                                foodItem.varient?.isNotEmpty ==
+                                                    true;
 
                                         if (hasOptions) {
                                           showDialog(
                                             context: context,
-                                            builder: (context) => ProductOptionsDialog(
+                                            builder: (context) =>
+                                                ProductOptionsDialog(
                                               product: foodItem,
-                                              onOptionsSelected: (options) async {
-                                                // Debug print
-                                                print('Options received in ProductCard:');
-                                                print(options);
-
+                                              onOptionsSelected:
+                                                  (options) async {
                                                 try {
                                                   await viewModel.addToCart(
                                                     productId: foodItem.id!,
-                                                    tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo,
-                                                    variantIds: options['variantIds']?.cast<String>() ?? [], // Ensure proper type casting
-                                                    discountId: options['discountId'],
-                                                    modifierIds: options['modifierIds']?.cast<String>() ?? [],
-                                                    topupIds: options['topupIds']?.cast<String>() ?? [],
-                                                    specialInstruction: options['specialInstructions'] ?? '',
+                                                    tableNo: widget.tableNo ==
+                                                            "Take away order"
+                                                        ? "0"
+                                                        : widget.tableNo,
+                                                    variantIds: options[
+                                                                'variantIds']
+                                                            ?.cast<String>() ??
+                                                        [],
+                                                    discountId:
+                                                        options['discountId'],
+                                                    modifierIds: options[
+                                                                'modifierIds']
+                                                            ?.cast<String>() ??
+                                                        [],
+                                                    topupIds: options[
+                                                                'topupIds']
+                                                            ?.cast<String>() ??
+                                                        [],
+                                                    specialInstruction: options[
+                                                            'specialInstructions'] ??
+                                                        '',
                                                   );
+
+                                                  // Refresh cart list after adding
+                                                  await viewModel.getStaffCartList(
+                                                      tableNo: widget.tableNo ==
+                                                              "Take away order"
+                                                          ? "0"
+                                                          : widget.tableNo);
 
                                                   if (mounted) {
                                                     setState(() {
-                                                      final currentCount = foodItem.cartCount ?? 0;
-                                                      foodItem.cartCount = currentCount + 1;
+                                                      final currentCount =
+                                                          foodItem.cartCount ??
+                                                              0;
+                                                      foodItem.cartCount =
+                                                          currentCount + 1;
                                                     });
                                                   }
                                                 } catch (e) {
-                                                  showRedToastMessage(e.toString());
+                                                  showRedToastMessage(
+                                                      e.toString());
                                                 }
                                               },
                                             ),
                                           );
                                         } else {
-                                          // No options, directly call addToCart with empty IDs
                                           try {
                                             await viewModel.addToCart(
                                               productId: foodItem.id!,
-                                              tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo,
+                                              tableNo: widget.tableNo ==
+                                                      "Take away order"
+                                                  ? "0"
+                                                  : widget.tableNo,
                                               variantIds: [],
                                               discountId: null,
                                               modifierIds: [],
@@ -228,10 +265,19 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                                               specialInstruction: '',
                                             );
 
+                                            // Refresh cart list after adding
+                                            await viewModel.getStaffCartList(
+                                                tableNo: widget.tableNo ==
+                                                        "Take away order"
+                                                    ? "0"
+                                                    : widget.tableNo);
+
                                             if (mounted) {
                                               setState(() {
-                                                final currentCount = foodItem.cartCount ?? 0;
-                                                foodItem.cartCount = currentCount + 1;
+                                                final currentCount =
+                                                    foodItem.cartCount ?? 0;
+                                                foodItem.cartCount =
+                                                    currentCount + 1;
                                               });
                                             }
                                           } catch (e) {
@@ -239,27 +285,173 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                                           }
                                         }
                                       },
+                                      // onAddToCartTap: () async {
+                                      //   final hasOptions =
+                                      //       foodItem.discount?.isNotEmpty ==
+                                      //               true ||
+                                      //           foodItem.modifier?.isNotEmpty ==
+                                      //               true ||
+                                      //           foodItem.topup?.isNotEmpty ==
+                                      //               true ||
+                                      //           foodItem.varient?.isNotEmpty ==
+                                      //               true;
+                                      //
+                                      //   if (hasOptions) {
+                                      //     showDialog(
+                                      //       context: context,
+                                      //       builder: (context) =>
+                                      //           ProductOptionsDialog(
+                                      //         product: foodItem,
+                                      //         onOptionsSelected:
+                                      //             (options) async {
+                                      //           // Debug print
+                                      //           print(
+                                      //               'Options received in ProductCard:');
+                                      //           print(options);
+                                      //
+                                      //           try {
+                                      //             await viewModel.addToCart(
+                                      //               productId: foodItem.id!,
+                                      //               tableNo: widget.tableNo ==
+                                      //                       "Take away order"
+                                      //                   ? "0"
+                                      //                   : widget.tableNo,
+                                      //               variantIds: options[
+                                      //                           'variantIds']
+                                      //                       ?.cast<String>() ??
+                                      //                   [],
+                                      //               // Ensure proper type casting
+                                      //               discountId:
+                                      //                   options['discountId'],
+                                      //               modifierIds: options[
+                                      //                           'modifierIds']
+                                      //                       ?.cast<String>() ??
+                                      //                   [],
+                                      //               topupIds: options[
+                                      //                           'topupIds']
+                                      //                       ?.cast<String>() ??
+                                      //                   [],
+                                      //               specialInstruction: options[
+                                      //                       'specialInstructions'] ??
+                                      //                   '',
+                                      //             );
+                                      //
+                                      //             if (mounted) {
+                                      //               setState(() {
+                                      //                 final currentCount =
+                                      //                     foodItem.cartCount ??
+                                      //                         0;
+                                      //                 foodItem.cartCount =
+                                      //                     currentCount + 1;
+                                      //               });
+                                      //             }
+                                      //           } catch (e) {
+                                      //             showRedToastMessage(
+                                      //                 e.toString());
+                                      //           }
+                                      //         },
+                                      //       ),
+                                      //     );
+                                      //   } else {
+                                      //     // No options, directly call addToCart with empty IDs
+                                      //     try {
+                                      //       await viewModel.addToCart(
+                                      //         productId: foodItem.id!,
+                                      //         tableNo: widget.tableNo ==
+                                      //                 "Take away order"
+                                      //             ? "0"
+                                      //             : widget.tableNo,
+                                      //         variantIds: [],
+                                      //         discountId: null,
+                                      //         modifierIds: [],
+                                      //         topupIds: [],
+                                      //         specialInstruction: '',
+                                      //       );
+                                      //
+                                      //       if (mounted) {
+                                      //         setState(() {
+                                      //           final currentCount =
+                                      //               foodItem.cartCount ?? 0;
+                                      //           foodItem.cartCount =
+                                      //               currentCount + 1;
+                                      //         });
+                                      //       }
+                                      //     } catch (e) {
+                                      //       showRedToastMessage(e.toString());
+                                      //     }
+                                      //   }
+                                      // },
                                       cartCount: foodItem.cartCount ?? 0,
-                                      onIncreaseTap: () {
+                                      onIncreaseTap: () async {
                                         setState(() {
                                           final currentCount =
                                               foodItem.cartCount ?? 0;
                                           foodItem.cartCount = currentCount + 1;
                                         });
-                                        viewModel.updateQuantity(
-                                            productId: foodItem.id ?? '--',
-                                            type: 'increase', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
+                                        await viewModel.updateQuantity(
+                                          productId: foodItem.id ?? '--',
+                                          type: 'increase',
+                                          tableNo: widget.tableNo ==
+                                                  "Take away order"
+                                              ? "0"
+                                              : widget.tableNo,
+                                        );
+                                        // Refresh cart
+                                        await viewModel.getStaffCartList(
+                                            tableNo: widget.tableNo ==
+                                                    "Take away order"
+                                                ? "0"
+                                                : widget.tableNo);
                                       },
-                                      onDecreaseTap: () {
+                                      onDecreaseTap: () async {
                                         setState(() {
                                           final currentCount =
                                               foodItem.cartCount ?? 0;
                                           foodItem.cartCount = currentCount - 1;
                                         });
-                                        viewModel.updateQuantity(
-                                            productId: foodItem.id ?? '--',
-                                            type: 'decrease', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
+                                        await viewModel.updateQuantity(
+                                          productId: foodItem.id ?? '--',
+                                          type: 'decrease',
+                                          tableNo: widget.tableNo ==
+                                                  "Take away order"
+                                              ? "0"
+                                              : widget.tableNo,
+                                        );
+                                        // Refresh cart
+                                        await viewModel.getStaffCartList(
+                                            tableNo: widget.tableNo ==
+                                                    "Take away order"
+                                                ? "0"
+                                                : widget.tableNo);
                                       },
+                                      // onIncreaseTap: () {
+                                      //   setState(() {
+                                      //     final currentCount =
+                                      //         foodItem.cartCount ?? 0;
+                                      //     foodItem.cartCount = currentCount + 1;
+                                      //   });
+                                      //   viewModel.updateQuantity(
+                                      //       productId: foodItem.id ?? '--',
+                                      //       type: 'increase',
+                                      //       tableNo: widget.tableNo ==
+                                      //               "Take away order"
+                                      //           ? "0"
+                                      //           : widget.tableNo);
+                                      // },
+                                      // onDecreaseTap: () {
+                                      //   setState(() {
+                                      //     final currentCount =
+                                      //         foodItem.cartCount ?? 0;
+                                      //     foodItem.cartCount = currentCount - 1;
+                                      //   });
+                                      //   viewModel.updateQuantity(
+                                      //       productId: foodItem.id ?? '--',
+                                      //       type: 'decrease',
+                                      //       tableNo: widget.tableNo ==
+                                      //               "Take away order"
+                                      //           ? "0"
+                                      //           : widget.tableNo);
+                                      // },
                                     );
                                   },
                                 ),
@@ -291,7 +483,10 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                           viewModel.isCartApiLoading == false)
                         GestureDetector(
                           onTap: () {
-                            viewModel.clearCart(tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
+                            viewModel.clearCart(
+                                tableNo: widget.tableNo == "Take away order"
+                                    ? "0"
+                                    : widget.tableNo);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -321,65 +516,97 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                     : Expanded(
                         child: viewModel.staffCartFoodList.isEmpty
                             ? Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Spacer(),
-                                Text(
-                                  "+\nAdd Product\nFrom Special Menu",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 22),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: CommonColors.primaryColor,
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 8),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.print,color: Colors.white, size: 18,),
-                                          Text(
-                                            " Get Bill",
-                                            style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 16),
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Spacer(),
+                                  Text(
+                                    "+\nAdd Product\nFrom Special Menu",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 22),
+                                  ),
+                                  Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        pushToScreen(GetBillView(
+                                          tableNo: widget.tableNo,
+                                        ));
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: CommonColors.primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.print,
+                                                color: Colors.white,
+                                                size: 18,
+                                              ),
+                                              Text(
+                                                " Get Bill",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            )
+                                ],
+                              )
                             : ListView.builder(
                                 itemCount: viewModel.staffCartFoodList.length,
                                 itemBuilder: (context, index) {
                                   return CartItemWidget(
-                                    item: viewModel.staffCartFoodList[index],
-                                    onIncrement: () {
-                                      viewModel.updateQuantity(
-                                          productId: viewModel
-                                                  .staffCartFoodList[index]
-                                                  .foodItemId ??
-                                              '--',
-                                          type: 'increase', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
-                                    },
-                                    onDecrement: () {
-                                      viewModel.updateQuantity(
-                                          productId: viewModel.staffCartFoodList[index].foodItemId ?? '--',
-                                          type: 'decrease', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
-                                    },
-                                    onDelete: () {
-                                      viewModel.removeItemFromCart(
-                                          productId: viewModel
-                                                  .staffCartFoodList[index]
-                                                  .foodItemId ??
-                                              '--', tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
-                                    }
-                                  );
+                                      item: viewModel.staffCartFoodList[index],
+                                      onIncrement: () {
+                                        viewModel.updateQuantity(
+                                            productId: viewModel
+                                                    .staffCartFoodList[index]
+                                                    .foodItemId ??
+                                                '--',
+                                            type: 'increase',
+                                            tableNo: widget.tableNo ==
+                                                    "Take away order"
+                                                ? "0"
+                                                : widget.tableNo);
+                                      },
+                                      onDecrement: () {
+                                        viewModel.updateQuantity(
+                                            productId: viewModel
+                                                    .staffCartFoodList[index]
+                                                    .foodItemId ??
+                                                '--',
+                                            type: 'decrease',
+                                            tableNo: widget.tableNo ==
+                                                    "Take away order"
+                                                ? "0"
+                                                : widget.tableNo);
+                                      },
+                                      onDelete: () {
+                                        viewModel.removeItemFromCart(
+                                            productId: viewModel
+                                                    .staffCartFoodList[index]
+                                                    .foodItemId ??
+                                                '--',
+                                            tableNo: widget.tableNo ==
+                                                    "Take away order"
+                                                ? "0"
+                                                : widget.tableNo);
+                                      });
                                 },
                               ),
                       ),
@@ -395,7 +622,7 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('Total QTY', style: TextStyle(fontSize: 16)),
-                            Text('${viewModel.cartQty} X',
+                            Text('${viewModel.cartQty}',
                                 style: TextStyle(fontSize: 16)),
                           ],
                         ),
@@ -403,67 +630,52 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Sub Total', style: TextStyle(fontSize: 16)),
+                            Text('Total Amount',
+                                style: TextStyle(fontSize: 16)),
                             Text('Rs ${viewModel.subTotal}',
                                 style: TextStyle(fontSize: 16)),
                           ],
                         ),
-                        SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('GST (5%)', style: TextStyle(fontSize: 16)),
-                            Text('Rs ${viewModel.gst}',
-                                style: TextStyle(fontSize: 16)),
-                          ],
-                        ),
-                        SizedBox(height: 16),
-                        Divider(height: 1),
-                        SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'To Pay',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              'Rs ${viewModel.cartTotal}',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
                         SizedBox(height: 24),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: PrimaryButton(
-                                padding: EdgeInsets.zero,
-                                height: 40,
-                                onPressed: () {
-                                  viewModel.placeOrderApi(
-                                      tableNo: widget.tableNo == "Take away order" ? "0" : widget.tableNo);
-                                },
-                                text: 'Save',
-                              ),
-                            ),
-                            kSizedBoxH10,
-                            Expanded(
-                              child: PrimaryButton(
-                                padding: EdgeInsets.zero,
-                                height: 40,
-                                onPressed: () {},
-                                text: 'Get Bill',
-                              ),
-                            ),
-                          ],
+                        PrimaryButton(
+                          padding: EdgeInsets.zero,
+                          height: 40,
+                          onPressed: () {
+                            pushToScreen(GetBillView(
+                              tableNo: widget.tableNo,
+                            ));
+                          },
+                          text: 'Get Bill',
                         ),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: PrimaryButton(
+                        //         padding: EdgeInsets.zero,
+                        //         height: 40,
+                        //         onPressed: () {
+                        //           viewModel.placeOrderApi(
+                        //               tableNo:
+                        //                   widget.tableNo == "Take away order"
+                        //                       ? "0"
+                        //                       : widget.tableNo);
+                        //         },
+                        //         text: 'Save',
+                        //       ),
+                        //     ),
+                        //     kSizedBoxH10,
+                        //     Expanded(
+                        //       child: PrimaryButton(
+                        //         padding: EdgeInsets.zero,
+                        //         height: 40,
+                        //         onPressed: () {
+                        //           pushToScreen(GetBillView(tableNo: widget.tableNo,));
+                        //         },
+                        //         text: 'Get Bill',
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         SizedBox(height: 16),
                       ],
                     ),
@@ -693,28 +905,31 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                       _buildSectionHeader('Variants (Multiple Selection)'),
                       Wrap(
                         spacing: 8,
-                        children: widget.product.varient!.map((variant) =>
-                            FilterChip(
-                              label: Text('${variant.varientName} (+${variant.price} Rs)'),
-                              selected: _selectedVariants.contains(variant),
-                              checkmarkColor: Colors.white,
-                              onSelected: (selected) {
-                                setState(() {
-                                  if (selected) {
-                                    _selectedVariants.add(variant);
-                                  } else {
-                                    _selectedVariants.remove(variant);
-                                  }
-                                });
-                              },
-                              selectedColor: CommonColors.primaryColor,
-                              labelStyle: TextStyle(
-                                color: _selectedVariants.contains(variant)
-                                    ? Colors.white
-                                    : Colors.black,
+                        children: widget.product.varient!
+                            .map(
+                              (variant) => FilterChip(
+                                label: Text(
+                                    '${variant.varientName} (+${variant.price} Rs)'),
+                                selected: _selectedVariants.contains(variant),
+                                checkmarkColor: Colors.white,
+                                onSelected: (selected) {
+                                  setState(() {
+                                    if (selected) {
+                                      _selectedVariants.add(variant);
+                                    } else {
+                                      _selectedVariants.remove(variant);
+                                    }
+                                  });
+                                },
+                                selectedColor: CommonColors.primaryColor,
+                                labelStyle: TextStyle(
+                                  color: _selectedVariants.contains(variant)
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
                               ),
-                            ),
-                        ).toList(),
+                            )
+                            .toList(),
                       ),
                       SizedBox(height: 20),
                     ],
@@ -725,33 +940,36 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                       ...widget.product.discount!
                           .where((d) => d.isEnable ?? false)
                           .map((discount) => RadioListTile<Discount>(
-                        value: discount,
-                        groupValue: _selectedDiscount,
-                        title: Text(discount.description ?? ''),
-                        subtitle: Text('${discount.percentage}% off'),
-                        onChanged: (value) => setState(() => _selectedDiscount = value),
-                        contentPadding: EdgeInsets.zero,
-                      )),
+                                value: discount,
+                                groupValue: _selectedDiscount,
+                                title: Text(discount.description ?? ''),
+                                subtitle: Text('${discount.percentage}% off'),
+                                onChanged: (value) =>
+                                    setState(() => _selectedDiscount = value),
+                                contentPadding: EdgeInsets.zero,
+                              )),
                       SizedBox(height: 20),
                     ],
 
                     // Modifiers Section
                     if (widget.product.modifier?.isNotEmpty ?? false) ...[
                       _buildSectionHeader('Modifiers (Multiple Selection)'),
-                      ...widget.product.modifier!.map((modifier) => CheckboxListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text('${modifier.modifierName} (+${modifier.price} Rs)'),
-                        value: _selectedModifiers.contains(modifier),
-                        onChanged: (bool? value) {
-                          setState(() {
-                            if (value == true) {
-                              _selectedModifiers.add(modifier);
-                            } else {
-                              _selectedModifiers.remove(modifier);
-                            }
-                          });
-                        },
-                      )),
+                      ...widget.product.modifier!
+                          .map((modifier) => CheckboxListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                    '${modifier.modifierName} (+${modifier.price} Rs)'),
+                                value: _selectedModifiers.contains(modifier),
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    if (value == true) {
+                                      _selectedModifiers.add(modifier);
+                                    } else {
+                                      _selectedModifiers.remove(modifier);
+                                    }
+                                  });
+                                },
+                              )),
                       SizedBox(height: 20),
                     ],
 
@@ -759,19 +977,20 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                     if (widget.product.topup?.isNotEmpty ?? false) ...[
                       _buildSectionHeader('Topups (Multiple Selection)'),
                       ...widget.product.topup!.map((topup) => CheckboxListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text('${topup.topupName} (+${topup.price} Rs)'),
-                        value: _selectedTopups.contains(topup),
-                        onChanged: (bool? value) {
-                          setState(() {
-                            if (value == true) {
-                              _selectedTopups.add(topup);
-                            } else {
-                              _selectedTopups.remove(topup);
-                            }
-                          });
-                        },
-                      )),
+                            contentPadding: EdgeInsets.zero,
+                            title:
+                                Text('${topup.topupName} (+${topup.price} Rs)'),
+                            value: _selectedTopups.contains(topup),
+                            onChanged: (bool? value) {
+                              setState(() {
+                                if (value == true) {
+                                  _selectedTopups.add(topup);
+                                } else {
+                                  _selectedTopups.remove(topup);
+                                }
+                              });
+                            },
+                          )),
                       SizedBox(height: 20),
                     ],
 
@@ -803,9 +1022,10 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                       side: BorderSide(color: CommonColors.primaryColor),
                     ),
                     onPressed: () => Navigator.pop(context),
-                    child: Text('Cancel', style: TextStyle(
-                      color: CommonColors.primaryColor,
-                    )),
+                    child: Text('Cancel',
+                        style: TextStyle(
+                          color: CommonColors.primaryColor,
+                        )),
                   ),
                 ),
                 SizedBox(width: 16),
@@ -817,13 +1037,15 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                     ),
                     onPressed: () {
                       final options = {
-                        'variantIds': _selectedVariants.map((v) => v.sId).toList(),
+                        'variantIds':
+                            _selectedVariants.map((v) => v.sId).toList(),
                         'discountId': _selectedDiscount?.sId,
-                        'modifierIds': _selectedModifiers.map((m) => m.sId).toList(),
+                        'modifierIds':
+                            _selectedModifiers.map((m) => m.sId).toList(),
                         'topupIds': _selectedTopups.map((t) => t.sId).toList(),
                         'specialInstructions': _specialInstructions,
                       };
-                  
+
                       // Print for debugging
                       print('Selected options before passing:');
                       print(options);
@@ -831,7 +1053,10 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
 
                       widget.onOptionsSelected(options);
                     },
-                    child: Text('Add to Cart', style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      'Add to Cart',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 )
               ],
@@ -857,95 +1082,243 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
   }
 }
 
-class CartItemWidget extends StatelessWidget {
+class CartItemWidget extends StatefulWidget {
   final StaffCartData item;
   final VoidCallback? onIncrement;
   final VoidCallback? onDecrement;
   final VoidCallback? onDelete;
 
-  const CartItemWidget(
-      {required this.item,
-      this.onIncrement,
-      this.onDecrement,
-      Key? key,
-      this.onDelete})
-      : super(key: key);
+  const CartItemWidget({
+    required this.item,
+    this.onIncrement,
+    this.onDecrement,
+    this.onDelete,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _CartItemWidgetState createState() => _CartItemWidgetState();
+}
+
+class _CartItemWidgetState extends State<CartItemWidget> {
+  bool _showDetails = false;
 
   @override
   Widget build(BuildContext context) {
+    final hasAdditionalInfo = widget.item.additionalPrice != null &&
+        ((widget.item.additionalPrice!.modifier?.isNotEmpty ?? false) ||
+            (widget.item.additionalPrice!.topup?.isNotEmpty ?? false) ||
+            (widget.item.additionalPrice!.varient?.isNotEmpty ?? false) ||
+            (widget.item.additionalPrice!.discount?.isEnable ?? false));
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      child: Row(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (item.image != null && item.image!.isNotEmpty)
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.grey[200],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  item.image!.first,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      Icon(Icons.fastfood, size: 30, color: Colors.grey[400]),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (widget.item.image != null && widget.item.image!.isNotEmpty)
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.grey[200],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      widget.item.image!.first,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Icon(
+                          Icons.fastfood,
+                          size: 30,
+                          color: Colors.grey[400]),
+                    ),
+                  ),
+                ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(widget.item.productName ?? '--',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500)),
+                        ),
+                        Text(
+                          'Rs ${widget.item.totalPrice ?? '--'}',
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4),
+                    if (widget.item.specialInstruction != null &&
+                        widget.item.specialInstruction!.isNotEmpty)
+                      Text(
+                        'Note: ${widget.item.specialInstruction}',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    if (hasAdditionalInfo)
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _showDetails = !_showDetails;
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            _showDetails ? 'Hide Info' : 'More Info',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: CommonColors.primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
-            ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.productName ?? '--',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              SizedBox(width: 10),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey[300]!),
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  'Rs ${item.price ?? '--'}',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.remove, size: 20),
+                      onPressed: widget.onDecrement,
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Text(widget.item.quantity?.toString() ?? '0'),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.add, size: 20),
+                      onPressed: widget.onIncrement,
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              SizedBox(width: 8),
+              GestureDetector(
+                onTap: widget.onDelete,
+                child: Icon(
+                  Icons.delete_forever,
+                  color: Colors.red,
+                  size: 24,
+                ),
+              ),
+            ],
           ),
-          SizedBox(width: 5),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[300]!),
-              borderRadius: BorderRadius.circular(4),
+          // Details section (shown when expanded)
+          if (_showDetails && widget.item.additionalPrice != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8, left: 60),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Modifiers
+                  if (widget.item.additionalPrice!.modifier != null &&
+                      widget.item.additionalPrice!.modifier!.isNotEmpty)
+                    _buildDetailSection(
+                      title: 'Modifiers',
+                      items: widget.item.additionalPrice!.modifier!
+                          .map((m) =>
+                              '${m.modifierName}${m.price != null && m.price! > 0 ? ' (+Rs${m.price})' : ''}')
+                          .toList(),
+                      color: Colors.blue[50]!,
+                    ),
+                  // Top-ups
+                  if (widget.item.additionalPrice!.topup != null &&
+                      widget.item.additionalPrice!.topup!.isNotEmpty)
+                    _buildDetailSection(
+                      title: 'Top-ups',
+                      items: widget.item.additionalPrice!.topup!
+                          .map((t) =>
+                              '${t.topupName}${t.price != null && t.price! > 0 ? ' (+Rs${t.price})' : ''}')
+                          .toList(),
+                      color: Colors.green[50]!,
+                    ),
+                  // Variants
+                  if (widget.item.additionalPrice!.varient != null &&
+                      widget.item.additionalPrice!.varient!.isNotEmpty)
+                    _buildDetailSection(
+                      title: 'Variants',
+                      items: widget.item.additionalPrice!.varient!
+                          .map((v) =>
+                              '${v.varientName}${v.price != null && v.price! > 0 ? ' (+Rs${v.price})' : ''}')
+                          .toList(),
+                      color: Colors.purple[50]!,
+                    ),
+                  // Discount
+                  if (widget.item.additionalPrice!.discount != null &&
+                      widget.item.additionalPrice!.discount!.isEnable == true)
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red[50],
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        'Discount: ${widget.item.additionalPrice!.discount!.percentage}%${widget.item.additionalPrice!.discount!.description != null ? ' (${widget.item.additionalPrice!.discount!.description})' : ''}',
+                        style: TextStyle(fontSize: 12, color: Colors.red[800]),
+                      ),
+                    ),
+                ],
+              ),
             ),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.remove, size: 20),
-                  onPressed: onDecrement,
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(item.quantity?.toString() ?? '0'),
-                ),
-                IconButton(
-                  icon: Icon(Icons.add, size: 20),
-                  onPressed: onIncrement,
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(),
-                ),
-              ],
-            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailSection({
+    required String title,
+    required List<String> items,
+    required Color color,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$title:',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
-          GestureDetector(
-            onTap: onDelete,
-            child: Icon(
-              Icons.delete_forever,
-              color: Colors.red,
-            ),
-          )
+          SizedBox(height: 2),
+          Wrap(
+            spacing: 4,
+            runSpacing: 4,
+            children: items
+                .map((item) => Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        item,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ))
+                .toList(),
+          ),
         ],
       ),
     );

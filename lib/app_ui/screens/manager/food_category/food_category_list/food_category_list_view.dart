@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:indisk_app/api_service/models/food_category_master.dart';
-import 'package:indisk_app/app_ui/common_widget/common_appbar.dart';
 import 'package:indisk_app/app_ui/common_widget/common_image.dart';
 import 'package:indisk_app/app_ui/screens/manager/food_category/food_category_list/food_category_list_view_model.dart';
-import 'package:indisk_app/utils/common_colors.dart';
 import 'package:indisk_app/utils/common_styles.dart';
 import 'package:indisk_app/utils/common_utills.dart';
-import 'package:indisk_app/utils/local_images.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../../utils/app_dimens.dart';
 import '../../../../../utils/global_variables.dart';
 import '../create_food_category/create_food_category_view.dart';
 
 class FoodCategoryListView extends StatefulWidget {
+  const FoodCategoryListView({super.key});
+
   @override
   State<FoodCategoryListView> createState() => _FoodCategoryListViewState();
 }
@@ -67,7 +64,8 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
             SizedBox(height: 4),
             Text(
               category.description ?? "No description",
-              style: getNormalTextStyle(fontSize: 14.0, fontColor: Colors.grey[600]),
+              style: getNormalTextStyle(
+                  fontSize: 14.0, fontColor: Colors.grey[600]),
               maxLines: 2,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
@@ -81,8 +79,7 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
                 padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
-                    color: Colors.green.shade100
-                ),
+                    color: Colors.green.shade100),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -97,8 +94,7 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
                       style: TextStyle(
                           color: Colors.green,
                           fontSize: 16,
-                          fontWeight: FontWeight.w500
-                      ),
+                          fontWeight: FontWeight.w500),
                     )
                   ],
                 ),
@@ -115,8 +111,7 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
                 padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
-                    color: Colors.red.shade100
-                ),
+                    color: Colors.red.shade100),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -131,8 +126,7 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
                       style: TextStyle(
                           color: Colors.red,
                           fontSize: 16,
-                          fontWeight: FontWeight.w500
-                      ),
+                          fontWeight: FontWeight.w500),
                     )
                   ],
                 ),
@@ -149,11 +143,12 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
     mViewModel = Provider.of<FoodCategoryListViewModel>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Food Categories', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Food Categories',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.add, size: 28),
+            icon: CircleAvatar(child: Icon(Icons.add, size: 28)),
             tooltip: 'Add Category',
             onPressed: _addCategory,
           ),
@@ -163,45 +158,62 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
         padding: const EdgeInsets.all(16.0),
         child: mViewModel.isApiLoading!
             ? Center(
-          child: CircularProgressIndicator(),
-        )
+                child: CircularProgressIndicator(),
+              )
             : mViewModel.foodCategoryList.isEmpty
-            ? Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.category_outlined,
-                    size: 100, color: Colors.grey[400]),
-                SizedBox(height: 20),
-                Text(
-                  'No categories added yet',
-                  style: TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w600),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Tap the + button to add your first food category.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16, color: Colors.grey[600]),
-                ),
-              ],
-            ),
-          ),
-        )
-            : GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            crossAxisSpacing: 16.0,
-            mainAxisSpacing: 16.0,
-            childAspectRatio: 0.8,
-          ),
-          itemCount: mViewModel.foodCategoryList.length,
-          itemBuilder: (context, index) =>
-              _buildCategoryCard(mViewModel.foodCategoryList[index], index),
-        ),
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.category_outlined,
+                              size: 100, color: Colors.grey[400]),
+                          SizedBox(height: 20),
+                          Text(
+                            'No categories added yet',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Tap the + button to add your first food category.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      final screenWidth = constraints.maxWidth;
+                      final int crossAxisCount = 4;
+                      // final crossAxisCount = screenWidth > 1200
+                      //     ? 4
+                      //     : screenWidth > 800
+                      //         ? 3
+                      //         : 2;
+                      final spacing = 16.0;
+                      final totalSpacing = spacing * (crossAxisCount - 1);
+                      final itemWidth =
+                          (screenWidth - totalSpacing) / crossAxisCount;
+                      final itemHeight = 306.0;
+                      final aspectRatio = itemWidth / itemHeight;
+                      return GridView.builder(
+                        itemCount: mViewModel.foodCategoryList.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          crossAxisSpacing: spacing,
+                          mainAxisSpacing: spacing,
+                          childAspectRatio: aspectRatio,
+                        ),
+                        itemBuilder: (context, index) => _buildCategoryCard(
+                            mViewModel.foodCategoryList[index], index),
+                      );
+                    },
+                  ),
       ),
     );
   }
@@ -213,8 +225,9 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
       builder: (BuildContext context) {
         return AlertDialog(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-          title: Text("Delete Category", style: TextStyle(fontWeight: FontWeight.bold)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+          title: Text("Delete Category",
+              style: TextStyle(fontWeight: FontWeight.bold)),
           content: Text(
               "Are you sure you want to delete $categoryName? This action cannot be undone."),
           actions: [
@@ -231,7 +244,10 @@ class _FoodCategoryListViewState extends State<FoodCategoryListView> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              child: Text("Delete",style: TextStyle(color: Colors.white),),
+              child: Text(
+                "Delete",
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 onConfirm();

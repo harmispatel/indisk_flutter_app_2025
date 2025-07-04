@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:indisk_app/api_service/models/food_category_master.dart';
+import 'package:indisk_app/api_service/models/order_bill_master.dart';
 import 'package:indisk_app/api_service/models/staff_cart_master.dart';
 
 import '../../../../../api_service/api_para.dart';
@@ -21,8 +22,32 @@ class StaffSelectProductViewModel with ChangeNotifier {
   String cartQty = '';
   String gst = '';
   String cartTotal = '';
+  List<OrderBillItems> orderedItems = [];
+  Summary? summary;
 
   List<FoodCategoryDetails> foodCategoryList = [];
+
+  Future<void> getTableBill(
+      {required String orderNo, required String orderType, required String tableNo}) async {
+    showProgressDialog();
+    OrderBillMaster? master = await services.api!.getOrderBill(params: {
+      ApiParams.order_id: orderNo,
+      ApiParams.order_type: orderType,
+      ApiParams.table_no: tableNo,
+    });
+    hideProgressDialog();
+    if (master != null) {
+      if (master.success!) {
+        orderedItems = master.items ?? [];
+        summary = master.summary;
+      } else {
+      //showRedToastMessage(master.message!);
+      }
+    } else {
+      oopsMSG();
+    }
+    notifyListeners();
+  }
 
   Future<void> placeOrderApi(
       {required String tableNo}) async {
@@ -194,7 +219,7 @@ class StaffSelectProductViewModel with ChangeNotifier {
         for (var product in staffFoodList) {
           if (product.id == productId) {
             product.cartCount = staffCartFoodList
-                    .firstWhere((item) => item.foodItemId == productId,
+                    .firstWhere((item) => item?.foodItemId == productId,
                         orElse: () => StaffCartData(quantity: 0))
                     .quantity ??
                 0;

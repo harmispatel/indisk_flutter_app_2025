@@ -22,6 +22,7 @@ class ApiParams {
   static const String is_available = "is_available";
   static const String restaurant_id = "restaurant_id";
   static const String role = "role";
+  static const String timePeriod = "timePeriod";
   static const String id = "id";
   static const String varient = "varient";
   static const String discount = "discount";
@@ -34,6 +35,7 @@ class ApiParams {
   static const String isActive = "isActive";
   static const String status = "status";
   static const String order_id = "order_id";
+  static const String order_type = "order_type";
   static const String websiteLink = "websiteLink";
   static const String food_category = "food_category";
   static const String unit = "unit";
@@ -60,4 +62,5 @@ class ApiParams {
   static const String address = "address";
   static const String location = "location";
   static const String cuisine_type = "cuisine_type";
+  static const String graphType = "graphType";
 }

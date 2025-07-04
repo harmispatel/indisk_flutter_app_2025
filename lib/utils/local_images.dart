@@ -13,4 +13,6 @@ class LocalImages {
   static final String img_waiter = "assets/images/img_waiter.png";
   static final String img_people_dining = "assets/images/img_people_dining.png";
   static final String food_preparing_view = "assets/images/food_preparing_view.gif";
+  static final String img_login_1 = "assets/images/img_login_1.webp";
+  static final String img_login_2 = "assets/images/img_login_2.avif";
 }

@@ -1,129 +1,47 @@
-import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:indisk_app/app_ui/screens/owner/owner_home/sales_summary/sales_summary_view.dart';
+import 'package:indisk_app/utils/global_variables.dart';
+import '../../../../api_service/models/salep_graph_master.dart';
 import 'owner_home_view_model.dart';
 
 class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key});
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  OwnerHomeViewModel? mViewModel;
+  final OwnerHomeViewModel mViewModel = OwnerHomeViewModel();
+  String? timePeriod = "monthly";
+  String? graphType = "Sales Summary";
 
-  final List<FlSpot> salesData = [
-    FlSpot(0, 0),
-    FlSpot(1, 0),
-    FlSpot(2, 0),
-    FlSpot(3, 0),
-    FlSpot(4, 0),
-    FlSpot(5, 0),
-    FlSpot(6, 0),
-    FlSpot(7, 1000),
-    FlSpot(8, 500),
-    FlSpot(9, 3000),
-    FlSpot(10, 6000),
-    FlSpot(11, 9000),
-    FlSpot(12, 12000),
-    FlSpot(13, 10000),
-    FlSpot(14, 8000),
-    FlSpot(15, 9000),
-    FlSpot(16, 0),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadData();
+    });
+  }
 
-  final List<String> dateLabels = [
-    "Apr 23",
-    "Apr 24",
-    "Apr 25",
-    "Apr 26",
-    "Apr 27",
-    "Apr 28",
-    "Apr 29",
-    "May 10",
-    "May 11",
-    "May 12",
-    "May 13",
-    "May 14",
-    "May 15",
-    "May 16",
-    "May 17",
-    "May 18",
-    "May 22"
-  ];
+  Future<void> loadData() async {
+    try {
+      await Future.wait([
+        // mViewModel.getOwnerHomeApi(),
+        mViewModel.salesCountApi(
+          ownerId: gLoginDetails!.sId.toString(),
+        ),
+        if (graphType != null && graphType!.isNotEmpty)
+          mViewModel.salesGraphApi(
+            ownerId: gLoginDetails!.sId.toString(),
+            graphType: graphType!,
+            timePeriod: timePeriod ?? "",
+          ),
+      ]);
+    } finally {
+      setState(() {});
+    }
+  }
 
-  final List<Map<String, dynamic>> reportItems = [
-    {
-      'title': 'Sales Summary',
-      'icon': Icons.summarize,
-      'color': Colors.blue,
-      'screen': SalesSummaryView(),
-    },
-    {
-      'title': 'Sales by Item',
-      'icon': Icons.shopping_bag,
-      'color': Colors.green,
-      'screen': Scaffold(
-        appBar: AppBar(title: Text('Sales by Item')),
-        body: Center(child: Text('Sales by Item Content')),
-      ),
-    },
-    {
-      'title': 'Sales by Category',
-      'icon': Icons.category,
-      'color': Colors.orange,
-      'screen': Scaffold(
-        appBar: AppBar(title: Text('Sales by Category')),
-        body: Center(child: Text('Sales by Category Content')),
-      ),
-    },
-    // Add other report items with their respective screens...
-    {
-      'title': 'Sales by Employee',
-      'icon': Icons.people,
-      'color': Colors.purple,
-      'screen': Scaffold(
-        appBar: AppBar(title: Text('Sales by Employee')),
-        body: Center(child: Text('Sales by Employee Report Content')),
-      ),
-    },
-    {
-      'title': 'Sales by Payment',
-      'icon': Icons.payment,
-      'color': Colors.teal,
-      'screen': Scaffold(
-        appBar: AppBar(title: Text('Sales by Payment')),
-        body: Center(child: Text('Sales by Payment Report Content')),
-      ),
-    },
-    {
-      'title': 'Receipts',
-      'icon': Icons.receipt,
-      'color': Colors.indigo,
-      'screen': Scaffold(
-        appBar: AppBar(title: Text('Receipts')),
-        body: Center(child: Text('Receipts Report Content')),
-      ),
-    },
-    {
-      'title': 'Sales by Modifier',
-      'icon': Icons.tune,
-      'color': Colors.pink,
-      'screen': Scaffold(
-        appBar: AppBar(title: Text('Sales by Modifier')),
-        body: Center(child: Text('Sales by Modifier Report Content')),
-      ),
-    },
-    {
-      'title': 'Taxes',
-      'icon': Icons.account_balance,
-      'color': Colors.brown,
-      'screen': Scaffold(
-        appBar: AppBar(title: Text('Taxes')),
-        body: Center(child: Text('Taxes Report Content')),
-      ),
-    },
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,94 +50,136 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Stats Cards Row
               Row(
                 children: [
-                  _buildStatCard("Gross sales", "kr. 104.235,00", Colors.green),
-                  _buildStatCard("Refunds", "kr. 0,00", Colors.grey),
-                  _buildStatCard("Discounts", "kr. 38.688,50", Colors.red),
-                  _buildStatCard("Net sales", "kr. 65.546,50", Colors.green),
-                  _buildStatCard("Gross profit", "kr. 41.688,50", Colors.green),
+                  _buildStatCard(
+                      "Gross sales",
+                      "kr.${mViewModel.salesCountData?.grossSales ?? ""}",
+                      Colors.green),
+                  _buildStatCard(
+                      "Refunds",
+                      "kr.${mViewModel.salesCountData?.refunds ?? ""}",
+                      Colors.grey),
+                  _buildStatCard(
+                      "Discounts",
+                      "kr.${mViewModel.salesCountData?.totalDiscount ?? ""}",
+                      Colors.red),
+                  _buildStatCard(
+                      "Net sales",
+                      "kr.${mViewModel.salesCountData?.netSales ?? ""}",
+                      Colors.green),
+                  _buildStatCard(
+                      "Gross profit",
+                      "kr.${mViewModel.salesCountData?.grossProfit ?? ""}",
+                      Colors.green),
                 ],
               ),
-              const SizedBox(height: 24),
-              // Sales Chart
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildTimePeriodButton("Monthly", "monthly"),
+                  _buildTimePeriodButton("Yearly", "yearly"),
+                ],
+              ),
+              const SizedBox(height: 16),
               Card(
                 elevation: 3,
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: SizedBox(
                     height: 250,
-                    child: LineChart(
-                      LineChartData(
-                        gridData: FlGridData(
-                          drawHorizontalLine: true,
-                          drawVerticalLine: false,
-                        ),
-                        borderData: FlBorderData(show: true),
-                        titlesData: FlTitlesData(
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 50,
-                              interval: 5000,
-                              getTitlesWidget: (value, meta) {
-                                return Text(
-                                  'kr.${(value / 1000).toStringAsFixed(0)}k',
-                                  style: TextStyle(fontSize: 12),
-                                );
-                              },
-                            ),
-                          ),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              interval: 1,
-                              getTitlesWidget: (value, meta) {
-                                int index = value.toInt();
-                                if (index >= 0 && index < dateLabels.length) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 6.0),
-                                    child: Text(
-                                      dateLabels[index],
-                                      style: TextStyle(fontSize: 10),
+                    child: mViewModel.isSalesGraphApiLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : mViewModel.salesGraph == null ||
+                                mViewModel.salesGraph!.isEmpty
+                            ? Center(
+                                child: Text(
+                                  graphType == null
+                                      ? "Select a report type"
+                                      : "No data available",
+                                ),
+                              )
+                            : LineChart(
+                                LineChartData(
+                                  gridData: FlGridData(show: true),
+                                  borderData: FlBorderData(show: true),
+                                  titlesData: FlTitlesData(
+                                    leftTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
+                                        reservedSize: 40,
+                                        interval: _calculateInterval(
+                                            mViewModel.salesGraph),
+                                        getTitlesWidget: (value, meta) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 4.0),
+                                            child: Text(
+                                              'kr.${value.toInt()}',
+                                              style:
+                                                  const TextStyle(fontSize: 10),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
-                                  );
-                                }
-                                return Text('');
-                              },
-                            ),
-                          ),
-                          rightTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false)),
-                          topTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false)),
-                        ),
-                        minY: 0,
-                        maxY: 15000,
-                        lineBarsData: [
-                        LineChartBarData(
-                        isCurved: true,
-                        color: Colors.green,
-                        barWidth: 3,
-                        spots: salesData,
-                        dotData: FlDotData(show: true),
-                        belowBarData: BarAreaData(
-                          show: true,
-                          color: Colors.green.withOpacity(0.3),
-                        ),
-                        )],
-                      ),
-                    ),
+                                    bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
+                                        reservedSize: 22,
+                                        interval: 1,
+                                        getTitlesWidget: (value, meta) {
+                                          final labels = _generateDateLabels(
+                                              mViewModel.salesGraph);
+                                          final index = value.toInt();
+                                          if (index >= 0 &&
+                                              index < labels.length) {
+                                            return Text(
+                                              labels[index],
+                                              style:
+                                                  const TextStyle(fontSize: 10),
+                                            );
+                                          }
+                                          return const Text('');
+                                        },
+                                      ),
+                                    ),
+                                    rightTitles: AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
+                                    topTitles: AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
+                                  ),
+                                  lineBarsData: [
+                                    LineChartBarData(
+                                      spots: _convertApiDataToFlSpots(
+                                          mViewModel.salesGraph),
+                                      isCurved: true,
+                                      color: Colors.green,
+                                      barWidth: 2,
+                                      isStrokeCapRound: true,
+                                      dotData: FlDotData(show: true),
+                                      belowBarData: BarAreaData(
+                                        show: true,
+                                        color: Colors.green.withOpacity(0.3),
+                                      ),
+                                    ),
+                                  ],
+                                  minY: 0,
+                                  maxY: _calculateMaxY(mViewModel.salesGraph),
+                                  lineTouchData: LineTouchData(enabled: true),
+                                ),
+                              ),
                   ),
                 ),
               ),
               const SizedBox(height: 24),
-              // Reports Grid
               Text(
                 'Sales Reports',
                 style: TextStyle(
@@ -231,8 +191,8 @@ class _DashboardPageState extends State<DashboardPage> {
               GridView.count(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                crossAxisCount: 4,
-                crossAxisSpacing: 12,
+                crossAxisCount: 3,
+                crossAxisSpacing: 10,
                 mainAxisSpacing: 12,
                 childAspectRatio: 2,
                 children: reportItems.map((item) {
@@ -241,15 +201,55 @@ class _DashboardPageState extends State<DashboardPage> {
                     item['title'],
                     item['icon'],
                     item['color'],
-                    item['screen'],
+                    item['graphType'],
                   );
                 }).toList(),
               ),
+              SizedBox(height: 30),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildTimePeriodButton(String label, String period) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          timePeriod = period;
+        });
+        loadData();
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: timePeriod == period ? Colors.blue : Colors.grey[200],
+        foregroundColor: timePeriod == period ? Colors.white : Colors.black,
+      ),
+      child: Text(label),
+    );
+  }
+
+  double _calculateMaxY(List<SalesGraphData>? data) {
+    if (data == null || data.isEmpty) return 1000;
+    final maxTotal = data.fold<double>(
+        0,
+        (prev, item) => item.total != null && item.total! > prev
+            ? item.total!.toDouble()
+            : prev);
+    return maxTotal * 1.2; // Add 20% padding
+  }
+
+  double _calculateInterval(List<SalesGraphData>? data) {
+    if (data == null || data.isEmpty) return 500;
+    final maxTotal = data.fold<double>(
+        0,
+        (prev, item) => item.total != null && item.total! > prev
+            ? item.total!.toDouble()
+            : prev);
+    if (maxTotal <= 1000) return 200;
+    if (maxTotal <= 5000) return 1000;
+    if (maxTotal <= 10000) return 2000;
+    return 5000;
   }
 
   Widget _buildStatCard(String title, String value, Color color) {
@@ -279,23 +279,26 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _buildReportCard(
-      BuildContext context,
-      String title,
-      IconData icon,
-      Color color,
-      Widget screen,
-      ) {
+    BuildContext context,
+    String title,
+    IconData icon,
+    Color color,
+    String graphType,
+  ) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => screen),
-        );
+        setState(() {
+          this.graphType = graphType;
+        });
+        loadData();
       },
       child: Card(
-        elevation: 2,
+        elevation: this.graphType == graphType ? 4 : 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
+          side: this.graphType == graphType
+              ? BorderSide(color: Colors.blue, width: 2)
+              : BorderSide.none,
         ),
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -308,7 +311,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   color: color.withOpacity(0.2),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, size: 44, color: color),
+                child: Icon(icon, size: 24, color: color),
               ),
               const SizedBox(height: 12),
               Text(
@@ -325,4 +328,61 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
+
+  List<FlSpot> _convertApiDataToFlSpots(List<SalesGraphData>? data) {
+    if (data == null || data.isEmpty) return [];
+
+    // Sort by date
+    data.sort((a, b) {
+      final dateA = DateTime.tryParse(a.sId ?? '') ?? DateTime(1970);
+      final dateB = DateTime.tryParse(b.sId ?? '') ?? DateTime(1970);
+      return dateA.compareTo(dateB);
+    });
+
+    return data.asMap().entries.map((entry) {
+      return FlSpot(
+        entry.key.toDouble(),
+        entry.value.total ?? 0.0,
+      );
+    }).toList();
+  }
+
+  List<String> _generateDateLabels(List<SalesGraphData>? data) {
+    if (data == null || data.isEmpty) return [];
+
+    // Sort by date (same as above)
+    data.sort((a, b) {
+      final dateA = DateTime.tryParse(a.sId ?? '') ?? DateTime(1970);
+      final dateB = DateTime.tryParse(b.sId ?? '') ?? DateTime(1970);
+      return dateA.compareTo(dateB);
+    });
+
+    return data.map((item) {
+      final date = DateTime.tryParse(item.sId ?? '');
+      return date != null
+          ? "${date.day}/${date.month}" // Format as "24/6"
+          : item.sId ?? "";
+    }).toList();
+  }
+
+  final List<Map<String, dynamic>> reportItems = [
+    {
+      'title': 'Sales Summary',
+      'icon': Icons.summarize,
+      'color': Colors.blue,
+      'graphType': 'Sales Summary',
+    },
+    {
+      'title': 'Sales by Item',
+      'icon': Icons.shopping_bag,
+      'color': Colors.green,
+      'graphType': 'Sales by Item',
+    },
+    {
+      'title': 'Sales by Category',
+      'icon': Icons.category,
+      'color': Colors.orange,
+      'graphType': 'Sales by Category',
+    },
+  ];
 }
