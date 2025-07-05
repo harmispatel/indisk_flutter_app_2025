@@ -6,7 +6,7 @@ class StaffCartMaster {
   List<StaffCartData>? cart;
   int? totalQuantity;
   int? subtotal;
-  double? gst5Percent;
+  dynamic? gst5Percent;
   double? totalWithGst;
 
   StaffCartMaster(

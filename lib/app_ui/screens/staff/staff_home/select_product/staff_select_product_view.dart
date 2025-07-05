@@ -12,8 +12,9 @@ import 'get_bill/get_bill_view.dart';
 
 class StaffSelectProductView extends StatefulWidget {
   final String tableNo;
+  final String type;
 
-  const StaffSelectProductView({super.key, required this.tableNo});
+  const StaffSelectProductView({super.key, required this.tableNo,required this.type});
 
   @override
   State<StaffSelectProductView> createState() => _StaffSelectProductViewState();
