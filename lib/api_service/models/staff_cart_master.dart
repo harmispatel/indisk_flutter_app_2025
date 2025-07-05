@@ -7,7 +7,7 @@ class StaffCartMaster {
   int? totalQuantity;
   int? subtotal;
   dynamic? gst5Percent;
-  double? totalWithGst;
+  dynamic? totalWithGst;
 
   StaffCartMaster(
       {this.success,

@@ -461,11 +461,15 @@
 //   }
 // }
 import 'package:flutter/material.dart';
+import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
+import 'package:indisk_app/app_ui/screens/staff/staff_dashboard/staff_dasboard_view.dart';
 import 'package:indisk_app/app_ui/screens/staff/staff_home/select_product/get_bill/viva_payment_service.dart';
+import 'package:indisk_app/app_ui/screens/staff/staff_home/select_table_view.dart';
 import 'package:indisk_app/utils/app_dimens.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../../../utils/local_images.dart';
 import '../staff_select_product_view_model.dart';
 
 class GetBillView extends StatefulWidget {
@@ -480,15 +484,10 @@ class GetBillView extends StatefulWidget {
 
 class _GetBillViewState extends State<GetBillView> {
   StaffSelectProductViewModel? mViewModel;
-  late Razorpay _razorpay;
 
   @override
   void initState() {
     super.initState();
-    _razorpay = Razorpay();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentErrorResponse);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccessResponse);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWalletSelected);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       mViewModel =
           Provider.of<StaffSelectProductViewModel>(context, listen: false);
@@ -501,9 +500,9 @@ class _GetBillViewState extends State<GetBillView> {
 
   @override
   void dispose() {
-    _razorpay.clear();
     super.dispose();
   }
+
   final vivaService = VivaPaymentService(
     clientId: 'demo',
     clientSecret: 'demo',
@@ -521,11 +520,13 @@ class _GetBillViewState extends State<GetBillView> {
     );
 
     if (checkoutUrl != null && await canLaunchUrl(Uri.parse(checkoutUrl))) {
-      await launchUrl(Uri.parse(checkoutUrl), mode: LaunchMode.externalApplication);
+      await launchUrl(Uri.parse(checkoutUrl),
+          mode: LaunchMode.externalApplication);
     } else {
       print("Can't launch payment URL");
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final viewModel =
@@ -888,108 +889,6 @@ class _GetBillViewState extends State<GetBillView> {
     );
   }
 
-  void _handlePaymentErrorResponse(PaymentFailureResponse response) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Payment Failed'),
-        content: Text('Error: ${response.message ?? 'Unknown error'}'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _handlePaymentSuccessResponse(PaymentSuccessResponse response) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Payment Successful'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Payment ID: ${response.paymentId}'),
-            Text('Order ID: ${response.orderId}'),
-            const SizedBox(height: 10),
-            const Text('Thank you for your payment!'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              if (mViewModel != null) {
-                mViewModel?.getTableBill(
-                    orderNo: widget.orderNo ?? '',
-                    orderType: widget.tableNo == '0' ? 'takeaway' : '',
-                    tableNo: widget.tableNo ?? '');
-                // mViewModel!.updateOrderPaymentStatus(
-                //   orderNo: widget.orderNo ?? '',
-                //   paymentId: response.paymentId ?? '',
-                //   isPaid: true,
-                // );
-              }
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _handleExternalWalletSelected(ExternalWalletResponse response) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('External Wallet Selected'),
-        content: Text('Wallet: ${response.walletName}'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _openRazorpayPayment() {
-    final amount = (mViewModel?.summary?.totalAmount ?? 0).toDouble();
-    // if (amount <= 0) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Invalid amount for payment')),
-    //   );
-    //   return;
-    // }
-    var options = {
-      'key': 'rzp_test_WGQ1BB4uyGl6uD', // Replace with your Razorpay key
-      'amount': (amount * 100).toInt(), // Amount in paise
-      'name': 'Tasty Restaurant',
-      'description': 'Payment for Order ${widget.orderNo}',
-      'prefill': {
-        'contact': '', // Add customer contact if available
-        'email': '', // Add customer email if available
-      },
-      'theme': {
-        'color': '#8130ac', // Customize color as per your app theme
-      }
-    };
-
-    try {
-      _razorpay.open(options);
-    } catch (e) {
-      debugPrint('Razorpay Error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-    }
-  }
-
   void _showPaymentOptions() {
     final amount = (mViewModel?.summary?.totalAmount ?? 0).toDouble();
     showModalBottomSheet(
@@ -997,50 +896,64 @@ class _GetBillViewState extends State<GetBillView> {
       builder: (BuildContext context) {
         return Container(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Pay ₹$amount',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Pay ₹$amount',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Select Payment Method',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              _buildPaymentOption(
-                icon: Icons.credit_card,
-                title: 'Razorpay',
-                subtitle: 'Pay with credit/debit card or UPI',
-                onTap: () {
-                  _openRazorpayPayment();
-                },
-              ),
-              const Divider(),
-              _buildPaymentOption(
-                icon: Icons.account_balance_wallet,
-                title: 'VivaPay',
-                subtitle: 'Pay with ViaPay wallet',
-                onTap: startPayment,
-              ),
-              const Divider(),
-              _buildPaymentOption(
-                icon: Icons.qr_code,
-                title: 'QR Code',
-                subtitle: 'Scan QR code to pay',
-                onTap: () {},
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-            ],
+                const SizedBox(height: 10),
+                const Text(
+                  'Select Payment Method',
+                  style: TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 20),
+                _buildPaymentOption(
+                  icon: Icons.credit_card,
+                  title: 'Cash On',
+                  subtitle: 'Pay cash',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CashPaymentSuccessScreen(),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
+                _buildPaymentOption(
+                  icon: Icons.account_balance_wallet,
+                  title: 'VivaPay',
+                  subtitle: 'Pay with ViaPay wallet',
+                  onTap: startPayment,
+                ),
+                const Divider(),
+                _buildPaymentOption(
+                  icon: Icons.qr_code,
+                  title: 'QR Code',
+                  subtitle: 'Scan QR code to pay',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const QRPaymentScreen(),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -1058,6 +971,158 @@ class _GetBillViewState extends State<GetBillView> {
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(subtitle),
       onTap: onTap,
+    );
+  }
+}
+
+class QRPaymentScreen extends StatelessWidget {
+  const QRPaymentScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Scan QR Code'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Image(
+                image: AssetImage(
+                  LocalImages.img_qr_code,
+                ), // replace with your image path
+                width: 400,
+                height: 400,
+              ),
+            ),
+            const SizedBox(height: 30),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                PrimaryButton(
+                  text: "OK",
+                  width: 200,
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StaffDashboardView(),
+                      ),
+                          (Route<dynamic> route) =>
+                      false, // Remove all previous routes
+                    );
+                  },
+                ),
+                SizedBox(width: 16),
+                PrimaryButton(
+                  text: "Cancel",
+                  width: 200,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CashPaymentSuccessScreen extends StatelessWidget {
+  const CashPaymentSuccessScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Blue Checkmark
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(30),
+                child: const Icon(
+                  Icons.check_circle,
+                  color: Colors.blue,
+                  size: 100,
+                ),
+              ),
+              const SizedBox(height: 30),
+
+              // Success Text
+              const Text(
+                'Cash payment has been received.',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Cash payment has been received.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 40),
+              PrimaryButton(
+                text: "Done",
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StaffDashboardView(),
+                    ),
+                    (Route<dynamic> route) =>
+                        false, // Remove all previous routes
+                  );
+                },
+              ),
+              // Done Button
+              // SizedBox(
+              //   width: 400,
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       Navigator.pushAndRemoveUntil(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) => SelectTableView(),
+              //         ),
+              //             (Route<dynamic> route) => false, // Remove all previous routes
+              //       );
+              //     },
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: Colors.blue,
+              //       padding: const EdgeInsets.symmetric(vertical: 16),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(12),
+              //       ),
+              //     ),
+              //     child: const Text(
+              //       'Done',
+              //       style: TextStyle(fontSize: 18, color: Colors.white),
+              //     ),
+              //   ),
+              // )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

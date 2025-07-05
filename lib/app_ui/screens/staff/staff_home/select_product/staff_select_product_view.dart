@@ -152,310 +152,640 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                                     },
                                   ),
                                 ),
-                                GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    crossAxisSpacing: 16.0,
-                                    mainAxisSpacing: 16.0,
-                                    childAspectRatio: 0.8,
-                                  ),
-                                  itemCount: _selectedCategoryId == null
-                                      ? viewModel.staffFoodList.length
-                                      : viewModel.staffFoodList
-                                          .where((item) =>
-                                              item.category?.sId ==
-                                              _selectedCategoryId)
-                                          .length,
-                                  itemBuilder: (context, index) {
-                                    final foodItem = _selectedCategoryId == null
-                                        ? viewModel.staffFoodList[index]
+                                // GridView.builder(
+                                //   shrinkWrap: true,
+                                //   physics: NeverScrollableScrollPhysics(),
+                                //   gridDelegate:
+                                //       const SliverGridDelegateWithFixedCrossAxisCount(
+                                //     crossAxisCount: 3,
+                                //     crossAxisSpacing: 16.0,
+                                //     mainAxisSpacing: 16.0,
+                                //     childAspectRatio: 0.8,
+                                //   ),
+                                //   itemCount: _selectedCategoryId == null
+                                //       ? viewModel.staffFoodList.length
+                                //       : viewModel.staffFoodList
+                                //           .where((item) =>
+                                //               item.category?.sId ==
+                                //               _selectedCategoryId)
+                                //           .length,
+                                //   itemBuilder: (context, index) {
+                                //     final foodItem = _selectedCategoryId == null
+                                //         ? viewModel.staffFoodList[index]
+                                //         : viewModel.staffFoodList
+                                //             .where((item) =>
+                                //                 item.category?.sId ==
+                                //                 _selectedCategoryId)
+                                //             .toList()[index];
+                                //
+                                //     return ProductCard(
+                                //       image: foodItem.image?.first ?? '--',
+                                //       name: foodItem.name ?? '--',
+                                //       price: foodItem.price.toString() ?? '--',
+                                //       description: foodItem.description ?? '--',
+                                //       onAddToCartTap: () async {
+                                //         final hasOptions =
+                                //             foodItem.discount?.isNotEmpty ==
+                                //                     true ||
+                                //                 foodItem.modifier?.isNotEmpty ==
+                                //                     true ||
+                                //                 foodItem.topup?.isNotEmpty ==
+                                //                     true ||
+                                //                 foodItem.varient?.isNotEmpty ==
+                                //                     true;
+                                //
+                                //         if (hasOptions) {
+                                //           showDialog(
+                                //             context: context,
+                                //             builder: (context) =>
+                                //                 ProductOptionsDialog(
+                                //               product: foodItem,
+                                //               onOptionsSelected:
+                                //                   (options) async {
+                                //                 try {
+                                //                   await viewModel.addToCart(
+                                //                     productId: foodItem.id!,
+                                //                     tableNo: widget.tableNo ==
+                                //                             "Take away order"
+                                //                         ? "0"
+                                //                         : widget.tableNo,
+                                //                     variantIds: options[
+                                //                                 'variantIds']
+                                //                             ?.cast<String>() ??
+                                //                         [],
+                                //                     discountId:
+                                //                         options['discountId'],
+                                //                     modifierIds: options[
+                                //                                 'modifierIds']
+                                //                             ?.cast<String>() ??
+                                //                         [],
+                                //                     topupIds: options[
+                                //                                 'topupIds']
+                                //                             ?.cast<String>() ??
+                                //                         [],
+                                //                     specialInstruction: options[
+                                //                             'specialInstructions'] ??
+                                //                         '',
+                                //                   );
+                                //
+                                //                   // Refresh cart list after adding
+                                //                   await viewModel.getStaffCartList(
+                                //                       tableNo: widget.tableNo ==
+                                //                               "Take away order"
+                                //                           ? "0"
+                                //                           : widget.tableNo);
+                                //
+                                //                   if (mounted) {
+                                //                     setState(() {
+                                //                       final currentCount =
+                                //                           foodItem.cartCount ??
+                                //                               0;
+                                //                       foodItem.cartCount =
+                                //                           currentCount + 1;
+                                //                     });
+                                //                   }
+                                //                 } catch (e) {
+                                //                   showRedToastMessage(
+                                //                       e.toString());
+                                //                 }
+                                //               },
+                                //             ),
+                                //           );
+                                //         } else {
+                                //           try {
+                                //             await viewModel.addToCart(
+                                //               productId: foodItem.id!,
+                                //               tableNo: widget.tableNo ==
+                                //                       "Take away order"
+                                //                   ? "0"
+                                //                   : widget.tableNo,
+                                //               variantIds: [],
+                                //               discountId: null,
+                                //               modifierIds: [],
+                                //               topupIds: [],
+                                //               specialInstruction: '',
+                                //             );
+                                //
+                                //             // Refresh cart list after adding
+                                //             await viewModel.getStaffCartList(
+                                //                 tableNo: widget.tableNo ==
+                                //                         "Take away order"
+                                //                     ? "0"
+                                //                     : widget.tableNo);
+                                //
+                                //             if (mounted) {
+                                //               setState(() {
+                                //                 final currentCount =
+                                //                     foodItem.cartCount ?? 0;
+                                //                 foodItem.cartCount =
+                                //                     currentCount + 1;
+                                //               });
+                                //             }
+                                //           } catch (e) {
+                                //             showRedToastMessage(e.toString());
+                                //           }
+                                //         }
+                                //       },
+                                //       // onAddToCartTap: () async {
+                                //       //   final hasOptions =
+                                //       //       foodItem.discount?.isNotEmpty ==
+                                //       //               true ||
+                                //       //           foodItem.modifier?.isNotEmpty ==
+                                //       //               true ||
+                                //       //           foodItem.topup?.isNotEmpty ==
+                                //       //               true ||
+                                //       //           foodItem.varient?.isNotEmpty ==
+                                //       //               true;
+                                //       //
+                                //       //   if (hasOptions) {
+                                //       //     showDialog(
+                                //       //       context: context,
+                                //       //       builder: (context) =>
+                                //       //           ProductOptionsDialog(
+                                //       //         product: foodItem,
+                                //       //         onOptionsSelected:
+                                //       //             (options) async {
+                                //       //           // Debug print
+                                //       //           print(
+                                //       //               'Options received in ProductCard:');
+                                //       //           print(options);
+                                //       //
+                                //       //           try {
+                                //       //             await viewModel.addToCart(
+                                //       //               productId: foodItem.id!,
+                                //       //               tableNo: widget.tableNo ==
+                                //       //                       "Take away order"
+                                //       //                   ? "0"
+                                //       //                   : widget.tableNo,
+                                //       //               variantIds: options[
+                                //       //                           'variantIds']
+                                //       //                       ?.cast<String>() ??
+                                //       //                   [],
+                                //       //               // Ensure proper type casting
+                                //       //               discountId:
+                                //       //                   options['discountId'],
+                                //       //               modifierIds: options[
+                                //       //                           'modifierIds']
+                                //       //                       ?.cast<String>() ??
+                                //       //                   [],
+                                //       //               topupIds: options[
+                                //       //                           'topupIds']
+                                //       //                       ?.cast<String>() ??
+                                //       //                   [],
+                                //       //               specialInstruction: options[
+                                //       //                       'specialInstructions'] ??
+                                //       //                   '',
+                                //       //             );
+                                //       //
+                                //       //             if (mounted) {
+                                //       //               setState(() {
+                                //       //                 final currentCount =
+                                //       //                     foodItem.cartCount ??
+                                //       //                         0;
+                                //       //                 foodItem.cartCount =
+                                //       //                     currentCount + 1;
+                                //       //               });
+                                //       //             }
+                                //       //           } catch (e) {
+                                //       //             showRedToastMessage(
+                                //       //                 e.toString());
+                                //       //           }
+                                //       //         },
+                                //       //       ),
+                                //       //     );
+                                //       //   } else {
+                                //       //     // No options, directly call addToCart with empty IDs
+                                //       //     try {
+                                //       //       await viewModel.addToCart(
+                                //       //         productId: foodItem.id!,
+                                //       //         tableNo: widget.tableNo ==
+                                //       //                 "Take away order"
+                                //       //             ? "0"
+                                //       //             : widget.tableNo,
+                                //       //         variantIds: [],
+                                //       //         discountId: null,
+                                //       //         modifierIds: [],
+                                //       //         topupIds: [],
+                                //       //         specialInstruction: '',
+                                //       //       );
+                                //       //
+                                //       //       if (mounted) {
+                                //       //         setState(() {
+                                //       //           final currentCount =
+                                //       //               foodItem.cartCount ?? 0;
+                                //       //           foodItem.cartCount =
+                                //       //               currentCount + 1;
+                                //       //         });
+                                //       //       }
+                                //       //     } catch (e) {
+                                //       //       showRedToastMessage(e.toString());
+                                //       //     }
+                                //       //   }
+                                //       // },
+                                //       cartCount: foodItem.cartCount ?? 0,
+                                //       onIncreaseTap: () async {
+                                //         setState(() {
+                                //           final currentCount =
+                                //               foodItem.cartCount ?? 0;
+                                //           foodItem.cartCount = currentCount + 1;
+                                //         });
+                                //         await viewModel.updateQuantity(
+                                //           productId: foodItem.id ?? '--',
+                                //           type: 'increase',
+                                //           tableNo: widget.tableNo ==
+                                //                   "Take away order"
+                                //               ? "0"
+                                //               : widget.tableNo,
+                                //         );
+                                //         // Refresh cart
+                                //         await viewModel.getStaffCartList(
+                                //             tableNo: widget.tableNo ==
+                                //                     "Take away order"
+                                //                 ? "0"
+                                //                 : widget.tableNo);
+                                //       },
+                                //       onDecreaseTap: () async {
+                                //         setState(() {
+                                //           final currentCount =
+                                //               foodItem.cartCount ?? 0;
+                                //           foodItem.cartCount = currentCount - 1;
+                                //         });
+                                //         await viewModel.updateQuantity(
+                                //           productId: foodItem.id ?? '--',
+                                //           type: 'decrease',
+                                //           tableNo: widget.tableNo ==
+                                //                   "Take away order"
+                                //               ? "0"
+                                //               : widget.tableNo,
+                                //         );
+                                //         // Refresh cart
+                                //         await viewModel.getStaffCartList(
+                                //             tableNo: widget.tableNo ==
+                                //                     "Take away order"
+                                //                 ? "0"
+                                //                 : widget.tableNo);
+                                //       },
+                                //       // onIncreaseTap: () {
+                                //       //   setState(() {
+                                //       //     final currentCount =
+                                //       //         foodItem.cartCount ?? 0;
+                                //       //     foodItem.cartCount = currentCount + 1;
+                                //       //   });
+                                //       //   viewModel.updateQuantity(
+                                //       //       productId: foodItem.id ?? '--',
+                                //       //       type: 'increase',
+                                //       //       tableNo: widget.tableNo ==
+                                //       //               "Take away order"
+                                //       //           ? "0"
+                                //       //           : widget.tableNo);
+                                //       // },
+                                //       // onDecreaseTap: () {
+                                //       //   setState(() {
+                                //       //     final currentCount =
+                                //       //         foodItem.cartCount ?? 0;
+                                //       //     foodItem.cartCount = currentCount - 1;
+                                //       //   });
+                                //       //   viewModel.updateQuantity(
+                                //       //       productId: foodItem.id ?? '--',
+                                //       //       type: 'decrease',
+                                //       //       tableNo: widget.tableNo ==
+                                //       //               "Take away order"
+                                //       //           ? "0"
+                                //       //           : widget.tableNo);
+                                //       // },
+                                //     );
+                                //   },
+                                // ),
+                                LayoutBuilder(builder: (context, constraints) {
+                                  final screenWidth = constraints.maxWidth;
+                                  //final int crossAxisCount = 4;
+                                  final crossAxisCount = screenWidth > 1000
+                                      ? 4
+                                      : screenWidth > 600
+                                          ? 2
+                                          : 1;
+                                  final spacing = 16.0;
+                                  final totalSpacing =
+                                      spacing * (crossAxisCount - 1);
+                                  final itemWidth =
+                                      (screenWidth - totalSpacing) /
+                                          crossAxisCount;
+                                  final itemHeight = 306.0;
+                                  final aspectRatio = itemWidth / itemHeight;
+                                  return GridView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: crossAxisCount,
+                                      crossAxisSpacing: spacing,
+                                      mainAxisSpacing: spacing,
+                                      childAspectRatio: aspectRatio,
+                                    ),
+                                    itemCount: _selectedCategoryId == null
+                                        ? viewModel.staffFoodList.length
                                         : viewModel.staffFoodList
-                                            .where((item) =>
-                                                item.category?.sId ==
-                                                _selectedCategoryId)
-                                            .toList()[index];
+                                        .where((item) =>
+                                    item.category?.sId ==
+                                        _selectedCategoryId)
+                                        .length,
+                                    itemBuilder: (context, index) {
+                                      final foodItem =
+                                      _selectedCategoryId == null
+                                          ? viewModel.staffFoodList[index]
+                                          : viewModel.staffFoodList
+                                          .where((item) =>
+                                      item.category?.sId ==
+                                          _selectedCategoryId)
+                                          .toList()[index];
 
-                                    return ProductCard(
-                                      image: foodItem.image?.first ?? '--',
-                                      name: foodItem.name ?? '--',
-                                      price: foodItem.price.toString() ?? '--',
-                                      description: foodItem.description ?? '--',
-                                      onAddToCartTap: () async {
-                                        final hasOptions =
-                                            foodItem.discount?.isNotEmpty ==
-                                                    true ||
-                                                foodItem.modifier?.isNotEmpty ==
-                                                    true ||
-                                                foodItem.topup?.isNotEmpty ==
-                                                    true ||
-                                                foodItem.varient?.isNotEmpty ==
-                                                    true;
+                                      return ProductCard(
+                                        image: foodItem.image?.first ?? '--',
+                                        name: foodItem.name ?? '--',
+                                        price:
+                                        foodItem.price.toString() ?? '--',
+                                        description:
+                                        foodItem.description ?? '--',
+                                        onAddToCartTap: () async {
+                                          final hasOptions = foodItem
+                                              .discount?.isNotEmpty ==
+                                              true ||
+                                              foodItem.modifier?.isNotEmpty ==
+                                                  true ||
+                                              foodItem.topup?.isNotEmpty ==
+                                                  true ||
+                                              foodItem.varient?.isNotEmpty ==
+                                                  true;
 
-                                        if (hasOptions) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) =>
-                                                ProductOptionsDialog(
-                                              product: foodItem,
-                                              onOptionsSelected:
-                                                  (options) async {
-                                                try {
-                                                  await viewModel.addToCart(
-                                                    productId: foodItem.id!,
-                                                    tableNo: widget.tableNo ==
-                                                            "Take away order"
-                                                        ? "0"
-                                                        : widget.tableNo,
-                                                    variantIds: options[
-                                                                'variantIds']
-                                                            ?.cast<String>() ??
-                                                        [],
-                                                    discountId:
-                                                        options['discountId'],
-                                                    modifierIds: options[
-                                                                'modifierIds']
-                                                            ?.cast<String>() ??
-                                                        [],
-                                                    topupIds: options[
-                                                                'topupIds']
-                                                            ?.cast<String>() ??
-                                                        [],
-                                                    specialInstruction: options[
-                                                            'specialInstructions'] ??
-                                                        '',
-                                                  );
-
-                                                  // Refresh cart list after adding
-                                                  await viewModel.getStaffCartList(
-                                                      tableNo: widget.tableNo ==
+                                          if (hasOptions) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  ProductOptionsDialog(
+                                                    product: foodItem,
+                                                    onOptionsSelected:
+                                                        (options) async {
+                                                      try {
+                                                        await viewModel.addToCart(
+                                                          productId: foodItem.id!,
+                                                          tableNo: widget.tableNo ==
                                                               "Take away order"
-                                                          ? "0"
-                                                          : widget.tableNo);
+                                                              ? "0"
+                                                              : widget.tableNo,
+                                                          variantIds: options[
+                                                          'variantIds']
+                                                              ?.cast<
+                                                              String>() ??
+                                                              [],
+                                                          discountId:
+                                                          options['discountId'],
+                                                          modifierIds: options[
+                                                          'modifierIds']
+                                                              ?.cast<
+                                                              String>() ??
+                                                              [],
+                                                          topupIds: options[
+                                                          'topupIds']
+                                                              ?.cast<
+                                                              String>() ??
+                                                              [],
+                                                          specialInstruction: options[
+                                                          'specialInstructions'] ??
+                                                              '',
+                                                        );
 
-                                                  if (mounted) {
-                                                    setState(() {
-                                                      final currentCount =
-                                                          foodItem.cartCount ??
-                                                              0;
-                                                      foodItem.cartCount =
-                                                          currentCount + 1;
-                                                    });
-                                                  }
-                                                } catch (e) {
-                                                  showRedToastMessage(
-                                                      e.toString());
-                                                }
-                                              },
-                                            ),
-                                          );
-                                        } else {
-                                          try {
-                                            await viewModel.addToCart(
-                                              productId: foodItem.id!,
-                                              tableNo: widget.tableNo ==
-                                                      "Take away order"
-                                                  ? "0"
-                                                  : widget.tableNo,
-                                              variantIds: [],
-                                              discountId: null,
-                                              modifierIds: [],
-                                              topupIds: [],
-                                              specialInstruction: '',
+                                                        // Refresh cart list after adding
+                                                        await viewModel.getStaffCartList(
+                                                            tableNo: widget
+                                                                .tableNo ==
+                                                                "Take away order"
+                                                                ? "0"
+                                                                : widget.tableNo);
+
+                                                        if (mounted) {
+                                                          setState(() {
+                                                            final currentCount =
+                                                                foodItem.cartCount ??
+                                                                    0;
+                                                            foodItem.cartCount =
+                                                                currentCount + 1;
+                                                          });
+                                                        }
+                                                      } catch (e) {
+                                                        showRedToastMessage(
+                                                            e.toString());
+                                                      }
+                                                    },
+                                                  ),
                                             );
-
-                                            // Refresh cart list after adding
-                                            await viewModel.getStaffCartList(
+                                          } else {
+                                            try {
+                                              await viewModel.addToCart(
+                                                productId: foodItem.id!,
                                                 tableNo: widget.tableNo ==
-                                                        "Take away order"
+                                                    "Take away order"
                                                     ? "0"
-                                                    : widget.tableNo);
+                                                    : widget.tableNo,
+                                                variantIds: [],
+                                                discountId: null,
+                                                modifierIds: [],
+                                                topupIds: [],
+                                                specialInstruction: '',
+                                              );
 
-                                            if (mounted) {
-                                              setState(() {
-                                                final currentCount =
-                                                    foodItem.cartCount ?? 0;
-                                                foodItem.cartCount =
-                                                    currentCount + 1;
-                                              });
+                                              // Refresh cart list after adding
+                                              await viewModel.getStaffCartList(
+                                                  tableNo: widget.tableNo ==
+                                                      "Take away order"
+                                                      ? "0"
+                                                      : widget.tableNo);
+
+                                              if (mounted) {
+                                                setState(() {
+                                                  final currentCount =
+                                                      foodItem.cartCount ?? 0;
+                                                  foodItem.cartCount =
+                                                      currentCount + 1;
+                                                });
+                                              }
+                                            } catch (e) {
+                                              showRedToastMessage(e.toString());
                                             }
-                                          } catch (e) {
-                                            showRedToastMessage(e.toString());
                                           }
-                                        }
-                                      },
-                                      // onAddToCartTap: () async {
-                                      //   final hasOptions =
-                                      //       foodItem.discount?.isNotEmpty ==
-                                      //               true ||
-                                      //           foodItem.modifier?.isNotEmpty ==
-                                      //               true ||
-                                      //           foodItem.topup?.isNotEmpty ==
-                                      //               true ||
-                                      //           foodItem.varient?.isNotEmpty ==
-                                      //               true;
-                                      //
-                                      //   if (hasOptions) {
-                                      //     showDialog(
-                                      //       context: context,
-                                      //       builder: (context) =>
-                                      //           ProductOptionsDialog(
-                                      //         product: foodItem,
-                                      //         onOptionsSelected:
-                                      //             (options) async {
-                                      //           // Debug print
-                                      //           print(
-                                      //               'Options received in ProductCard:');
-                                      //           print(options);
-                                      //
-                                      //           try {
-                                      //             await viewModel.addToCart(
-                                      //               productId: foodItem.id!,
-                                      //               tableNo: widget.tableNo ==
-                                      //                       "Take away order"
-                                      //                   ? "0"
-                                      //                   : widget.tableNo,
-                                      //               variantIds: options[
-                                      //                           'variantIds']
-                                      //                       ?.cast<String>() ??
-                                      //                   [],
-                                      //               // Ensure proper type casting
-                                      //               discountId:
-                                      //                   options['discountId'],
-                                      //               modifierIds: options[
-                                      //                           'modifierIds']
-                                      //                       ?.cast<String>() ??
-                                      //                   [],
-                                      //               topupIds: options[
-                                      //                           'topupIds']
-                                      //                       ?.cast<String>() ??
-                                      //                   [],
-                                      //               specialInstruction: options[
-                                      //                       'specialInstructions'] ??
-                                      //                   '',
-                                      //             );
-                                      //
-                                      //             if (mounted) {
-                                      //               setState(() {
-                                      //                 final currentCount =
-                                      //                     foodItem.cartCount ??
-                                      //                         0;
-                                      //                 foodItem.cartCount =
-                                      //                     currentCount + 1;
-                                      //               });
-                                      //             }
-                                      //           } catch (e) {
-                                      //             showRedToastMessage(
-                                      //                 e.toString());
-                                      //           }
-                                      //         },
-                                      //       ),
-                                      //     );
-                                      //   } else {
-                                      //     // No options, directly call addToCart with empty IDs
-                                      //     try {
-                                      //       await viewModel.addToCart(
-                                      //         productId: foodItem.id!,
-                                      //         tableNo: widget.tableNo ==
-                                      //                 "Take away order"
-                                      //             ? "0"
-                                      //             : widget.tableNo,
-                                      //         variantIds: [],
-                                      //         discountId: null,
-                                      //         modifierIds: [],
-                                      //         topupIds: [],
-                                      //         specialInstruction: '',
-                                      //       );
-                                      //
-                                      //       if (mounted) {
-                                      //         setState(() {
-                                      //           final currentCount =
-                                      //               foodItem.cartCount ?? 0;
-                                      //           foodItem.cartCount =
-                                      //               currentCount + 1;
-                                      //         });
-                                      //       }
-                                      //     } catch (e) {
-                                      //       showRedToastMessage(e.toString());
-                                      //     }
-                                      //   }
-                                      // },
-                                      cartCount: foodItem.cartCount ?? 0,
-                                      onIncreaseTap: () async {
-                                        setState(() {
-                                          final currentCount =
-                                              foodItem.cartCount ?? 0;
-                                          foodItem.cartCount = currentCount + 1;
-                                        });
-                                        await viewModel.updateQuantity(
-                                          productId: foodItem.id ?? '--',
-                                          type: 'increase',
-                                          tableNo: widget.tableNo ==
-                                                  "Take away order"
-                                              ? "0"
-                                              : widget.tableNo,
-                                        );
-                                        // Refresh cart
-                                        await viewModel.getStaffCartList(
+                                        },
+                                        // onAddToCartTap: () async {
+                                        //   final hasOptions =
+                                        //       foodItem.discount?.isNotEmpty ==
+                                        //               true ||
+                                        //           foodItem.modifier?.isNotEmpty ==
+                                        //               true ||
+                                        //           foodItem.topup?.isNotEmpty ==
+                                        //               true ||
+                                        //           foodItem.varient?.isNotEmpty ==
+                                        //               true;
+                                        //
+                                        //   if (hasOptions) {
+                                        //     showDialog(
+                                        //       context: context,
+                                        //       builder: (context) =>
+                                        //           ProductOptionsDialog(
+                                        //         product: foodItem,
+                                        //         onOptionsSelected:
+                                        //             (options) async {
+                                        //           // Debug print
+                                        //           print(
+                                        //               'Options received in ProductCard:');
+                                        //           print(options);
+                                        //
+                                        //           try {
+                                        //             await viewModel.addToCart(
+                                        //               productId: foodItem.id!,
+                                        //               tableNo: widget.tableNo ==
+                                        //                       "Take away order"
+                                        //                   ? "0"
+                                        //                   : widget.tableNo,
+                                        //               variantIds: options[
+                                        //                           'variantIds']
+                                        //                       ?.cast<String>() ??
+                                        //                   [],
+                                        //               // Ensure proper type casting
+                                        //               discountId:
+                                        //                   options['discountId'],
+                                        //               modifierIds: options[
+                                        //                           'modifierIds']
+                                        //                       ?.cast<String>() ??
+                                        //                   [],
+                                        //               topupIds: options[
+                                        //                           'topupIds']
+                                        //                       ?.cast<String>() ??
+                                        //                   [],
+                                        //               specialInstruction: options[
+                                        //                       'specialInstructions'] ??
+                                        //                   '',
+                                        //             );
+                                        //
+                                        //             if (mounted) {
+                                        //               setState(() {
+                                        //                 final currentCount =
+                                        //                     foodItem.cartCount ??
+                                        //                         0;
+                                        //                 foodItem.cartCount =
+                                        //                     currentCount + 1;
+                                        //               });
+                                        //             }
+                                        //           } catch (e) {
+                                        //             showRedToastMessage(
+                                        //                 e.toString());
+                                        //           }
+                                        //         },
+                                        //       ),
+                                        //     );
+                                        //   } else {
+                                        //     // No options, directly call addToCart with empty IDs
+                                        //     try {
+                                        //       await viewModel.addToCart(
+                                        //         productId: foodItem.id!,
+                                        //         tableNo: widget.tableNo ==
+                                        //                 "Take away order"
+                                        //             ? "0"
+                                        //             : widget.tableNo,
+                                        //         variantIds: [],
+                                        //         discountId: null,
+                                        //         modifierIds: [],
+                                        //         topupIds: [],
+                                        //         specialInstruction: '',
+                                        //       );
+                                        //
+                                        //       if (mounted) {
+                                        //         setState(() {
+                                        //           final currentCount =
+                                        //               foodItem.cartCount ?? 0;
+                                        //           foodItem.cartCount =
+                                        //               currentCount + 1;
+                                        //         });
+                                        //       }
+                                        //     } catch (e) {
+                                        //       showRedToastMessage(e.toString());
+                                        //     }
+                                        //   }
+                                        // },
+                                        cartCount: foodItem.cartCount ?? 0,
+                                        onIncreaseTap: () async {
+                                          setState(() {
+                                            final currentCount =
+                                                foodItem.cartCount ?? 0;
+                                            foodItem.cartCount =
+                                                currentCount + 1;
+                                          });
+                                          await viewModel.updateQuantity(
+                                            productId: foodItem.id ?? '--',
+                                            type: 'increase',
                                             tableNo: widget.tableNo ==
-                                                    "Take away order"
+                                                "Take away order"
                                                 ? "0"
-                                                : widget.tableNo);
-                                      },
-                                      onDecreaseTap: () async {
-                                        setState(() {
-                                          final currentCount =
-                                              foodItem.cartCount ?? 0;
-                                          foodItem.cartCount = currentCount - 1;
-                                        });
-                                        await viewModel.updateQuantity(
-                                          productId: foodItem.id ?? '--',
-                                          type: 'decrease',
-                                          tableNo: widget.tableNo ==
+                                                : widget.tableNo,
+                                          );
+                                          // Refresh cart
+                                          await viewModel.getStaffCartList(
+                                              tableNo: widget.tableNo ==
                                                   "Take away order"
-                                              ? "0"
-                                              : widget.tableNo,
-                                        );
-                                        // Refresh cart
-                                        await viewModel.getStaffCartList(
+                                                  ? "0"
+                                                  : widget.tableNo);
+                                        },
+                                        onDecreaseTap: () async {
+                                          setState(() {
+                                            final currentCount =
+                                                foodItem.cartCount ?? 0;
+                                            foodItem.cartCount =
+                                                currentCount - 1;
+                                          });
+                                          await viewModel.updateQuantity(
+                                            productId: foodItem.id ?? '--',
+                                            type: 'decrease',
                                             tableNo: widget.tableNo ==
-                                                    "Take away order"
+                                                "Take away order"
                                                 ? "0"
-                                                : widget.tableNo);
-                                      },
-                                      // onIncreaseTap: () {
-                                      //   setState(() {
-                                      //     final currentCount =
-                                      //         foodItem.cartCount ?? 0;
-                                      //     foodItem.cartCount = currentCount + 1;
-                                      //   });
-                                      //   viewModel.updateQuantity(
-                                      //       productId: foodItem.id ?? '--',
-                                      //       type: 'increase',
-                                      //       tableNo: widget.tableNo ==
-                                      //               "Take away order"
-                                      //           ? "0"
-                                      //           : widget.tableNo);
-                                      // },
-                                      // onDecreaseTap: () {
-                                      //   setState(() {
-                                      //     final currentCount =
-                                      //         foodItem.cartCount ?? 0;
-                                      //     foodItem.cartCount = currentCount - 1;
-                                      //   });
-                                      //   viewModel.updateQuantity(
-                                      //       productId: foodItem.id ?? '--',
-                                      //       type: 'decrease',
-                                      //       tableNo: widget.tableNo ==
-                                      //               "Take away order"
-                                      //           ? "0"
-                                      //           : widget.tableNo);
-                                      // },
-                                    );
-                                  },
-                                ),
+                                                : widget.tableNo,
+                                          );
+                                          // Refresh cart
+                                          await viewModel.getStaffCartList(
+                                              tableNo: widget.tableNo ==
+                                                  "Take away order"
+                                                  ? "0"
+                                                  : widget.tableNo);
+                                        },
+                                        // onIncreaseTap: () {
+                                        //   setState(() {
+                                        //     final currentCount =
+                                        //         foodItem.cartCount ?? 0;
+                                        //     foodItem.cartCount = currentCount + 1;
+                                        //   });
+                                        //   viewModel.updateQuantity(
+                                        //       productId: foodItem.id ?? '--',
+                                        //       type: 'increase',
+                                        //       tableNo: widget.tableNo ==
+                                        //               "Take away order"
+                                        //           ? "0"
+                                        //           : widget.tableNo);
+                                        // },
+                                        // onDecreaseTap: () {
+                                        //   setState(() {
+                                        //     final currentCount =
+                                        //         foodItem.cartCount ?? 0;
+                                        //     foodItem.cartCount = currentCount - 1;
+                                        //   });
+                                        //   viewModel.updateQuantity(
+                                        //       productId: foodItem.id ?? '--',
+                                        //       type: 'decrease',
+                                        //       tableNo: widget.tableNo ==
+                                        //               "Take away order"
+                                        //           ? "0"
+                                        //           : widget.tableNo);
+                                        // },
+                                      );
+                                    },
+                                  );
+                                }),
                               ],
                             ),
                           ),
@@ -638,7 +968,7 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                           ],
                         ),
                         SizedBox(height: 24),
-                        PrimaryButton(
+                        widget.type == "Take away"?PrimaryButton(
                           padding: EdgeInsets.zero,
                           height: 40,
                           onPressed: () {
@@ -647,36 +977,36 @@ class _StaffSelectProductViewState extends State<StaffSelectProductView> {
                             ));
                           },
                           text: 'Get Bill',
+                        ):
+                        Row(
+                          children: [
+                            Expanded(
+                              child: PrimaryButton(
+                                padding: EdgeInsets.zero,
+                                height: 40,
+                                onPressed: () {
+                                  viewModel.placeOrderApi(
+                                      tableNo:
+                                          widget.tableNo == "Take away order"
+                                              ? "0"
+                                              : widget.tableNo);
+                                },
+                                text: 'Save',
+                              ),
+                            ),
+                            kSizedBoxH10,
+                            Expanded(
+                              child: PrimaryButton(
+                                padding: EdgeInsets.zero,
+                                height: 40,
+                                onPressed: () {
+                                  pushToScreen(GetBillView(tableNo: widget.tableNo,));
+                                },
+                                text: 'Get Bill',
+                              ),
+                            ),
+                          ],
                         ),
-                        // Row(
-                        //   children: [
-                        //     Expanded(
-                        //       child: PrimaryButton(
-                        //         padding: EdgeInsets.zero,
-                        //         height: 40,
-                        //         onPressed: () {
-                        //           viewModel.placeOrderApi(
-                        //               tableNo:
-                        //                   widget.tableNo == "Take away order"
-                        //                       ? "0"
-                        //                       : widget.tableNo);
-                        //         },
-                        //         text: 'Save',
-                        //       ),
-                        //     ),
-                        //     kSizedBoxH10,
-                        //     Expanded(
-                        //       child: PrimaryButton(
-                        //         padding: EdgeInsets.zero,
-                        //         height: 40,
-                        //         onPressed: () {
-                        //           pushToScreen(GetBillView(tableNo: widget.tableNo,));
-                        //         },
-                        //         text: 'Get Bill',
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                         SizedBox(height: 16),
                       ],
                     ),
