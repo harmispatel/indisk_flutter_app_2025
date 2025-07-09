@@ -7,6 +7,7 @@ import 'package:indisk_app/api_service/models/salep_graph_master.dart';
 import 'package:indisk_app/api_service/models/sales_count_master.dart';
 import 'package:indisk_app/api_service/models/staff_cart_master.dart';
 import 'package:indisk_app/api_service/models/staff_list_master.dart';
+import 'package:indisk_app/api_service/models/viva_payment_master.dart';
 
 import 'api_url.dart';
 import 'base_client.dart';
@@ -841,6 +842,44 @@ class ApiServices extends BaseServices {
     if (response != null) {
       try {
         return SalesCountMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<StripePaymentMaster?> getVivaPaymentApi(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.VIVA_PAYMENT,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return StripePaymentMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<StripePaymentMaster?> getPaymentStatusApi(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.UPDATE_PAYMENT_STUTUS,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return StripePaymentMaster.fromJson(response);
       } on Exception catch (e) {
         log("Exception :: $e");
         return null;

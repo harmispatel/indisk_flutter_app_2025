@@ -1,6 +1,10 @@
 // import 'package:flutter/material.dart';
+// import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
+// import 'package:indisk_app/app_ui/screens/staff/staff_home/select_product/get_bill/viva_payment_service.dart';
 // import 'package:indisk_app/utils/app_dimens.dart';
+// import 'package:indisk_app/utils/common_utills.dart';
 // import 'package:provider/provider.dart';
+// import '../../../../../../utils/local_images.dart';
 // import '../staff_select_product_view_model.dart';
 //
 // class GetBillView extends StatefulWidget {
@@ -19,14 +23,20 @@
 //   @override
 //   void initState() {
 //     super.initState();
+//     print('GetBillView initialized with orderId: ${widget.orderNo}');
 //     WidgetsBinding.instance.addPostFrameCallback((_) {
-//       mViewModel =
-//           Provider.of<StaffSelectProductViewModel>(context, listen: false);
+//       mViewModel = Provider.of<StaffSelectProductViewModel>(context, listen: false);
+//       print('Fetching bill for order: ${widget.orderNo}');
 //       mViewModel?.getTableBill(
 //           orderNo: widget.orderNo ?? '',
-//           orderType: widget.tableNo == '0' ? 'takeaway' : '',
+//           orderType: widget.tableNo == '0' ? 'Take away order' : '',
 //           tableNo: widget.tableNo ?? '');
 //     });
+//   }
+//
+//   @override
+//   void dispose() {
+//     super.dispose();
 //   }
 //
 //   @override
@@ -365,27 +375,6 @@
 //               ),
 //             ),
 //           ),
-//           const SizedBox(width: 10),
-//           Expanded(
-//             child: ElevatedButton.icon(
-//               icon: const Icon(
-//                 Icons.update,
-//                 size: 20,
-//                 color: Colors.white,
-//               ),
-//               label: const Text(
-//                 'Update Status',
-//                 style: TextStyle(color: Colors.white),
-//               ),
-//               onPressed: () {
-//                 // Handle update status action
-//               },
-//               style: ElevatedButton.styleFrom(
-//                 padding: const EdgeInsets.symmetric(vertical: 12),
-//                 backgroundColor: Colors.blue,
-//               ),
-//             ),
-//           ),
 //         ],
 //       ),
 //     );
@@ -398,48 +387,101 @@
 //       builder: (BuildContext context) {
 //         return Container(
 //           padding: const EdgeInsets.all(20),
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               Text(
-//                 'Pay ₹$amount',
-//                 style: const TextStyle(
-//                   fontSize: 20,
-//                   fontWeight: FontWeight.bold,
+//           child: SingleChildScrollView(
+//             child: Column(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 Text(
+//                   'Pay ₹$amount',
+//                   style: const TextStyle(
+//                     fontSize: 20,
+//                     fontWeight: FontWeight.bold,
+//                   ),
 //                 ),
-//               ),
-//               const SizedBox(height: 10),
-//               const Text(
-//                 'Select Payment Method',
-//                 style: TextStyle(fontSize: 16),
-//               ),
-//               const SizedBox(height: 20),
-//               _buildPaymentOption(
-//                 icon: Icons.credit_card,
-//                 title: 'Razorpay',
-//                 subtitle: 'Pay with credit/debit card or UPI',
-//                 onTap: () {},
-//               ),
-//               const Divider(),
-//               _buildPaymentOption(
-//                 icon: Icons.account_balance_wallet,
-//                 title: 'VivaPay',
-//                 subtitle: 'Pay with ViaPay wallet',
-//                 onTap: () {},
-//               ),
-//               const Divider(),
-//               _buildPaymentOption(
-//                 icon: Icons.qr_code,
-//                 title: 'QR Code',
-//                 subtitle: 'Scan QR code to pay',
-//                 onTap: () {},
-//               ),
-//               const SizedBox(height: 20),
-//               TextButton(
-//                 onPressed: () => Navigator.pop(context),
-//                 child: const Text('Cancel'),
-//               ),
-//             ],
+//                 const SizedBox(height: 10),
+//                 const Text(
+//                   'Select Payment Method',
+//                   style: TextStyle(fontSize: 16),
+//                 ),
+//                 const SizedBox(height: 20),
+//                 _buildPaymentOption(
+//                   icon: Icons.credit_card,
+//                   title: 'Cash On',
+//                   subtitle: 'Pay cash',
+//                   onTap: () {
+//                     Navigator.push(
+//                       context,
+//                       MaterialPageRoute(
+//                         builder: (context) => CashPaymentSuccessScreen(
+//                           onPressed: () {
+//                             mViewModel?.getUpdatePaymentApi(
+//                                 tableNo: widget.tableNo,
+//                                 orderId: widget.orderNo ?? "",
+//                                 status: "paid",
+//                                 paymentType: "cash");
+//                           },
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                 ),
+//                 const Divider(),
+//                 _buildPaymentOption(
+//                     icon: Icons.account_balance_wallet,
+//                     title: 'VivaPay',
+//                     subtitle: 'Pay with ViaPay wallet',
+//                     onTap: () async {
+//                       try {
+//                         await mViewModel?.getVivaPaymentApi(
+//                             tableNo: widget.tableNo,orderId:widget.orderNo ?? "",);
+//                         if (mViewModel?.stripePaymentUrl != null &&
+//                             mViewModel!.stripePaymentUrl.isNotEmpty) {
+//                           final result = await Navigator.push(
+//                             context,
+//                             MaterialPageRoute(
+//                               builder: (context) => StripePaymentScreen(
+//                                 checkoutUrl: mViewModel!.stripePaymentUrl,
+//                               ),
+//                             ),
+//                           );
+//                         } else {
+//                           print('Stripe Payment URL is empty.');
+//                           showRedToastMessage("Payment URL is not available.");
+//                         }
+//                       } catch (e) {
+//                         print('Stripe API error: $e');
+//                         showRedToastMessage("Payment initialization failed.");
+//                       }
+//                     }),
+//                 const Divider(),
+//                 _buildPaymentOption(
+//                   icon: Icons.qr_code,
+//                   title: 'QR Code',
+//                   subtitle: 'Scan QR code to pay',
+//                   onTap: () {
+//                     Navigator.push(
+//                       context,
+//                       MaterialPageRoute(
+//                         builder: (context) => QRPaymentScreen(
+//                           onPressed: () {
+//                             mViewModel?.getUpdatePaymentApi(
+//                                 tableNo: widget.tableNo,
+//                                 orderId: widget.orderNo ?? "",
+//                                 status: "paid",
+//                                 paymentType: "online");
+//                           },
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                 ),
+//                 const SizedBox(height: 20),
+//                 TextButton(
+//                   onPressed: () => Navigator.pop(context),
+//                   child: const Text('Cancel'),
+//                 ),
+//               ],
+//             ),
 //           ),
 //         );
 //       },
@@ -460,16 +502,149 @@
 //     );
 //   }
 // }
+//
+// class QRPaymentScreen extends StatelessWidget {
+//   final VoidCallback onPressed;
+//   const QRPaymentScreen({required this.onPressed, super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Scan QR Code'),
+//       ),
+//       body: SingleChildScrollView(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Center(
+//               child: Image(
+//                 image: AssetImage(
+//                   LocalImages.img_qr_code,
+//                 ), // replace with your image path
+//                 width: 400,
+//                 height: 400,
+//               ),
+//             ),
+//             const SizedBox(height: 30),
+//             Row(
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 PrimaryButton(
+//                   text: "OK",
+//                   width: 200,
+//                   onPressed: onPressed,
+//                 ),
+//                 SizedBox(width: 16),
+//                 PrimaryButton(
+//                   text: "Cancel",
+//                   width: 200,
+//                   onPressed: () {
+//                     Navigator.pop(context);
+//                   },
+//                 ),
+//               ],
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+//
+// class CashPaymentSuccessScreen extends StatelessWidget {
+//   final VoidCallback onPressed;
+//   const CashPaymentSuccessScreen({required this.onPressed, super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       body: Center(
+//         child: Padding(
+//           padding: const EdgeInsets.symmetric(horizontal: 24.0),
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               // Blue Checkmark
+//               Container(
+//                 decoration: BoxDecoration(
+//                   color: Colors.blue[50],
+//                   shape: BoxShape.circle,
+//                 ),
+//                 padding: const EdgeInsets.all(30),
+//                 child: const Icon(
+//                   Icons.check_circle,
+//                   color: Colors.blue,
+//                   size: 100,
+//                 ),
+//               ),
+//               const SizedBox(height: 30),
+//               const Text(
+//                 'Cash payment has been received.',
+//                 style: TextStyle(
+//                   fontSize: 28,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.black87,
+//                 ),
+//               ),
+//               const SizedBox(height: 10),
+//               const Text(
+//                 'Cash payment has been received.',
+//                 textAlign: TextAlign.center,
+//                 style: TextStyle(
+//                   fontSize: 18,
+//                   color: Colors.black54,
+//                 ),
+//               ),
+//               const SizedBox(height: 40),
+//               PrimaryButton(
+//                 text: "Done",
+//                 onPressed: onPressed,
+//               ),
+//               // Done Button
+//               // SizedBox(
+//               //   width: 400,
+//               //   child: ElevatedButton(
+//               //     onPressed: () {
+//               //       Navigator.pushAndRemoveUntil(
+//               //         context,
+//               //         MaterialPageRoute(
+//               //           builder: (context) => SelectTableView(),
+//               //         ),
+//               //             (Route<dynamic> route) => false, // Remove all previous routes
+//               //       );
+//               //     },
+//               //     style: ElevatedButton.styleFrom(
+//               //       backgroundColor: Colors.blue,
+//               //       padding: const EdgeInsets.symmetric(vertical: 16),
+//               //       shape: RoundedRectangleBorder(
+//               //         borderRadius: BorderRadius.circular(12),
+//               //       ),
+//               //     ),
+//               //     child: const Text(
+//               //       'Done',
+//               //       style: TextStyle(fontSize: 18, color: Colors.white),
+//               //     ),
+//               //   ),
+//               // )
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 import 'package:flutter/material.dart';
 import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
 import 'package:indisk_app/app_ui/screens/staff/staff_dashboard/staff_dasboard_view.dart';
 import 'package:indisk_app/app_ui/screens/staff/staff_home/select_product/get_bill/viva_payment_service.dart';
-import 'package:indisk_app/app_ui/screens/staff/staff_home/select_table_view.dart';
 import 'package:indisk_app/utils/app_dimens.dart';
+import 'package:indisk_app/utils/common_utills.dart';
 import 'package:provider/provider.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../utils/local_images.dart';
+import '../../../../printer_connect/printer_connect_view.dart';
 import '../staff_select_product_view_model.dart';
 
 class GetBillView extends StatefulWidget {
@@ -488,12 +663,14 @@ class _GetBillViewState extends State<GetBillView> {
   @override
   void initState() {
     super.initState();
+    print('GetBillView initialized with orderId: ${widget.orderNo}');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       mViewModel =
           Provider.of<StaffSelectProductViewModel>(context, listen: false);
+      print('Fetching bill for order: ${widget.orderNo}');
       mViewModel?.getTableBill(
           orderNo: widget.orderNo ?? '',
-          orderType: widget.tableNo == '0' ? 'takeaway' : '',
+          orderType: widget.tableNo == '0' ? 'Take away order' : '',
           tableNo: widget.tableNo ?? '');
     });
   }
@@ -501,30 +678,6 @@ class _GetBillViewState extends State<GetBillView> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  final vivaService = VivaPaymentService(
-    clientId: 'demo',
-    clientSecret: 'demo',
-    isLive: false, // Change to true in production
-  );
-
-  Future<void> startPayment() async {
-    final token = await vivaService.getAccessToken();
-    if (token == null) return;
-
-    final checkoutUrl = await vivaService.createPaymentOrder(
-      token,
-      1000, // Amount in cents (e.g. 1000 = €10.00)
-      'customer@example.com',
-    );
-
-    if (checkoutUrl != null && await canLaunchUrl(Uri.parse(checkoutUrl))) {
-      await launchUrl(Uri.parse(checkoutUrl),
-          mode: LaunchMode.externalApplication);
-    } else {
-      print("Can't launch payment URL");
-    }
   }
 
   @override
@@ -835,7 +988,10 @@ class _GetBillViewState extends State<GetBillView> {
                 style: TextStyle(color: Colors.black),
               ),
               onPressed: () {
-                // Handle print bill action
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => PrinterScreen()),
+                // );
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -860,27 +1016,6 @@ class _GetBillViewState extends State<GetBillView> {
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 backgroundColor: Colors.green,
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: ElevatedButton.icon(
-              icon: const Icon(
-                Icons.update,
-                size: 20,
-                color: Colors.white,
-              ),
-              label: const Text(
-                'Update Status',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                // Handle update status action
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                backgroundColor: Colors.blue,
               ),
             ),
           ),
@@ -921,18 +1056,50 @@ class _GetBillViewState extends State<GetBillView> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CashPaymentSuccessScreen(),
+                        builder: (context) => CashPaymentSuccessScreen(
+                          onTapPressed: () async {
+                            await mViewModel?.getUpdatePaymentApi(
+                                tableNo: widget.tableNo,
+                                orderId: mViewModel?.orderId ?? "",
+
+                                status: "paid",
+                                paymentType: "cash");
+                          },
+                        ),
                       ),
                     );
                   },
                 ),
                 const Divider(),
                 _buildPaymentOption(
-                  icon: Icons.account_balance_wallet,
-                  title: 'VivaPay',
-                  subtitle: 'Pay with ViaPay wallet',
-                  onTap: startPayment,
-                ),
+                    icon: Icons.account_balance_wallet,
+                    title: 'VivaPay',
+                    subtitle: 'Pay with ViaPay wallet',
+                    onTap: () async {
+                      try {
+                        await mViewModel?.getVivaPaymentApi(
+                          tableNo: widget.tableNo,
+                          orderId: mViewModel?.orderId ?? "",
+                        );
+                        if (mViewModel?.stripePaymentUrl != null &&
+                            mViewModel!.stripePaymentUrl.isNotEmpty) {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StripePaymentScreen(
+                                checkoutUrl: mViewModel!.stripePaymentUrl,
+                              ),
+                            ),
+                          );
+                        } else {
+                          print('Stripe Payment URL is empty.');
+                          showRedToastMessage("Payment URL is not available.");
+                        }
+                      } catch (e) {
+                        print('Stripe API error: $e');
+                        showRedToastMessage("Payment initialization failed.");
+                      }
+                    }),
                 const Divider(),
                 _buildPaymentOption(
                   icon: Icons.qr_code,
@@ -942,7 +1109,15 @@ class _GetBillViewState extends State<GetBillView> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const QRPaymentScreen(),
+                        builder: (context) => QRPaymentScreen(
+                          onTapPressed: () async {
+                            await mViewModel?.getUpdatePaymentApi(
+                                tableNo: widget.tableNo,
+                                orderId: mViewModel?.orderId ?? "",
+                                status: "paid",
+                                paymentType: "online");
+                          },
+                        ),
                       ),
                     );
                   },
@@ -976,7 +1151,8 @@ class _GetBillViewState extends State<GetBillView> {
 }
 
 class QRPaymentScreen extends StatelessWidget {
-  const QRPaymentScreen({super.key});
+  final Future<void> Function() onTapPressed;
+  const QRPaymentScreen({required this.onTapPressed, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -1005,14 +1181,13 @@ class QRPaymentScreen extends StatelessWidget {
                 PrimaryButton(
                   text: "OK",
                   width: 200,
-                  onPressed: () {
+                  onPressed: () async {
+                    await onTapPressed();
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => StaffDashboardView(),
-                      ),
-                          (Route<dynamic> route) =>
-                      false, // Remove all previous routes
+                          builder: (context) => StaffDashboardView()),
+                      (Route<dynamic> route) => false,
                     );
                   },
                 ),
@@ -1034,7 +1209,9 @@ class QRPaymentScreen extends StatelessWidget {
 }
 
 class CashPaymentSuccessScreen extends StatelessWidget {
-  const CashPaymentSuccessScreen({super.key});
+  // final VoidCallback onTapPressed;
+  final Future<void> Function() onTapPressed;
+  const CashPaymentSuccessScreen({required this.onTapPressed, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -1060,8 +1237,6 @@ class CashPaymentSuccessScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-
-              // Success Text
               const Text(
                 'Cash payment has been received.',
                 style: TextStyle(
@@ -1082,43 +1257,26 @@ class CashPaymentSuccessScreen extends StatelessWidget {
               const SizedBox(height: 40),
               PrimaryButton(
                 text: "Done",
-                onPressed: () {
+                onPressed: () async {
+                  await onTapPressed();
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => StaffDashboardView(),
-                    ),
-                    (Route<dynamic> route) =>
-                        false, // Remove all previous routes
+                        builder: (context) => StaffDashboardView()),
+                    (Route<dynamic> route) => false,
                   );
                 },
               ),
-              // Done Button
-              // SizedBox(
-              //   width: 400,
-              //   child: ElevatedButton(
-              //     onPressed: () {
-              //       Navigator.pushAndRemoveUntil(
+              // PrimaryButton(
+              //   text: "Done",
+              //   onPressed: () async {
+              //     await onTapPressed();
+              //     Navigator.push(
               //         context,
               //         MaterialPageRoute(
-              //           builder: (context) => SelectTableView(),
-              //         ),
-              //             (Route<dynamic> route) => false, // Remove all previous routes
-              //       );
-              //     },
-              //     style: ElevatedButton.styleFrom(
-              //       backgroundColor: Colors.blue,
-              //       padding: const EdgeInsets.symmetric(vertical: 16),
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(12),
-              //       ),
-              //     ),
-              //     child: const Text(
-              //       'Done',
-              //       style: TextStyle(fontSize: 18, color: Colors.white),
-              //     ),
-              //   ),
-              // )
+              //             builder: (context) => StaffDashboardView()));
+              //   },
+              // ),
             ],
           ),
         ),

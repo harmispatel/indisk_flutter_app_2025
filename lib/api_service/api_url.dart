@@ -43,6 +43,8 @@ class ApiUrl {
   static String GET_TAKEAWAY_ORDERS = "${BASE_URL}orders/takeaway-list";
   static String SALES_GRAPH = "${BASE_URL}sales-graph";
   static String SALES_COUNT = "${BASE_URL}sales-count";
+  static String VIVA_PAYMENT = "${BASE_URL}orders/viva-payment";
+  static String UPDATE_PAYMENT_STUTUS = "${BASE_URL}orders/update-payment-status";
 
 }
 

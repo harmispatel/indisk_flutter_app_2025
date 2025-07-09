@@ -16,6 +16,7 @@ class ApiParams {
   static const String manager_id = "manager_id";
   static const String vat = "vat";
   static const String table_no = "table_no";
+  static const String orderId = "order_id";
   static const String payment_type = "payment_type";
   static const String created_by = "created_by";
   static const String category = "category";
@@ -63,4 +64,5 @@ class ApiParams {
   static const String location = "location";
   static const String cuisine_type = "cuisine_type";
   static const String graphType = "graphType";
+  static const String paymentType = "payment_type";
 }

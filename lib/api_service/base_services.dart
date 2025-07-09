@@ -3,6 +3,7 @@ import 'package:indisk_app/api_service/models/food_category_master.dart';
 import 'package:indisk_app/api_service/models/login_master.dart';
 import 'package:indisk_app/api_service/models/salep_graph_master.dart';
 import 'package:indisk_app/api_service/models/sales_count_master.dart';
+import 'package:indisk_app/api_service/models/viva_payment_master.dart';
 
 import 'models/common_master.dart';
 import 'models/food_list_master.dart';
@@ -150,5 +151,11 @@ abstract class BaseServices {
       {required Map<String, dynamic> params});
 
   Future<SalesCountMaster?> salesCountApi(
+      {required Map<String, dynamic> params});
+
+  Future<StripePaymentMaster?> getVivaPaymentApi(
+      {required Map<String, dynamic> params});
+
+  Future<StripePaymentMaster?> getPaymentStatusApi(
       {required Map<String, dynamic> params});
 }

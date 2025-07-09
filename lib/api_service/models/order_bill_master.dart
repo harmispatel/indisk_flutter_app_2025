@@ -2,9 +2,10 @@ class OrderBillMaster {
   bool? success;
   String? message;
   List<OrderBillItems>? items;
+  String? orderId;
   Summary? summary;
 
-  OrderBillMaster({this.success, this.message, this.items, this.summary});
+  OrderBillMaster({this.success, this.message, this.items, this.orderId,this.summary});
 
   OrderBillMaster.fromJson(Map<String, dynamic> json) {
     success = json['success'];
@@ -15,6 +16,7 @@ class OrderBillMaster {
         items!.add(new OrderBillItems.fromJson(v));
       });
     }
+    orderId = json['order_id'];
     summary =
     json['summary'] != null ? new Summary.fromJson(json['summary']) : null;
   }
@@ -26,6 +28,7 @@ class OrderBillMaster {
     if (this.items != null) {
       data['items'] = this.items!.map((v) => v.toJson()).toList();
     }
+    data['order_id'] = this.orderId;
     if (this.summary != null) {
       data['summary'] = this.summary!.toJson();
     }

@@ -46,7 +46,7 @@ class _SelectTableViewState extends State<SelectTableView> {
                 text: 'Take away',
                 onPressed: () {
                   navigateToOrderScreen(
-                      tableNo: 'Take away order', type: "Take away");
+                      tableNo: 'Take away order');
                 }),
           )
         ],
@@ -80,7 +80,7 @@ class _SelectTableViewState extends State<SelectTableView> {
                     navigateToOrderScreen(
                         tableNo:
                             mViewModel.tablesList[index].tableNo.toString(),
-                        type: "tablesList");
+                        );
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -229,12 +229,12 @@ class _SelectTableViewState extends State<SelectTableView> {
     }
   }
 
-  void navigateToOrderScreen({required String tableNo, required String type}) {
+  void navigateToOrderScreen({required String tableNo}) {
     Navigator.of(context)
         .push(
       MaterialPageRoute(
         builder: (context) =>
-            StaffSelectProductView(tableNo: tableNo, type: type),
+            StaffSelectProductView(tableNo: tableNo),
       ),
     )
         .then((_) {

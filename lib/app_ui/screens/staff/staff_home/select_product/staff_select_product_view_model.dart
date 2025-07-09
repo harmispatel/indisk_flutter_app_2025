@@ -1,15 +1,15 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:indisk_app/api_service/models/food_category_master.dart';
 import 'package:indisk_app/api_service/models/order_bill_master.dart';
 import 'package:indisk_app/api_service/models/staff_cart_master.dart';
-
+import 'package:indisk_app/api_service/models/viva_payment_master.dart';
+import 'package:indisk_app/app_ui/screens/staff/staff_dashboard/staff_dasboard_view.dart';
 import '../../../../../api_service/api_para.dart';
 import '../../../../../api_service/index.dart';
 import '../../../../../api_service/models/common_master.dart';
 import '../../../../../api_service/models/staff_home_master.dart';
 import '../../../../../utils/common_utills.dart';
 import '../../../../../utils/global_variables.dart';
-import '../../../app/app_view.dart';
 
 class StaffSelectProductViewModel with ChangeNotifier {
   Services services = Services();
@@ -24,51 +24,84 @@ class StaffSelectProductViewModel with ChangeNotifier {
   String cartTotal = '';
   List<OrderBillItems> orderedItems = [];
   Summary? summary;
-
+  String stripePaymentUrl = '';
+  String stripePaymentId = '';
+  String orderId = '';
   List<FoodCategoryDetails> foodCategoryList = [];
+  BuildContext? context;
 
-  Future<void> getTableBill(
-      {required String orderNo, required String orderType, required String tableNo}) async {
+  Future<void> getTableBill({
+    required String orderNo,
+    required String orderType,
+    required String tableNo,
+  }) async {
+    print('Fetching bill for order: $orderNo');
     showProgressDialog();
-    OrderBillMaster? master = await services.api!.getOrderBill(params: {
-      ApiParams.order_id: orderNo,
-      ApiParams.order_type: orderType,
-      ApiParams.table_no: tableNo,
-    });
-    hideProgressDialog();
-    if (master != null) {
-      if (master.success!) {
-        orderedItems = master.items ?? [];
-        summary = master.summary;
+
+    try {
+      OrderBillMaster? master = await services.api!.getOrderBill(params: {
+        ApiParams.order_id: orderNo,
+        ApiParams.order_type: orderType,
+        ApiParams.table_no: tableNo,
+      });
+      if (master != null) {
+        print('Bill API Response: ${master.toJson()}');
+        if (master.success!) {
+          orderedItems = master.items ?? [];
+          summary = master.summary;
+          orderId = master.orderId ?? orderNo;
+          print('Bill loaded successfully for order: $orderId');
+        } else {
+          print('Bill API Error: ${master.message}');
+          showRedToastMessage(master.message!);
+        }
       } else {
-      //showRedToastMessage(master.message!);
+        print('Bill API returned null');
+        oopsMSG();
       }
-    } else {
-      oopsMSG();
+    } catch (e) {
+      print('Error in getTableBill: $e');
+      showRedToastMessage('Failed to load bill details');
+    } finally {
+      hideProgressDialog();
+      notifyListeners();
     }
-    notifyListeners();
   }
 
-  Future<void> placeOrderApi(
-      {required String tableNo}) async {
+  Future<String?> placeOrderApi({required String tableNo}) async {
     isApiLoading = true;
     showProgressDialog();
-    CommonMaster? master = await services.api!.placeOrder(params: {
-      ApiParams.user_id: gLoginDetails!.sId!,
-      ApiParams.table_no: tableNo,
-    });
-    hideProgressDialog();
-    isApiLoading = false;
-    if (master != null) {
-      if (master.success) {
-        Navigator.pop(mainNavKey.currentContext!, true);
+
+    try {
+      CommonMaster? master = await services.api!.placeOrder(params: {
+        ApiParams.user_id: gLoginDetails!.sId!,
+        ApiParams.table_no: tableNo,
+      });
+
+      if (master != null) {
+        if (master.success) {
+          // Store the order ID from the nested order object
+          orderId = master.orderId!;
+          print('Extracted Order ID: $orderId');
+          if (orderId == null) {
+            debugPrint('Warning: Order ID is null in API response');
+          }
+          notifyListeners();
+          return orderId;
+        } else {
+          showRedToastMessage(master.message);
+        }
       } else {
-        showRedToastMessage(master.message);
+        oopsMSG();
       }
-    } else {
-      oopsMSG();
+    } catch (e) {
+      debugPrint('Error in placeOrderApi: $e');
+      showRedToastMessage('Failed to place order');
+    } finally {
+      hideProgressDialog();
+      isApiLoading = false;
     }
-    notifyListeners();
+    return null;
   }
 
   Future<void> getFoodCategoryList() async {
@@ -105,15 +138,17 @@ class StaffSelectProductViewModel with ChangeNotifier {
     isApiLoading = true;
     notifyListeners();
     staffFoodList.clear();
-    StaffHomeMaster? staffListMaster = await services.api!
-        .getStaffFoodList(params: {ApiParams.staff_id: gLoginDetails!.sId!, ApiParams.is_manageable: isManageable});
+    StaffHomeMaster? staffListMaster = await services.api!.getStaffFoodList(
+        params: {
+          ApiParams.staff_id: gLoginDetails!.sId!,
+          ApiParams.is_manageable: isManageable
+        });
     isApiLoading = false;
     notifyListeners();
 
     if (staffListMaster != null) {
       if (staffListMaster.success != null && staffListMaster.success!) {
         staffFoodList = staffListMaster.data!;
-
       } else {
         showRedToastMessage(staffListMaster.message!);
       }
@@ -149,7 +184,6 @@ class StaffSelectProductViewModel with ChangeNotifier {
         'quantity': 1
       };
 
-      // Print params before API call
       print('API Params:');
       print(params);
 
@@ -173,7 +207,10 @@ class StaffSelectProductViewModel with ChangeNotifier {
     isCartApiLoading = true;
     notifyListeners();
     staffCartFoodList.clear();
-    StaffCartMaster? master = await services.api!.getStaffCartList(params: {ApiParams.user_id: gLoginDetails!.sId!, ApiParams.table_no: tableNo});
+    StaffCartMaster? master = await services.api!.getStaffCartList(params: {
+      ApiParams.user_id: gLoginDetails!.sId!,
+      ApiParams.table_no: tableNo
+    });
     isCartApiLoading = false;
     notifyListeners();
     if (master != null) {
@@ -193,7 +230,9 @@ class StaffSelectProductViewModel with ChangeNotifier {
   }
 
   Future<void> updateQuantity(
-      {required String productId, required String type, required String tableNo}) async {
+      {required String productId,
+      required String type,
+      required String tableNo}) async {
     showProgressDialog();
     CommonMaster? master = await services.api!.updateQuantityStaffCart(params: {
       ApiParams.user_id: gLoginDetails!.sId!,
@@ -257,7 +296,8 @@ class StaffSelectProductViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> removeItemFromCart({required String productId, required String tableNo}) async {
+  Future<void> removeItemFromCart(
+      {required String productId, required String tableNo}) async {
     showProgressDialog();
     CommonMaster? master = await services.api!.removeItemStaffCart(params: {
       ApiParams.user_id: gLoginDetails!.sId!,
@@ -291,7 +331,8 @@ class StaffSelectProductViewModel with ChangeNotifier {
   Future<void> updateFoodAvailability(
       {required String productId, required bool status}) async {
     showProgressDialog();
-    CommonMaster? commonMaster = await services.api!.updateFoodAvailability(params: {
+    CommonMaster? commonMaster =
+        await services.api!.updateFoodAvailability(params: {
       ApiParams.id: productId,
       ApiParams.is_available: status,
     }, files: [], onProgress: (bytes, totalBytes) {});
@@ -305,5 +346,93 @@ class StaffSelectProductViewModel with ChangeNotifier {
     } else {
       oopsMSG();
     }
+  }
+
+  Future<void> getVivaPaymentApi(
+      {required String tableNo, required String orderId}) async {
+    showProgressDialog();
+    Map<String, dynamic> params = <String, dynamic>{
+      ApiParams.table_no: tableNo,
+      ApiParams.orderId: orderId,
+    };
+    try {
+      StripePaymentMaster? master =
+          await services.api!.getVivaPaymentApi(params: params);
+      if (master == null) {
+        oopsMSG();
+        print("Get Viva Payment oops: null response");
+      } else if (master.success == false) {
+        showRedToastMessage(master.message.toString());
+        print("VivaPay API Error: ${master.message}");
+      } else if (master.success!) {
+        stripePaymentUrl = master.checkoutUrl ?? '';
+        print("VivaPay Payment URL: $stripePaymentUrl");
+        getUpdatePaymentApi(
+            tableNo: tableNo,
+            status: "paid",
+            paymentType: "viva",
+            orderId: orderId);
+        showGreenToastMessage("Payment URL generated successfully");
+      }
+    } catch (e) {
+      print("Exception in VivaPay API: $e");
+    } finally {
+      hideProgressDialog();
+      notifyListeners();
+    }
+  }
+
+  Future<void> getUpdatePaymentApi({
+    required String tableNo,
+    required String status,
+    required String paymentType,
+    required String orderId,
+  }) async {
+    showProgressDialog();
+
+    Map<String, dynamic> params = <String, dynamic>{
+      ApiParams.table_no: tableNo,
+      ApiParams.status: status,
+      ApiParams.paymentType: paymentType,
+      ApiParams.orderId: orderId,
+    };
+    try {
+      StripePaymentMaster? master =
+          await services.api!.getPaymentStatusApi(params: params);
+      if (master == null) {
+        oopsMSG();
+        print("Get getUpdatePaymentApi Payment oops: null response");
+      } else if (master.success == false) {
+        showRedToastMessage(
+            master.message?.toString() ?? "Payment update failed");
+        print("getUpdatePaymentApi API Error: ${master.message}");
+      } else if (master.success == true) {
+        Navigator.pushAndRemoveUntil(
+          context!,
+          MaterialPageRoute(
+            builder: (context) => StaffDashboardView(),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      }
+    } catch (e) {
+      print("getUpdatePaymentApi : $e");
+    } finally {
+      hideProgressDialog();
+      notifyListeners();
+    }
+  }
+
+  Future<void> handlePaymentCompletion(String transactionId) async {
+    showProgressDialog();
+    hideProgressDialog();
+    showGreenToastMessage(
+        "Payment completed successfully! Transaction ID: $transactionId");
+    notifyListeners();
+  }
+
+  void handlePaymentFailure(String error) {
+    showRedToastMessage("Payment failed: $error");
+    notifyListeners();
   }
 }
