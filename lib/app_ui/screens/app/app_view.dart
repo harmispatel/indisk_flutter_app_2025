@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:indisk_app/app_ui/screens/login/login_view_model.dart';
 import 'package:indisk_app/app_ui/screens/manager/food_menu/create_food/create_food_view_model.dart';
+import 'package:indisk_app/app_ui/screens/manager/manager_home/manager_home_view_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import '../../../language/app_localizations.dart';
@@ -147,8 +148,7 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => RestaurantDetailsViewModel()),
         ChangeNotifierProvider<StaffSelectProductViewModel>(
             create: (_) => StaffSelectProductViewModel()),
-        ChangeNotifierProvider<TableViewModel>(
-            create: (_) => TableViewModel()),
+        ChangeNotifierProvider<TableViewModel>(create: (_) => TableViewModel()),
         ChangeNotifierProvider<SelectTableViewModel>(
             create: (_) => SelectTableViewModel()),
         ChangeNotifierProvider<KitchenStaffHomeViewModel>(
@@ -157,6 +157,8 @@ class AppViewState extends State<AppView> with WidgetsBindingObserver {
             create: (_) => OrderHistoryViewModel()),
         ChangeNotifierProvider<ManagerVatViewModel>(
             create: (_) => ManagerVatViewModel()),
+        ChangeNotifierProvider<ManagerHomeViewModel>(
+            create: (_) => ManagerHomeViewModel()),
       ],
       child: Consumer<AppModel>(
         builder: (context, appModel, child) => MaterialApp(

@@ -5,6 +5,7 @@ import 'package:indisk_app/api_service/models/food_category_master.dart';
 import 'package:indisk_app/api_service/models/login_master.dart';
 import 'package:indisk_app/api_service/models/salep_graph_master.dart';
 import 'package:indisk_app/api_service/models/sales_count_master.dart';
+import 'package:indisk_app/api_service/models/sales_graph_manager.dart';
 import 'package:indisk_app/api_service/models/staff_cart_master.dart';
 import 'package:indisk_app/api_service/models/staff_list_master.dart';
 import 'package:indisk_app/api_service/models/viva_payment_master.dart';
@@ -731,6 +732,23 @@ class ApiServices extends BaseServices {
   }
 
   @override
+  Future<OrderHistoryMaster?> getKitchenStaffHistory(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+        url: ApiUrl.KITCHEN_ORDER_HISTORY, postParams: params ?? {});
+    if (response != null) {
+      try {
+        return OrderHistoryMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
   Future<VatMaster?> getVat({required Map<String, dynamic> params}) async {
     dynamic response = await appBaseClient.postApiCall(
         url: ApiUrl.GET_VAT, postParams: params ?? {});
@@ -833,6 +851,25 @@ class ApiServices extends BaseServices {
   }
 
   @override
+  Future<SalesGraphMangerMaster?> salesMangerGraphApi(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.SALES_COUNT_MANAGER,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return SalesGraphMangerMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
   Future<SalesCountMaster?> salesCountApi(
       {required Map<String, dynamic> params}) async {
     dynamic response = await appBaseClient.postApiCall(
@@ -856,6 +893,25 @@ class ApiServices extends BaseServices {
       {required Map<String, dynamic> params}) async {
     dynamic response = await appBaseClient.postApiCall(
       url: ApiUrl.VIVA_PAYMENT,
+      postParams: params,
+    );
+    if (response != null) {
+      try {
+        return StripePaymentMaster.fromJson(response);
+      } on Exception catch (e) {
+        log("Exception :: $e");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<StripePaymentMaster?> getVivaTerminalPaymentApi(
+      {required Map<String, dynamic> params}) async {
+    dynamic response = await appBaseClient.postApiCall(
+      url: ApiUrl.VIVA_TERMINAL_PAYMENT,
       postParams: params,
     );
     if (response != null) {

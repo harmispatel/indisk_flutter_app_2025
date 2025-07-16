@@ -16,4 +16,5 @@ class LocalImages {
   static final String img_login_1 = "assets/images/img_login_1.webp";
   static final String img_login_2 = "assets/images/img_login_2.avif";
   static final String img_qr_code = "assets/images/img_qr_code.jpeg";
+  static final String img_vwcards = "assets/images/img_vwcards.png";
 }

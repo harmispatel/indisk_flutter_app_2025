@@ -25,6 +25,7 @@ class StaffSelectProductViewModel with ChangeNotifier {
   List<OrderBillItems> orderedItems = [];
   Summary? summary;
   String stripePaymentUrl = '';
+  String vivaTerminalPaymentUrl = '';
   String stripePaymentId = '';
   String orderId = '';
   List<FoodCategoryDetails> foodCategoryList = [];
@@ -376,6 +377,45 @@ class StaffSelectProductViewModel with ChangeNotifier {
       }
     } catch (e) {
       print("Exception in VivaPay API: $e");
+    } finally {
+      hideProgressDialog();
+      notifyListeners();
+    }
+  }
+
+  Future<void> getVivaTerminalPaymentApi({
+    required String terminalId,
+    required String tableNo,
+    required String orderId,
+  }) async {
+    showProgressDialog();
+    Map<String, dynamic> params = <String, dynamic>{
+      ApiParams.terminalId: terminalId,
+      ApiParams.table_no: tableNo,
+      ApiParams.orderId: orderId,
+    };
+    try {
+      StripePaymentMaster? master =
+          await services.api!.getVivaTerminalPaymentApi(params: params);
+      if (master == null) {
+        oopsMSG();
+        print("Get Viva Terminal Payment oops: null response");
+      } else if (master.success == false) {
+        showRedToastMessage(master.message.toString());
+        print("Viva Terminal Payment API Error: ${master.message}");
+      } else if (master.success!) {
+        vivaTerminalPaymentUrl = master.checkoutUrl ?? '';
+        print("Viva Terminal Payment URL: $vivaTerminalPaymentUrl");
+        getUpdatePaymentApi(
+            tableNo: tableNo,
+            status: "paid",
+            paymentType: "viva-terminal",
+            orderId: orderId);
+        showGreenToastMessage(
+            "Viva Terminal Payment URL generated successfully");
+      }
+    } catch (e) {
+      print("Exception in Viva Terminal Payment API: $e");
     } finally {
       hideProgressDialog();
       notifyListeners();

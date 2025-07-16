@@ -1,5 +1,5 @@
 String BASE_URL = "https://indisk-app.harmistechnology.com/api/";
-// String BASE_URL = "https://1938-43-252-116-162.ngrok-free.app/api/";
+//String BASE_URL = "https://161014bdcf43.ngrok-free.app/api/";
 
 class ApiUrl {
   static String LOGIN = "${BASE_URL}login";
@@ -36,6 +36,7 @@ class ApiUrl {
   static String UPDATE_ORDER_STATUS = "${BASE_URL}orders/status";
   static String UPDATE_AVALIBALITY_STATUS = "${BASE_URL}update-availability-status";
   static String ORDER_HISTORY = "${BASE_URL}order-list";
+  static String KITCHEN_ORDER_HISTORY = "${BASE_URL}kitchen-staff-order-list";
   static String GET_VAT = "${BASE_URL}manager/get-vat";
   static String SAVE_VAT = "${BASE_URL}manager/save-vat";
   static String ADD_FOOD_MODIFIER = "${BASE_URL}food-modifier";
@@ -43,8 +44,10 @@ class ApiUrl {
   static String GET_TAKEAWAY_ORDERS = "${BASE_URL}orders/takeaway-list";
   static String SALES_GRAPH = "${BASE_URL}sales-graph";
   static String SALES_COUNT = "${BASE_URL}sales-count";
+  static String SALES_COUNT_MANAGER = "${BASE_URL}sales-count-manager";
   static String VIVA_PAYMENT = "${BASE_URL}orders/viva-payment";
   static String UPDATE_PAYMENT_STUTUS = "${BASE_URL}orders/update-payment-status";
+  static String VIVA_TERMINAL_PAYMENT = "${BASE_URL}orders/viva-terminal-payment";
 
 }
 

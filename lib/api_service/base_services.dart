@@ -3,6 +3,7 @@ import 'package:indisk_app/api_service/models/food_category_master.dart';
 import 'package:indisk_app/api_service/models/login_master.dart';
 import 'package:indisk_app/api_service/models/salep_graph_master.dart';
 import 'package:indisk_app/api_service/models/sales_count_master.dart';
+import 'package:indisk_app/api_service/models/sales_graph_manager.dart';
 import 'package:indisk_app/api_service/models/viva_payment_master.dart';
 
 import 'models/common_master.dart';
@@ -139,6 +140,9 @@ abstract class BaseServices {
   Future<OrderHistoryMaster?> getOrderHistory(
       {required Map<String, dynamic> params});
 
+  Future<OrderHistoryMaster?> getKitchenStaffHistory(
+      {required Map<String, dynamic> params});
+
   Future<VatMaster?> getVat({required Map<String, dynamic> params});
 
   Future<VatMaster?> saveVat({required Map<String, dynamic> params});
@@ -150,10 +154,16 @@ abstract class BaseServices {
   Future<SalesGraphMaster?> salesGraphApi(
       {required Map<String, dynamic> params});
 
+  Future<SalesGraphMangerMaster?> salesMangerGraphApi(
+      {required Map<String, dynamic> params});
+
   Future<SalesCountMaster?> salesCountApi(
       {required Map<String, dynamic> params});
 
   Future<StripePaymentMaster?> getVivaPaymentApi(
+      {required Map<String, dynamic> params});
+
+  Future<StripePaymentMaster?> getVivaTerminalPaymentApi(
       {required Map<String, dynamic> params});
 
   Future<StripePaymentMaster?> getPaymentStatusApi(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:indisk_app/app_ui/screens/kitchen_staff/kitchen_staff_history/kitchen_staff_history.dart';
 import 'package:indisk_app/app_ui/screens/new_kitchen_staff_home/new_kitchen_staff_home_view.dart';
 
 import '../../../../utils/common_colors.dart';
@@ -10,7 +11,8 @@ class KitchenStaffDashboardView extends StatefulWidget {
   const KitchenStaffDashboardView({super.key});
 
   @override
-  State<KitchenStaffDashboardView> createState() => _KitchenStaffDashboardViewState();
+  State<KitchenStaffDashboardView> createState() =>
+      _KitchenStaffDashboardViewState();
 }
 
 class _KitchenStaffDashboardViewState extends State<KitchenStaffDashboardView> {
@@ -33,16 +35,16 @@ class _KitchenStaffDashboardViewState extends State<KitchenStaffDashboardView> {
             width: 80,
             decoration: BoxDecoration(
               color: Colors.grey[100],
-              border: Border(right: BorderSide(color: Colors.grey.shade300, width: 2),
+              border: Border(
+                right: BorderSide(color: Colors.grey.shade300, width: 2),
               ),
             ),
             child: Column(
               children: [
                 const SizedBox(height: 20),
                 _buildNavItem(Icons.home, 0),
-                // _buildNavItem(Icons.category, 1),
-                // _buildNavItem(Icons.fastfood, 2),
-                _buildNavItem(Icons.settings, 1),
+                _buildNavItem(Icons.restore, 1),
+                _buildNavItem(Icons.settings, 2),
               ],
             ),
           ),
@@ -57,10 +59,8 @@ class _KitchenStaffDashboardViewState extends State<KitchenStaffDashboardView> {
                 setState(() {});
               },
               children: [
-                // KitchenStaffHomeView(),
                 NewKitchenStaffHomeView(),
-                // Container(),
-                // Container(),
+                KitchenStaffHistoryView(),
                 ProfileView(),
               ],
             ),
@@ -85,5 +85,3 @@ class _KitchenStaffDashboardViewState extends State<KitchenStaffDashboardView> {
     );
   }
 }
-
-

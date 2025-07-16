@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:indisk_app/api_service/models/order_history_master.dart';
 
 import '../../../../api_service/api_para.dart';
 import '../../../../api_service/index.dart';
@@ -10,7 +11,7 @@ import '../../../../utils/global_variables.dart';
 class KitchenStaffHomeViewModel with ChangeNotifier {
   Services services = Services();
   List<KitchenStaffOrders> kitchenOrders = [];
-
+  List<Orders> orderHistory = [];
   Future<void> getKitchenStaffOrderList() async {
     showProgressDialog();
     KitchenStaffOrderMaster? master =
@@ -45,5 +46,24 @@ class KitchenStaffHomeViewModel with ChangeNotifier {
     } else {
       oopsMSG();
     }
+  }
+
+  Future<void> getKitchenStaffHistory() async {
+    showProgressDialog();
+    OrderHistoryMaster? master =
+        await services.api!.getKitchenStaffHistory(params: {
+      ApiParams.user_id: gLoginDetails!.sId!,
+    });
+    hideProgressDialog();
+    if (master != null) {
+      if (master.success!) {
+        orderHistory = master.orders ?? [];
+      } else {
+        showRedToastMessage(master.message ?? '--');
+      }
+    } else {
+      oopsMSG();
+    }
+    notifyListeners();
   }
 }

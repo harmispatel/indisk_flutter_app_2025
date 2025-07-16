@@ -65,4 +65,5 @@ class ApiParams {
   static const String cuisine_type = "cuisine_type";
   static const String graphType = "graphType";
   static const String paymentType = "payment_type";
+  static const String terminalId = "terminal_id";
 }
