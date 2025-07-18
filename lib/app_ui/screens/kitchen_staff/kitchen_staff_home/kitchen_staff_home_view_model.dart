@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:indisk_app/api_service/models/order_history_master.dart';
-
 import '../../../../api_service/api_para.dart';
 import '../../../../api_service/index.dart';
 import '../../../../api_service/models/common_master.dart';
@@ -12,21 +11,29 @@ class KitchenStaffHomeViewModel with ChangeNotifier {
   Services services = Services();
   List<KitchenStaffOrders> kitchenOrders = [];
   List<Orders> orderHistory = [];
+
   Future<void> getKitchenStaffOrderList() async {
-    showProgressDialog();
-    KitchenStaffOrderMaster? master =
-        await services.api!.getKitchenStaffOrder();
-    hideProgressDialog();
-    if (master == null) {
-      oopsMSG();
-      return;
+    try {
+      showProgressDialog();
+      KitchenStaffOrderMaster? master =
+          await services.api!.getKitchenStaffOrder();
+      hideProgressDialog();
+      if (master == null) {
+        oopsMSG();
+        return;
+      }
+      if (master.success != null && master.success!) {
+        kitchenOrders = master.orders ?? [];
+      } else {
+        showRedToastMessage(master.message!);
+      }
+    } catch (e) {
+      print("Error fetching orders: $e");
+    } finally {
+      await Future.delayed(Duration(seconds: 10));
+      print("Fetching Socket Data again after 10 seconds");
+      getKitchenStaffOrderList();
     }
-    if (master.success != null && master.success!) {
-      kitchenOrders = master.orders ?? [];
-    } else {
-      showRedToastMessage(master.message!);
-    }
-    notifyListeners();
   }
 
   Future<void> updateFoodStatus(

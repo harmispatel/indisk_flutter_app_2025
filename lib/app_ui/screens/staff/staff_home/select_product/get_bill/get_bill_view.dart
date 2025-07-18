@@ -638,18 +638,16 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:indisk_app/app_ui/common_widget/primary_button.dart';
+import 'package:indisk_app/app_ui/printer_connect/printer_connect_view.dart';
+import 'package:indisk_app/app_ui/screens/bluetooth_printer/bluetooth_printer_view.dart';
 import 'package:indisk_app/app_ui/screens/staff/staff_dashboard/staff_dasboard_view.dart';
 import 'package:indisk_app/app_ui/screens/staff/staff_home/select_product/get_bill/viva_payment_service.dart';
-import 'package:indisk_app/app_ui/screens/viva_payment/viva_payment_success_view.dart';
 import 'package:indisk_app/utils/app_dimens.dart';
 import 'package:indisk_app/utils/common_utills.dart';
 import 'package:provider/provider.dart';
 import '../../../../../../utils/local_images.dart';
 import '../../../../wifi_printer/wifi_printer_view.dart';
 import '../staff_select_product_view_model.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:uuid/uuid.dart';
 
 class GetBillView extends StatefulWidget {
   final String tableNo;
@@ -671,6 +669,7 @@ class _GetBillViewState extends State<GetBillView> {
   bool onlinePaymentCompleted = false;
   String sessionId = "";
   String bearerToken = "";
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   @override
   void initState() {
     super.initState();
@@ -686,9 +685,54 @@ class _GetBillViewState extends State<GetBillView> {
     });
   }
 
+  double tipAmount = 0.0;
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void _showTipDialog() {
+    final amount = (mViewModel?.summary?.totalAmount ?? 0).toDouble();
+    final TextEditingController tipController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Waiter Tip'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Current Total: ₹$amount'),
+            const SizedBox(height: 10),
+            TextField(
+              controller: tipController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Tip Amount',
+                prefixText: '₹',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (tipController.text.isNotEmpty) {
+                setState(() {
+                  tipAmount = double.tryParse(tipController.text) ?? 0.0;
+                });
+              }
+              Navigator.pop(context);
+            },
+            child: const Text('Add Tip'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -700,6 +744,16 @@ class _GetBillViewState extends State<GetBillView> {
         title: const Text('Order Summary'),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20, top: 10),
+            child: PrimaryButton(
+              width: 150,
+              text: "Waiter Tip",
+              onPressed: () => _showTipDialog(),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: _buildActionButtons(viewModel),
       body: Center(
@@ -901,7 +955,7 @@ class _GetBillViewState extends State<GetBillView> {
     }
 
     final summary = viewModel.summary!;
-
+    final totalWithTip = (summary.totalAmount ?? 0) + tipAmount;
     return Column(
       children: [
         const Divider(thickness: 1),
@@ -911,7 +965,7 @@ class _GetBillViewState extends State<GetBillView> {
         const Divider(thickness: 1),
         _buildSummaryRow(
           'Total Amount:',
-          '₹${summary.totalAmount ?? 0}',
+          '₹${totalWithTip.toStringAsFixed(2)}',
           isBold: true,
           fontSize: 18,
         ),
@@ -1076,18 +1130,50 @@ class _GetBillViewState extends State<GetBillView> {
             const SizedBox(height: 12),
             ElevatedButton.icon(
               icon: const Icon(Icons.bluetooth),
-              label: const Text("Bluetooth Printer"),
+              label: const Text("Bluetooth Printer 0"),
               onPressed: () {
                 Navigator.pop(context);
                 showDialog(
-                  context: context,
-                  builder: (_) => EpsonPrinterPage(),
-                  // builder: (_) => BluetoothPrinterPage(
-                  //   tableNo: tableNo,
-                  //   orderNo: orderNo,
-                  //   viewModel: viewModel,
-                  // ),
-                );
+                    context: context,
+                    builder: (_) => ConnectToPrinter1(
+                          title: "Demo Connect Printer",
+                        ));
+              },
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.bluetooth),
+              label: const Text("Bluetooth Printer 1"),
+              onPressed: () {
+                Navigator.pop(context);
+                showDialog(
+                    context: context,
+                    builder: (_) => ConnectToPrinter(
+                        // title: "Demo Connect Printer",
+                        )
+                    // builder: (_) => BluetoothPrinterPage(
+                    //   tableNo: tableNo,
+                    //   orderNo: orderNo,
+                    //   viewModel: viewModel,
+                    // ),
+                    );
+              },
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.bluetooth),
+              label: const Text("Bluetooth Printer 2"),
+              onPressed: () {
+                Navigator.pop(context);
+                showDialog(
+                    context: context, builder: (_) => ConnectToPrinterView());
+              },
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.bluetooth),
+              label: const Text("flutter_bluetooth"),
+              onPressed: () {
+                Navigator.pop(context);
+                showDialog(
+                    context: context, builder: (_) => BluetoothPrinterPage());
               },
             ),
           ],
